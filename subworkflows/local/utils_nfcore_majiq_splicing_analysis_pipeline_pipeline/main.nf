@@ -17,6 +17,9 @@ include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 
+include { INPUT_CHECK               } from '../input_check'
+include { CONTRASTS_CHECK           } from '../contrast_check'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW TO INITIALISE PIPELINE
@@ -86,6 +89,68 @@ workflow PIPELINE_INITIALISATION {
                 return [ meta, fastqs.flatten() ]
         }
         .set { ch_samplesheet }
+
+    
+
+    //
+    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
+    //
+    switch (params.source) {
+        case 'fastq':
+            INPUT_CHECK (
+                input,
+                params.source
+            )
+            .reads
+            .map {
+                meta, fastq ->
+                    new_id = meta.id - ~/_T\d+/
+                    [ meta + [id: new_id], fastq ]
+            }
+            .groupTuple()
+            .branch {
+                meta, fastq ->
+                    single  : fastq.size() == 1
+                        return [ meta, fastq.flatten() ]
+                    multiple: fastq.size() > 1
+                        return [ meta, fastq.flatten() ]
+            }
+            .set { ch_fastq }
+            
+            ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+            break;
+        case 'genome_bam':
+            INPUT_CHECK (
+                input,
+                params.source
+            )
+            .reads
+            .set { ch_genome_bam }
+            
+            ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+            break;
+    }
+
+ 
+
+
+    // Create samplesheet channel (after input check)
+    
+    
+
+    //
+    // SUBWORKFLOW: Read in contrastsheet, validate and stage input files
+    //
+    ch_contrasts = Channel.fromPath(params.contrasts)
+    
+    CONTRASTS_CHECK (
+        ch_contrasts
+    )
+    ch_versions = ch_versions.mix(CONTRASTS_CHECK.out.versions)
+
+
+    
+    ch_versions.view()
 
     emit:
     samplesheet = ch_samplesheet
