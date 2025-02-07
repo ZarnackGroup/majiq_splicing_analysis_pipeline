@@ -9,35 +9,24 @@ include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_majiq_splicing_analysis_pipeline_pipeline'
-include { FASTQ_PROCESSING       } from './fastq_processing'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN MAIN WORKFLOW
+    RUN FASTQ PROCESSING WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
+workflow FASTQ_PROCESSING {
 
     take: 
         ch_fastq       // channel: fastq file inputs
-        ch_bam         // channel: bam file inputs
-        ch_contrasts    // channel: contrasts input
+        
     
     main:
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    // Create BAM from FASTQ if necessary
-    ch_generated_bam = params.source == 'fastq' ? FASTQ_PROCESSING(ch_fastq).genome_bam : Channel.empty()
-
-    ch_versions.mix(FASTQ_PROCESSING.out.versions)
-
-    // Merge BAM sources: Either from FASTQ conversion or user-provided
-    ch_final_bam = ch_generated_bam.mix(ch_bam)
-
-    /*
     //
     // MODULE: Run FastQC
     //
@@ -98,10 +87,13 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         [],
         []
     )
-    */
+
+
+
 
     emit:
-    multiqc_report = FASTQ_PROCESSING.out.multiqc_report // channel: /path/to/multiqc_report.html
+    genome_bam     = Channel.value("bam")
+    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }

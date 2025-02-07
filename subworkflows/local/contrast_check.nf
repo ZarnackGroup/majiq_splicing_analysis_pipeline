@@ -14,11 +14,11 @@ workflow CONTRASTS_CHECK {
     CONTRASTSHEET_CHECK ( contrastsheet )
             .csv
             .splitCsv ( header:true, sep:',' )
-            .set { contrasts }
+            .set { ch_contrasts }
 
 
     emit:
-    contrasts
+    contrasts = ch_contrasts
     versions = CONTRASTSHEET_CHECK.out.versions // channel: [ versions.yml ]
 
 }

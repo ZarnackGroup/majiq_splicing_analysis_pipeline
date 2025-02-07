@@ -106,8 +106,11 @@ workflow PIPELINE_INITIALISATION {
                 meta, fastq ->
                     new_id = meta.id - ~/_T\d+/
                     [ meta + [id: new_id], fastq ]
-            }
+            }   
             .groupTuple()
+            .map { meta, fastq -> [meta, fastq.flatten()] } 
+            /*
+            // this was part of the original implementation of rnasplice but apparently does nothing
             .branch {
                 meta, fastq ->
                     single  : fastq.size() == 1
@@ -115,6 +118,7 @@ workflow PIPELINE_INITIALISATION {
                     multiple: fastq.size() > 1
                         return [ meta, fastq.flatten() ]
             }
+            */
             .set { ch_fastq }
             
             ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
@@ -148,13 +152,16 @@ workflow PIPELINE_INITIALISATION {
     )
     ch_versions = ch_versions.mix(CONTRASTS_CHECK.out.versions)
 
-
     
-    ch_versions.view()
+    
 
     emit:
-    samplesheet = ch_samplesheet
-    versions    = ch_versions
+    fastq         = params.source == 'fastq' ? ch_fastq : Channel.empty()
+    genome_bam    = params.source == 'genome_bam' ? ch_genome_bam : Channel.empty()
+    samplesheet   = ch_samplesheet
+    contrasts     = CONTRASTS_CHECK.out.contrasts
+    versions      = ch_versions
+
 }
 
 /*

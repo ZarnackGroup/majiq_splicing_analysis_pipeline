@@ -22,6 +22,7 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_maji
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+/*
 //
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
@@ -41,7 +42,7 @@ workflow ZARNACKGROUP_MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     emit:
     multiqc_report = MAJIQ_SPLICING_ANALYSIS_PIPELINE.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
-/*
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,11 +63,15 @@ workflow {
         params.input
     )
 
+
+
     //
     // WORKFLOW: Run main workflow
     //
-    ZARNACKGROUP_MAJIQ_SPLICING_ANALYSIS_PIPELINE (
-        PIPELINE_INITIALISATION.out.samplesheet
+    MAJIQ_SPLICING_ANALYSIS_PIPELINE (
+        PIPELINE_INITIALISATION.out.fastq,
+        PIPELINE_INITIALISATION.out.genome_bam,
+        PIPELINE_INITIALISATION.out.contrasts
     )
     //
     // SUBWORKFLOW: Run completion tasks
@@ -78,7 +83,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        ZARNACKGROUP_MAJIQ_SPLICING_ANALYSIS_PIPELINE.out.multiqc_report
+        MAJIQ_SPLICING_ANALYSIS_PIPELINE.out.multiqc_report
     )
 }
 
