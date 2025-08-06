@@ -69,7 +69,6 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     MAJIQ_SPLICING_ANALYSIS_PIPELINE (
-        PIPELINE_INITIALISATION.out.fastq,
         PIPELINE_INITIALISATION.out.genome_bam,
         PIPELINE_INITIALISATION.out.contrasts
     )

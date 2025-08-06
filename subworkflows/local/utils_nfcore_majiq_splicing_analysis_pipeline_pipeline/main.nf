@@ -72,92 +72,56 @@ workflow PIPELINE_INITIALISATION {
 
     Channel
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
+        .map { meta, genome_bam ->
+            return [ meta.id, meta, [ genome_bam ] ]
         }
         .groupTuple()
         .map { samplesheet ->
             validateInputSamplesheet(samplesheet)
         }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
+        .map { meta, bam_files ->
+            return [ meta, bam_files.flatten() ]
         }
         .set { ch_samplesheet }
 
-    
+
+
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
-    switch (params.source) {
-        case 'fastq':
-            INPUT_CHECK (
-                input,
-                params.source
-            )
-            .reads
-            .map {
-                meta, fastq ->
-                    new_id = meta.id - ~/_T\d+/
-                    [ meta + [id: new_id], fastq ]
-            }   
-            .groupTuple()
-            .map { meta, fastq -> [meta, fastq.flatten()] } 
-            /*
-            // this was part of the original implementation of rnasplice but apparently does nothing
-            .branch {
-                meta, fastq ->
-                    single  : fastq.size() == 1
-                        return [ meta, fastq.flatten() ]
-                    multiple: fastq.size() > 1
-                        return [ meta, fastq.flatten() ]
-            }
-            */
-            .set { ch_fastq }
-            
-            ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-            break;
-        case 'genome_bam':
-            INPUT_CHECK (
-                input,
-                params.source
-            )
-            .reads
-            .set { ch_genome_bam }
-            
-            ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-            break;
-    }
+    INPUT_CHECK (
+        input,
+        'genome_bam'
+        )
+        .reads
+        .set { ch_genome_bam }
 
- 
+        ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+
+
+
 
 
     // Create samplesheet channel (after input check)
-    
-    
+
+
 
     //
     // SUBWORKFLOW: Read in contrastsheet, validate and stage input files
     //
     ch_contrasts = Channel.fromPath(params.contrasts)
-    
+
     CONTRASTS_CHECK (
         ch_contrasts
     )
     ch_versions = ch_versions.mix(CONTRASTS_CHECK.out.versions)
 
-    
-    
+
+
 
     emit:
-    fastq         = params.source == 'fastq' ? ch_fastq : Channel.empty()
-    genome_bam    = params.source == 'genome_bam' ? ch_genome_bam : Channel.empty()
+    genome_bam    = ch_genome_bam
     samplesheet   = ch_samplesheet
     contrasts     = CONTRASTS_CHECK.out.contrasts
     versions      = ch_versions
@@ -222,16 +186,16 @@ workflow PIPELINE_COMPLETION {
 // Validate channels from input samplesheet
 //
 def validateInputSamplesheet(input) {
-    def (metas, fastqs) = input[1..2]
+    def (metas, bam_files) = input[1..2]
 
-    // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size == 1
-    if (!endedness_ok) {
-        error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
+    // Basic validation: Ensure all BAM files exist
+    if (!bam_files || bam_files.flatten().isEmpty()) {
+        error("No BAM files found for sample: ${metas[0].id}")
     }
 
-    return [ metas[0], fastqs ]
+    return [ metas[0], bam_files ]
 }
+
 //
 // Generate methods description for MultiQC
 //
