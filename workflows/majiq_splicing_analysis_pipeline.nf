@@ -11,7 +11,7 @@ include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_majiq_splicing_analysis_pipeline_pipeline'
-
+include { MAJIQ                  } from '../subworkflows/local/majiq/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -79,7 +79,13 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
-
+    // WORKFLOW: Run MAJIQ
+    MAJIQ (
+        ch_bam,
+        SAMTOOLS_INDEX.out.bai,
+        ch_gff
+    )
+    ch_versions = ch_versions.mix(MAJIQ.out.versions.first())
 
 
     //

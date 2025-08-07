@@ -4,32 +4,60 @@
 //               https://nf-co.re/join
 // TODO nf-core: A subworkflow SHOULD import at least two modules
 
-include { SAMTOOLS_SORT      } from '../../../modules/nf-core/samtools/sort/main'
-include { SAMTOOLS_INDEX     } from '../../../modules/nf-core/samtools/index/main'
+include { MAJIQ_BUILDGFF3      }    from '../../../modules/local/majiq/buildgff3/main'
+include { MAJIQ_BUILDSJ        }       from '../../../modules/local/majiq/buildsj/main'
+//include { MAJIQ_BUILDUPDATE }       from '../../../modules/local/majiq/buildupdate/main'
+//include { MAJIQ_PSICOVERAGE     }   from '../../../modules/local/majiq/psicoverage/main'
 
 workflow MAJIQ {
 
     take:
-    // TODO nf-core: edit input (take) channels
+
     ch_bam // channel: [ val(meta), [ bam ] ]
+    ch_bai // channel: [ val(meta), [ bai ] ]
+    ch_gff // channel: [ val(meta), [ gff ] ]
 
     main:
 
     ch_versions = Channel.empty()
 
-    // TODO nf-core: substitute modules here for the modules of your subworkflow
+    
+    ch_license = Channel.fromPath(params.majiq_license, checkIfExists: true)
 
-    SAMTOOLS_SORT ( ch_bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions.first())
+    ch_bam.view()
 
-    SAMTOOLS_INDEX ( SAMTOOLS_SORT.out.bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+    //
+    // MODULE: MAJIQ_BUILDGFF3
+    //
+    MAJIQ_BUILDGFF3(
+        ch_gff,
+        ch_license
+    )
+    ch_versions = ch_versions.mix(MAJIQ_BUILDGFF3.out.versions)
+
+    ch_splicegraph = MAJIQ_BUILDGFF3.out.splicegraph
+
+    
+    ch_combine = ch_bam.combine(ch_splicegraph).combine(ch_license)
+    
+
+    MAJIQ_BUILDSJ(
+        ch_combine
+    )
+    
+    ch_versions = ch_versions.mix(MAJIQ_BUILDSJ.out.versions)
+
+    //
+    // MODULE: MAJIQ_BUILDSJ
+    //
+    /*
+    MAJIQ_BUILDSJ(
+        ch_bam,
+        ch_gff
+    )
+    ch_versions = ch_versions.mix(MAJIQ_BUILDSJ.out.versions)
+    */
 
     emit:
-    // TODO nf-core: edit emitted channels
-    bam      = SAMTOOLS_SORT.out.bam           // channel: [ val(meta), [ bam ] ]
-    bai      = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
-    csi      = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), [ csi ] ]
-
     versions = ch_versions                     // channel: [ versions.yml ]
 }
