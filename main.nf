@@ -70,7 +70,8 @@ workflow {
     //
     MAJIQ_SPLICING_ANALYSIS_PIPELINE (
         PIPELINE_INITIALISATION.out.genome_bam,
-        PIPELINE_INITIALISATION.out.contrasts
+        PIPELINE_INITIALISATION.out.contrasts,
+        params.annotation
     )
     //
     // SUBWORKFLOW: Run completion tasks
