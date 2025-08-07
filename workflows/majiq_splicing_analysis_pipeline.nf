@@ -5,6 +5,7 @@
 */
 include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
+include { SAMTOOLS_INDEX         } from '../modules/nf-core/samtools/index/main'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -27,6 +28,19 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
+
+
+    //
+    // MODULE: SAMTOOLS_INDEX
+    //
+    SAMTOOLS_INDEX(
+        ch_bam
+    )
+
+
+    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+
+    SAMTOOLS_INDEX.out.bai.view()
 
     //
     // MODULE: Run FastQC
@@ -89,7 +103,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         []
     )
 
-    // Merge BAM sources: Either from FASTQ conversion or user-provided
 
 
     /*
