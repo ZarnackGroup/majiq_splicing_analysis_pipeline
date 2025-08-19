@@ -12,11 +12,11 @@ process MAJIQ_BUILDSJ {
         path(splicegraph),
         path(license)
         )
-    
-    
+
+
 
     output:
-    tuple val(meta), path("*.sj") , emit: bam
+    tuple val(meta), path("*.sj") , emit: sj
     path "versions.yml"           , emit: versions
 
     when:
@@ -30,12 +30,13 @@ process MAJIQ_BUILDSJ {
     majiq-build \\
         sj \\
         --license $license \\
+        --nthreads $task.cpus \\
         $bam \\
         $splicegraph \\
         ${prefix}.sj \\
         --strandness AUTO \\
         $args \\
-        
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -4,9 +4,9 @@
 //               https://nf-co.re/join
 // TODO nf-core: A subworkflow SHOULD import at least two modules
 
-include { MAJIQ_BUILDGFF3      }    from '../../../modules/local/majiq/buildgff3/main'
-include { MAJIQ_BUILDSJ        }       from '../../../modules/local/majiq/buildsj/main'
-//include { MAJIQ_BUILDUPDATE }       from '../../../modules/local/majiq/buildupdate/main'
+include { MAJIQ_BUILDGFF3           }       from '../../../modules/local/majiq/buildgff3/main'
+include { MAJIQ_BUILDSJ             }       from '../../../modules/local/majiq/buildsj/main'
+include { MAJIQ_BUILDUPDATE         }       from '../../../modules/local/majiq/buildupdate/main'
 //include { MAJIQ_PSICOVERAGE     }   from '../../../modules/local/majiq/psicoverage/main'
 
 workflow MAJIQ {
@@ -21,7 +21,7 @@ workflow MAJIQ {
 
     ch_versions = Channel.empty()
 
-    
+
     ch_license = Channel.fromPath(params.majiq_license, checkIfExists: true)
 
     ch_bam.view()
@@ -37,26 +37,44 @@ workflow MAJIQ {
 
     ch_splicegraph = MAJIQ_BUILDGFF3.out.splicegraph
 
-    
+
     ch_combine = ch_bam.combine(ch_splicegraph).combine(ch_license)
-    
+
 
     MAJIQ_BUILDSJ(
         ch_combine
     )
-    
+
     ch_versions = ch_versions.mix(MAJIQ_BUILDSJ.out.versions)
 
+    ch_sj_condition_map = MAJIQ_BUILDSJ.out.sj
+        .collect()
+        .map { it.collate(2) }  // Group every 2 elements: [meta, file]
+        .map { pairs ->
+            pairs.collect { [ it[1].name.toString(), it[0].condition ] }
+        }
+
+    ch_sj = MAJIQ_BUILDSJ.out.sj
+        .collect()
+        .map { it.collate(2) }
+        .map { pairs ->
+            pairs.collect {  it[1]  }
+        }
+
+    ch_sj.view()
+
     //
-    // MODULE: MAJIQ_BUILDSJ
+    // MODULE: MAJIQ_BUILDUPDATE
     //
-    /*
-    MAJIQ_BUILDSJ(
-        ch_bam,
-        ch_gff
+
+    MAJIQ_BUILDUPDATE(
+        ch_sj,
+        ch_splicegraph,
+        ch_license,
+        ch_sj_condition_map
     )
-    ch_versions = ch_versions.mix(MAJIQ_BUILDSJ.out.versions)
-    */
+    ch_versions = ch_versions.mix(MAJIQ_BUILDUPDATE.out.versions)
+
 
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]
