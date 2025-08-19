@@ -7,7 +7,7 @@
 include { MAJIQ_BUILDGFF3           }       from '../../../modules/local/majiq/buildgff3/main'
 include { MAJIQ_BUILDSJ             }       from '../../../modules/local/majiq/buildsj/main'
 include { MAJIQ_BUILDUPDATE         }       from '../../../modules/local/majiq/buildupdate/main'
-//include { MAJIQ_PSICOVERAGE     }   from '../../../modules/local/majiq/psicoverage/main'
+include { MAJIQ_PSICOVERAGE         }       from '../../../modules/local/majiq/psicoverage/main'
 
 workflow MAJIQ {
 
@@ -24,7 +24,7 @@ workflow MAJIQ {
 
     ch_license = Channel.fromPath(params.majiq_license, checkIfExists: true)
 
-    ch_bam.view()
+    //ch_bam.view()
 
     //
     // MODULE: MAJIQ_BUILDGFF3
@@ -61,7 +61,7 @@ workflow MAJIQ {
             pairs.collect {  it[1]  }
         }
 
-    ch_sj.view()
+    //ch_sj.view()
 
     //
     // MODULE: MAJIQ_BUILDUPDATE
@@ -75,6 +75,27 @@ workflow MAJIQ {
     )
     ch_versions = ch_versions.mix(MAJIQ_BUILDUPDATE.out.versions)
 
+
+    ch_finished_splicegraph = MAJIQ_BUILDUPDATE.out.splicegraph
+
+
+    //
+    // MODULE: MAJIQ_PSICOVERAGE
+    //
+
+    ch_combined_sj = MAJIQ_BUILDSJ.out.sj.combine(ch_finished_splicegraph).combine(ch_license)
+
+    MAJIQ_PSICOVERAGE(
+        ch_combined_sj
+    )
+
+    ch_versions = ch_versions.mix(MAJIQ_PSICOVERAGE.out.versions)
+
+
+    ch_psi_coverage = MAJIQ_PSICOVERAGE.out.psi_coverage
+        .collect()
+
+    ch_psi_coverage.view()
 
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]
