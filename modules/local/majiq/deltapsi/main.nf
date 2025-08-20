@@ -12,8 +12,8 @@ process MAJIQ_DELTAPSI {
 
     output:
 
-    path "deltapsi/${contrast}.deltapsi.tsv" , emit: deltapsi_tsv
-    path "deltapsi/${contrast}.dpsicov"      , emit: dpsicov
+    path("deltapsi/${contrast}.deltapsi.tsv") , emit: deltapsi_tsv
+    path("deltapsi/${contrast}.dpsicov")      , emit: dpsicov
     path "deltapsi/${contrast}.deltapsi.logger.txt"               , emit: logger
     path "versions.yml"                      , emit: versions
 

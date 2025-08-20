@@ -16,26 +16,18 @@
 //               list (`[]`) instead of a file can be used to work around this issue.
 
 process MAJIQ_SGCOVERAGE {
-    tag "$meta.id"
+    tag "$condition"
     label 'process_single'
 
-    // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
-    conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/YOUR-TOOL-HERE':
-        'biocontainers/YOUR-TOOL-HERE' }"
+    container "/storage/zar/shared/apptainer_images/majiq_v3_0_6.sif"
 
-    input:// TODO nf-core: Where applicable all sample-specific information e.g. "id", "single_end", "read_group"
-    //               MUST be provided as an input via a Groovy Map called "meta".
-    //               This information may not be required in some instances e.g. indexing reference genome files:
-    //               https://github.com/nf-core/modules/blob/master/modules/nf-core/bwa/index/main.nf
-    // TODO nf-core: Where applicable please provide/convert compressed files as input/output
-    //               e.g. "*.fastq.gz" and NOT "*.fastq", "*.bam" and NOT "*.sam" etc.
-    tuple val(meta), path(bam)
+    input:
+
+    tuple val(condition), path(sj_files), val(meta_splicegraph), path(splicegraph),  path(license) // channel: [ splicegraph, condition, [ sj_files ] ]
 
     output:
     // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
-    tuple val(meta), path("*.bam"), emit: bam
+    tuple val(condition), path("*.sgc"), emit: sgc_files
     // TODO nf-core: List additional required output channels/values here
     path "versions.yml"           , emit: versions
 
@@ -44,7 +36,7 @@ process MAJIQ_SGCOVERAGE {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    //def prefix = task.ext.prefix ?: "${meta.id}"
     // TODO nf-core: Where possible, a command MUST be provided to obtain the version number of the software e.g. 1.10
     //               If the software is unable to output a version number on the command-line then it can be manually specified
     //               e.g. https://github.com/nf-core/modules/blob/master/modules/nf-core/homer/annotatepeaks/main.nf
@@ -55,11 +47,14 @@ process MAJIQ_SGCOVERAGE {
     // TODO nf-core: Please replace the example samtools command below with your module's command
     // TODO nf-core: Please indent the command appropriately (4 spaces!!) to help with readability ;)
     """
-    majiq \\
-        $args \\
-        -@ $task.cpus \\
-        -o ${prefix}.bam \\
-        $bam
+    majiq-v3 \\
+        sg-coverage \\
+        --license $license \\
+        $splicegraph \\
+        ${condition}.sgc \\
+        $sj_files \\
+        --nthreads ${task.cpus} \\
+        $args
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -69,7 +64,7 @@ process MAJIQ_SGCOVERAGE {
 
     stub:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    //def prefix = task.ext.prefix ?: "${meta.id}"
     // TODO nf-core: A stub section should mimic the execution of the original module as best as possible
     //               Have a look at the following examples:
     //               Simple example: https://github.com/nf-core/modules/blob/818474a292b4860ae8ff88e149fbcda68814114d/modules/nf-core/bcftools/annotate/main.nf#L47-L63
@@ -79,8 +74,8 @@ process MAJIQ_SGCOVERAGE {
     //               - The use of the variable in the script `echo $args ` below.
     """
     echo $args
-    
-    touch ${prefix}.bam
+
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

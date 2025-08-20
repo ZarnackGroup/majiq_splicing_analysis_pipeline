@@ -11,6 +11,8 @@ include { MAJIQ_PSICOVERAGE         }       from '../../../modules/local/majiq/p
 include { MAJIQ_PSI                 }       from '../../../modules/local/majiq/psi/main'
 include { MAJIQ_DELTAPSI            }       from '../../../modules/local/majiq/deltapsi/main'
 include { MAJIQ_HETEROGEN           }       from '../../../modules/local/majiq/heterogen/main'
+include { MAJIQ_SGCOVERAGE          }       from '../../../modules/local/majiq/sgcoverage/main'
+include { MAJIQ_MODULIZE            }       from '../../../modules/local/majiq/modulize/main'
 
 workflow MAJIQ {
 
@@ -163,6 +165,53 @@ workflow MAJIQ {
     )
 
     ch_versions = ch_versions.mix(MAJIQ_HETEROGEN.out.versions)
+
+
+    //
+    // MODULE: MAJIQ_SGCOVERAGE
+    //
+
+    ch_condition_samples_sj = MAJIQ_BUILDSJ.out.sj
+        .map { pair ->
+            tuple(pair[0].condition, pair[1])  }
+        .groupTuple()
+
+    ch_sgcoverage_input = ch_condition_samples_sj
+        .combine(ch_finished_splicegraph)
+        .combine(ch_license)
+
+
+
+    MAJIQ_SGCOVERAGE(
+        ch_sgcoverage_input
+    )
+
+
+    //
+    // MODULE: MAJIQ_MODULIZE
+    //
+
+    ch_modulize_input_deltapsi = MAJIQ_SGCOVERAGE.out.sgc_files
+        .collect{  it[1]  }
+        .combine(MAJIQ_DELTAPSI.out.dpsicov.collect())
+        .toList()
+        .combine(ch_finished_splicegraph)
+        .combine(ch_license)
+
+
+
+
+
+    MAJIQ_MODULIZE(
+        ch_modulize_input_deltapsi
+    )
+
+    ch_versions = ch_versions.mix(MAJIQ_SGCOVERAGE.out.versions)
+
+
+    ch_versions = ch_versions.mix(MAJIQ_MODULIZE.out.versions)
+
+
 
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]
