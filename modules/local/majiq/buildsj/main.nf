@@ -16,7 +16,7 @@ process MAJIQ_BUILDSJ {
 
 
     output:
-    tuple val(meta), path("*.sj") , emit: sj
+    tuple val(meta), path("build/sj/*.sj") , emit: sj
     path "versions.yml"           , emit: versions
 
     when:
@@ -27,13 +27,18 @@ process MAJIQ_BUILDSJ {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
+
+    mkdir build
+
+    mkdir build/sj
+
     majiq-build \\
         sj \\
         --license $license \\
         --nthreads $task.cpus \\
         $bam \\
         $splicegraph \\
-        ${prefix}.sj \\
+        build/sj/${prefix}.sj \\
         --strandness AUTO \\
         $args \\
 

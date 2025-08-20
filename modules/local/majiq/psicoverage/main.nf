@@ -12,7 +12,7 @@ process MAJIQ_PSICOVERAGE {
 
     output:
 
-    tuple val(meta), path("*.psicov"), emit: psi_coverage
+    tuple val(meta), path("psi-coverage/*.psicov"), emit: psi_coverage
     path "versions.yml"           , emit: versions
 
     when:
@@ -23,14 +23,17 @@ process MAJIQ_PSICOVERAGE {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
+
+    mkdir psi-coverage
+
     majiq \\
         psi-coverage \\
         --license $license \\
         --nthreads $task.cpus \\
         $splicegraph \\
-        ${prefix}.psicov \\
+        psi-coverage/${prefix}.psicov \\
         $sj \\
-        $args \\
+        $args
 
 
     cat <<-END_VERSIONS > versions.yml

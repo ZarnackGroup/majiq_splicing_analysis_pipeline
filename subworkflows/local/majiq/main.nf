@@ -8,6 +8,9 @@ include { MAJIQ_BUILDGFF3           }       from '../../../modules/local/majiq/b
 include { MAJIQ_BUILDSJ             }       from '../../../modules/local/majiq/buildsj/main'
 include { MAJIQ_BUILDUPDATE         }       from '../../../modules/local/majiq/buildupdate/main'
 include { MAJIQ_PSICOVERAGE         }       from '../../../modules/local/majiq/psicoverage/main'
+include { MAJIQ_PSI                 }       from '../../../modules/local/majiq/psi/main'
+include { MAJIQ_DELTAPSI            }       from '../../../modules/local/majiq/deltapsi/main'
+include { MAJIQ_HETEROGEN           }       from '../../../modules/local/majiq/heterogen/main'
 
 workflow MAJIQ {
 
@@ -16,6 +19,8 @@ workflow MAJIQ {
     ch_bam // channel: [ val(meta), [ bam ] ]
     ch_bai // channel: [ val(meta), [ bai ] ]
     ch_gff // channel: [ val(meta), [ gff ] ]
+    ch_contrasts
+
 
     main:
 
@@ -24,7 +29,10 @@ workflow MAJIQ {
 
     ch_license = Channel.fromPath(params.majiq_license, checkIfExists: true)
 
-    //ch_bam.view()
+
+
+
+
 
     //
     // MODULE: MAJIQ_BUILDGFF3
@@ -61,7 +69,7 @@ workflow MAJIQ {
             pairs.collect {  it[1]  }
         }
 
-    //ch_sj.view()
+
 
     //
     // MODULE: MAJIQ_BUILDUPDATE
@@ -83,7 +91,13 @@ workflow MAJIQ {
     // MODULE: MAJIQ_PSICOVERAGE
     //
 
-    ch_combined_sj = MAJIQ_BUILDSJ.out.sj.combine(ch_finished_splicegraph).combine(ch_license)
+    ch_combined_sj = MAJIQ_BUILDSJ.out.sj
+        .combine(ch_finished_splicegraph)
+        .combine(ch_license)
+
+
+
+
 
     MAJIQ_PSICOVERAGE(
         ch_combined_sj
@@ -91,11 +105,64 @@ workflow MAJIQ {
 
     ch_versions = ch_versions.mix(MAJIQ_PSICOVERAGE.out.versions)
 
+    ch_combined_psicoverage = MAJIQ_PSICOVERAGE.out.psi_coverage
+        .combine(ch_finished_splicegraph)
+        .combine(ch_license)
+
+    //
+    // MODULE: MAJIQ_PSI
+    //
+
+    MAJIQ_PSI(
+        ch_combined_psicoverage
+    )
+
 
     ch_psi_coverage = MAJIQ_PSICOVERAGE.out.psi_coverage
         .collect()
 
-    ch_psi_coverage.view()
+
+
+    ch_condition_samples = MAJIQ_PSICOVERAGE.out.psi_coverage
+        .map { pair ->
+            tuple(pair[0].condition, pair[1])  }
+        .groupTuple()
+
+
+    contrast_comparison_ch = ch_contrasts
+        .map { it -> [it['treatment'], it] }
+        .combine ( ch_condition_samples, by: 0 )
+        .map { it -> it[1] + ['psicov1': it[2]] }
+        .map { it -> [it['control'], it] }
+        .combine ( ch_condition_samples, by: 0 )
+        .map { it -> it[1] + ['psicov2': it[2]] }
+
+    ch_contrast_input = contrast_comparison_ch.combine(ch_finished_splicegraph)
+        .combine(ch_license)
+        .map { it -> [it[0].contrast, it[0].treatment, it[0].control, it[0].psicov1, it[0].psicov2, it[2], it[3]] }
+
+
+    //
+    // MODULE: MAJIQ_DELTAPSI
+    //
+
+
+
+    MAJIQ_DELTAPSI(
+        ch_contrast_input
+    )
+
+    ch_versions = ch_versions.mix(MAJIQ_DELTAPSI.out.versions)
+
+    //
+    // MODULE: MAJIQ_HETEROGEN
+    //
+
+    MAJIQ_HETEROGEN(
+        ch_contrast_input
+    )
+
+    ch_versions = ch_versions.mix(MAJIQ_HETEROGEN.out.versions)
 
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]
