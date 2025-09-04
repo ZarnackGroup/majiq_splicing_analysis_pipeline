@@ -78,6 +78,43 @@
                 "skip_heterogen": {
                     "type": "boolean",
                     "description": "If set to true, this will skip the voila heterogen quantification"
+                },
+                "majiq_buildgff3_args": {
+                    "type": "string"
+                },
+                "majiq_buildsj_args": {
+                    "type": "string"
+                },
+                "majiq_buildupdate_args": {
+                    "type": "string"
+                },
+                "majiq_psicoverage_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "majiq_psi_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "majiq_deltapsi_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "majiq_heterogen_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "majiq_sgcoverage_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "deltapsi_modulize_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "heterogen_modulize_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
                 }
             }
         },

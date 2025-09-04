@@ -1,0 +1,12 @@
+{
+  "majiq_buildgff3_args":    "",
+  "majiq_buildsj_args":      "",
+  "majiq_buildupdate_args":  "",
+  "majiq_psicoverage_args":  "",
+  "majiq_psi_args":          "",
+  "majiq_deltapsi_args":     "",
+  "majiq_heterogen_args":    "",
+  "majiq_sgcoverage_args":   "",
+  "deltapsi_modulize_args":   "--changing-between-group-dpsi 0.1  --probability-changing-threshold 0.9 --output-mpe",
+  "heterogen_modulize_args":  ""
+}
