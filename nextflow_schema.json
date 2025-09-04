@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "annotation", "outdir"],
+            "required": ["input", "outdir", "annotation", "majiq_license"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -52,6 +52,32 @@
                     "pattern": ".*\\.(gtf|gff3)$",
                     "fa_icon": "fas fa-file-code",
                     "help_text": "Ensure the annotation file matches the one used for generating the BAM files. Supported formats: .gtf, .gff3"
+                },
+                "majiq_license": {
+                    "type": "string",
+                    "description": "Path to the MAJIQ license. Can be obtained at https://majiq.biociphers.org/app_download/.",
+                    "format": "file-path",
+                    "fa_icon": "fas fa-address-card"
+                }
+            }
+        },
+        "majiq": {
+            "title": "MAJIQ",
+            "type": "object",
+            "description": "Parameters to modify the MAJIQ Analysis",
+            "default": "",
+            "properties": {
+                "skip_psi": {
+                    "type": "boolean",
+                    "description": "If set to true, this will skip the voila psi quantification"
+                },
+                "skip_deltapsi": {
+                    "type": "boolean",
+                    "description": "If set to true, this will skip the voila deltapsi quantification"
+                },
+                "skip_heterogen": {
+                    "type": "boolean",
+                    "description": "If set to true, this will skip the voila heterogen quantification"
                 }
             }
         },
@@ -204,6 +230,9 @@
     "allOf": [
         {
             "$ref": "#/$defs/input_output_options"
+        },
+        {
+            "$ref": "#/$defs/majiq"
         },
         {
             "$ref": "#/$defs/institutional_config_options"

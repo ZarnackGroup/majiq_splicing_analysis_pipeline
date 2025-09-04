@@ -12,7 +12,8 @@ include { MAJIQ_PSI                 }       from '../../../modules/local/majiq/p
 include { MAJIQ_DELTAPSI            }       from '../../../modules/local/majiq/deltapsi/main'
 include { MAJIQ_HETEROGEN           }       from '../../../modules/local/majiq/heterogen/main'
 include { MAJIQ_SGCOVERAGE          }       from '../../../modules/local/majiq/sgcoverage/main'
-include { MAJIQ_MODULIZE            }       from '../../../modules/local/majiq/modulize/main'
+include { MAJIQ_MODULIZE as DELTAPSI_MODULIZE            }       from '../../../modules/local/majiq/modulize/main'
+include { MAJIQ_MODULIZE as HETEROGEN_MODULIZE           }       from '../../../modules/local/majiq/modulize/main'
 
 workflow MAJIQ {
 
@@ -111,13 +112,9 @@ workflow MAJIQ {
         .combine(ch_finished_splicegraph)
         .combine(ch_license)
 
-    //
-    // MODULE: MAJIQ_PSI
-    //
 
-    MAJIQ_PSI(
-        ch_combined_psicoverage
-    )
+
+
 
 
     ch_psi_coverage = MAJIQ_PSICOVERAGE.out.psi_coverage
@@ -145,29 +142,6 @@ workflow MAJIQ {
 
 
     //
-    // MODULE: MAJIQ_DELTAPSI
-    //
-
-
-
-    MAJIQ_DELTAPSI(
-        ch_contrast_input
-    )
-
-    ch_versions = ch_versions.mix(MAJIQ_DELTAPSI.out.versions)
-
-    //
-    // MODULE: MAJIQ_HETEROGEN
-    //
-
-    MAJIQ_HETEROGEN(
-        ch_contrast_input
-    )
-
-    ch_versions = ch_versions.mix(MAJIQ_HETEROGEN.out.versions)
-
-
-    //
     // MODULE: MAJIQ_SGCOVERAGE
     //
 
@@ -185,31 +159,100 @@ workflow MAJIQ {
     MAJIQ_SGCOVERAGE(
         ch_sgcoverage_input
     )
-
-
-    //
-    // MODULE: MAJIQ_MODULIZE
-    //
-
-    ch_modulize_input_deltapsi = MAJIQ_SGCOVERAGE.out.sgc_files
-        .collect{  it[1]  }
-        .combine(MAJIQ_DELTAPSI.out.dpsicov.collect())
-        .toList()
-        .combine(ch_finished_splicegraph)
-        .combine(ch_license)
-
-
-
-
-
-    MAJIQ_MODULIZE(
-        ch_modulize_input_deltapsi
-    )
-
     ch_versions = ch_versions.mix(MAJIQ_SGCOVERAGE.out.versions)
 
 
-    ch_versions = ch_versions.mix(MAJIQ_MODULIZE.out.versions)
+    //
+    //  MAJIQ Quantification
+    //
+
+
+
+    if( !params.skip_psi ) {
+
+        //
+        // MODULE: MAJIQ_PSI
+        //
+
+        MAJIQ_PSI(
+            ch_combined_psicoverage
+        )
+
+        ch_versions = ch_versions.mix(MAJIQ_PSI.out.versions)
+    }
+
+
+    if ( !params.skip_deltapsi ) {
+
+        //
+        // MODULE: MAJIQ_DELTAPSI
+        //
+
+        MAJIQ_DELTAPSI(
+            ch_contrast_input
+        )
+
+        ch_versions = ch_versions.mix(MAJIQ_DELTAPSI.out.versions)
+
+        //
+        // MODULE: MAJIQ_MODULIZE
+        //
+
+
+        ch_modulize_input_deltapsi = MAJIQ_SGCOVERAGE.out.sgc_files
+            .collect{  it[1]  }
+            .combine(MAJIQ_DELTAPSI.out.dpsicov.collect())
+            .toList()
+            .combine(ch_finished_splicegraph)
+            .combine(ch_license)
+
+        DELTAPSI_MODULIZE(
+            ch_modulize_input_deltapsi
+    )
+
+
+
+    ch_versions = ch_versions.mix(DELTAPSI_MODULIZE.out.versions)
+    }
+
+
+    if ( !params.skip_heterogen ) {
+        //
+        // MODULE: MAJIQ_HETEROGEN
+        //
+
+        MAJIQ_HETEROGEN(
+            ch_contrast_input
+        )
+
+        ch_versions = ch_versions.mix(MAJIQ_HETEROGEN.out.versions)
+
+        //
+        // MODULE: MAJIQ_MODULIZE
+        //
+
+        ch_modulize_input_heterogen = MAJIQ_SGCOVERAGE.out.sgc_files
+            .collect{  it[1]  }
+            .combine(MAJIQ_HETEROGEN.out.hetcov.collect())
+            .toList()
+            .combine(ch_finished_splicegraph)
+            .combine(ch_license)
+
+        HETEROGEN_MODULIZE(
+            ch_modulize_input_heterogen
+        )
+
+
+
+        ch_versions = ch_versions.mix(HETEROGEN_MODULIZE.out.versions)
+
+    }
+
+
+
+
+
+
 
 
 
