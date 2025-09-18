@@ -262,3 +262,74 @@ def methodsDescriptionText(mqc_methods_yaml) {
     return description_html.toString()
 }
 
+//
+// Function that parses RSeQC infer_experiment output file to get inferred strandedness, taken from https://github.com/nf-core/rnaseq/blob/3.20.0/subworkflows/local/utils_nfcore_rnaseq_pipeline/main.nf
+//
+def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
+    def forwardFragments = 0
+    def reverseFragments = 0
+    def unstrandedFragments = 0
+
+    inferexperiment_file.eachLine { line ->
+        def unstranded_matcher = line =~ /Fraction of reads failed to determine:\s([\d\.]+)/
+        def se_sense_matcher = line =~ /Fraction of reads explained by "\++,--":\s([\d\.]+)/
+        def se_antisense_matcher = line =~ /Fraction of reads explained by "\+-,-\+":\s([\d\.]+)/
+        def pe_sense_matcher = line =~ /Fraction of reads explained by "1\++,1--,2\+-,2-\+":\s([\d\.]+)/
+        def pe_antisense_matcher = line =~ /Fraction of reads explained by "1\+-,1-\+,2\+\+,2--":\s([\d\.]+)/
+
+        if (unstranded_matcher) unstrandedFragments = unstranded_matcher[0][1].toFloat() * 100
+        if (se_sense_matcher) forwardFragments = se_sense_matcher[0][1].toFloat() * 100
+        if (se_antisense_matcher) reverseFragments = se_antisense_matcher[0][1].toFloat() * 100
+        if (pe_sense_matcher) forwardFragments = pe_sense_matcher[0][1].toFloat() * 100
+        if (pe_antisense_matcher) reverseFragments = pe_antisense_matcher[0][1].toFloat() * 100
+    }
+
+    // Use shared calculation function to determine strandedness
+    return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
+}
+
+//
+// Function to determine library type by comparing type counts. Taken from https://github.com/nf-core/rnaseq/blob/3.20.0/subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/main.nf
+//
+
+//
+def calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
+    def totalFragments = forwardFragments + reverseFragments + unstrandedFragments
+    def totalStrandedFragments = forwardFragments + reverseFragments
+
+    def strandedness = 'undetermined'
+    if (totalStrandedFragments > 0) {
+        def forwardProportion = forwardFragments / (totalStrandedFragments as double)
+        def reverseProportion = reverseFragments / (totalStrandedFragments as double)
+        def proportionDifference = Math.abs(forwardProportion - reverseProportion)
+
+        if (forwardProportion >= stranded_threshold) {
+            strandedness = 'forward'
+        }
+        else if (reverseProportion >= stranded_threshold) {
+            strandedness = 'reverse'
+        }
+        else if (proportionDifference <= unstranded_threshold) {
+            strandedness = 'unstranded'
+        }
+    }
+
+    return [
+        inferred_strandedness: strandedness,
+        forwardFragments: (forwardFragments / (totalFragments as double)) * 100,
+        reverseFragments: (reverseFragments / (totalFragments as double)) * 100,
+        unstrandedFragments: (unstrandedFragments / (totalFragments as double)) * 100,
+    ]
+}
+
+//
+// Create MultiQC tsv custom content from a list of values. taken from https://github.com/nf-core/rnaseq/blob/3.20.0/subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/main.nf
+//
+def multiqcTsvFromList(tsv_data, header) {
+    def tsv_string = ""
+    if (tsv_data.size() > 0) {
+        tsv_string += "${header.join('\t')}\n"
+        tsv_string += tsv_data.join('\n')
+    }
+    return tsv_string
+}
