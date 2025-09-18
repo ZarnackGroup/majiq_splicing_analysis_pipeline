@@ -118,6 +118,31 @@
                 }
             }
         },
+        "rseqc": {
+            "title": "RSEQC",
+            "type": "object",
+            "description": "Parameters to modify the RSEQC execution",
+            "default": "",
+            "properties": {
+                "skip_rseqc": {
+                    "type": "boolean",
+                    "description": "Skip RSEQC if set to true"
+                },
+                "rseqc_modules": {
+                    "type": "string",
+                    "default": "bam_stat,infer_experiment,junction_annotation,junction_saturation,read_duplication",
+                    "description": "Which RSEQC modules to run. Comma seperated list. \"inner_distance\" and \"read_distribution\" not available"
+                },
+                "stranded_threshold": {
+                    "type": "number",
+                    "default": 0.8
+                },
+                "unstranded_threshold": {
+                    "type": "number",
+                    "default": 0.1
+                }
+            }
+        },
         "institutional_config_options": {
             "title": "Institutional config options",
             "type": "object",
@@ -270,6 +295,9 @@
         },
         {
             "$ref": "#/$defs/majiq"
+        },
+        {
+            "$ref": "#/$defs/rseqc"
         },
         {
             "$ref": "#/$defs/institutional_config_options"
