@@ -3,7 +3,6 @@ process MAJIQ_BUILDGFF3 {
     label 'process_single'
 
 
-    container "/storage/zar/shared/apptainer_images/majiq_v3_0_6.sif"
 
     input:
     tuple val(meta), path(gff)

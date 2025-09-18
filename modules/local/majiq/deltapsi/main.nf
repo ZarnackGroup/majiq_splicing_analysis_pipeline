@@ -2,7 +2,6 @@ process MAJIQ_DELTAPSI {
     tag "$contrast"
     label 'process_medium'
 
-    container "/storage/zar/shared/apptainer_images/majiq_v3_0_6.sif"
 
 
     input:

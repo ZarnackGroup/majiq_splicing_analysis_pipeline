@@ -2,8 +2,6 @@ process MAJIQ_PSICOVERAGE {
     tag "$meta.id"
     label 'process_single'
 
-    container "/storage/zar/shared/apptainer_images/majiq_v3_0_6.sif"
-
 
     input:
     tuple val(meta), path(sj), val(meta_splicegraph), path(splicegraph), path (license)           // channel: [ val(meta), path(s
