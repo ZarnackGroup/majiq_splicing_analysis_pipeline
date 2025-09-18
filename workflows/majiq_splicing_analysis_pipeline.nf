@@ -7,6 +7,7 @@ include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { SAMTOOLS_INDEX         } from '../modules/nf-core/samtools/index/main'
 include { AGAT_CONVERTSPGXF2GXF  } from '../modules/nf-core/agat/convertspgxf2gxf/main'
+include { DEEPTOOLS_BAMCOVERAGE  } from '../modules/nf-core/deeptools/bamcoverage/main'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -66,8 +67,27 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         ch_bam
     )
 
+    ch_bam
+        .join(SAMTOOLS_INDEX.out.bai)
+        .map { meta, bam, bai -> tuple(meta, bam, bai) }
+        .set { ch_bam_with_index }
+
+    ch_bam_with_index.view()
 
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+
+    //
+    // MODULE: DEEPTOOLS_BAMCOVERAGE
+    //
+
+
+    ch_bigwig = DEEPTOOLS_BAMCOVERAGE(
+        ch_bam_with_index,
+        [],
+        []
+    )
+
+    ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions.first())
 
 
     //
