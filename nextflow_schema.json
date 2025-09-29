@@ -143,6 +143,22 @@
                 }
             }
         },
+        "deeptools": {
+            "title": "DEEPTOOLS",
+            "type": "object",
+            "description": "Parameters to modify the DEEPTOOLS execution",
+            "default": "",
+            "properties": {
+                "skip_deeptools_bamcoverage": {
+                    "type": "boolean",
+                    "description": "Skip bamCoverage if set to true"
+                },
+                "deeptools_bamcoverage_args": {
+                    "type": "string",
+                    "description": "additional arguments for the bamCoverage command"
+                }
+            }
+        },
         "institutional_config_options": {
             "title": "Institutional config options",
             "type": "object",
@@ -298,6 +314,9 @@
         },
         {
             "$ref": "#/$defs/rseqc"
+        },
+        {
+            "$ref": "#/$defs/deeptools"
         },
         {
             "$ref": "#/$defs/institutional_config_options"
