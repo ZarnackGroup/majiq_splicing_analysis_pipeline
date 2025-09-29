@@ -99,15 +99,14 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     // MODULE: DEEPTOOLS_BAMCOVERAGE
     //
 
-
-    ch_bigwig = DEEPTOOLS_BAMCOVERAGE(
-        ch_bam_with_index,
-        [],
-        []
-    )
-
-    ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions.first())
-
+    if (!params.skip_deeptools_bamcoverage) {
+        DEEPTOOLS_BAMCOVERAGE(
+            ch_bam_with_index,
+            [],
+            []
+        )
+        ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions.first())
+    }
 
     //
     // MODULE: Run FastQC
