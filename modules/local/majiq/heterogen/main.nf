@@ -32,8 +32,8 @@ process MAJIQ_HETEROGEN {
         --license $license \\
         --nthreads ${task.cpus} \\
         --splicegraph $splicegraph \\
-        -psi1 $treatment_files \\
-        -psi2 $control_files \\
+        -psi1 $control_files \\
+        -psi2 $treatment_files \\
         --names $treatment $control  \\
         --output-tsv heterogen/${contrast}.heterogen.tsv \\
         --logger heterogen/${contrast}.heterogen.logger.txt \\

@@ -31,8 +31,8 @@ process MAJIQ_DELTAPSI {
         --license $license \\
         --nthreads ${task.cpus} \\
         --splicegraph $splicegraph \\
-        -psi1 $treatment_files \\
-        -psi2 $control_files \\
+        -psi1 $control_files \\
+        -psi2 $treatment_files \\
         --names $treatment $control  \\
         --output-tsv deltapsi/${contrast}.deltapsi.tsv \\
         --logger deltapsi/${contrast}.deltapsi.logger.txt \\
