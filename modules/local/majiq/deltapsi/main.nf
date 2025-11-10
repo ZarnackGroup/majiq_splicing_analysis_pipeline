@@ -33,7 +33,7 @@ process MAJIQ_DELTAPSI {
         --splicegraph $splicegraph \\
         -psi1 $control_files \\
         -psi2 $treatment_files \\
-        --names $treatment $control  \\
+        --names $control $treatment \\
         --output-tsv deltapsi/${contrast}.deltapsi.tsv \\
         --logger deltapsi/${contrast}.deltapsi.logger.txt \\
         --output-voila deltapsi/${contrast}.dpsicov \\
