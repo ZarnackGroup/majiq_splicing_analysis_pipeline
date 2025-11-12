@@ -58,7 +58,6 @@ template:
   force: true
   outdir: .
   skip_features:
-    - ci
     - igenomes
     - gitpod
     - codespaces
