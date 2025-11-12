@@ -1,7 +1,7 @@
 sample,genome_bam,condition
-ctrl_1,,ctrl
-ctrl_2,,ctrl
-ctrl_3,,ctrl
-siUSP39_1,,siUSP39
-siUSP39_2,,siUSP39
-siUSP39_3,,siUSP39
+ctrl_1,https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/raw/refs/heads/dev_felix/assets/test_data/bam/ctrl_1.subset.bam,ctrl
+ctrl_2,https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/raw/refs/heads/dev_felix/assets/test_data/bam/ctrl_2.subset.bam,ctrl
+ctrl_3,https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/raw/refs/heads/dev_felix/assets/test_data/bam/ctrl_3.subset.bam,ctrl
+siUSP39_1,https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/raw/refs/heads/dev_felix/assets/test_data/bam/siUSP39_1.subset.bam,siUSP39
+siUSP39_2,https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/raw/refs/heads/dev_felix/assets/test_data/bam/siUSP39_2.subset.bam,siUSP39
+siUSP39_3,https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/raw/refs/heads/dev_felix/assets/test_data/bam/siUSP39_3.subset.bam,siUSP39
