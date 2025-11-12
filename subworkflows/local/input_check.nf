@@ -29,9 +29,9 @@ workflow INPUT_CHECK {
             break;
     }
 
-   
 
-   
+
+
 
     emit:
     reads                                     // channel: [ val(meta), [ reads ] ]
@@ -80,4 +80,3 @@ def create_genome_bam_channel(LinkedHashMap row) {
     genome_bam_meta = [ meta, [ file(row.genome_bam) ] ]
     return genome_bam_meta
 }
-

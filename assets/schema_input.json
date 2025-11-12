@@ -27,6 +27,6 @@
                 "meta": ["condition"]
             }
         },
-        "required": ["sample", "genome_bam","condition"]
+        "required": ["sample", "genome_bam", "condition"]
     }
 }

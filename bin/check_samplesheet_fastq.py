@@ -245,7 +245,7 @@ def check_samplesheet(file_in, file_out):
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
     with file_in.open(newline="") as in_handle:
         reader = csv.DictReader(in_handle)
-        
+
         # Detect if fastq_2 exists in the file
         has_fastq2 = "fastq_2" in reader.fieldnames
 
