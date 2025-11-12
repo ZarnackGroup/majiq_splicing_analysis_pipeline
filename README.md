@@ -1,4 +1,5 @@
 # majiq_splicing_analysis_pipeline
+
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)
 
 ## Introduction
@@ -10,6 +11,7 @@ Our in-house pipeline for analyzing alternative splicing events from RNA sequenc
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
+
 1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 
 2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
@@ -69,4 +71,3 @@ If you would like to contribute to this pipeline, please see the [contributing g
 <!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
-

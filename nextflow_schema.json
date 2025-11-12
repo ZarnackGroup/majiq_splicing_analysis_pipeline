@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": ["input", "outdir", "annotation", "majiq_license"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -40,6 +40,122 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
+                },
+                "contrasts": {
+                    "type": "string",
+                    "description": "Path to comma-separated file containing information about the contrasts in the experiment."
+                },
+                "annotation": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Path to the annotation file used during alignment. Must be in GTF or GFF3 format. If a GTF is provided, it will be converted to GFF3 automatically.",
+                    "pattern": ".*\\.(gtf|gff3)$",
+                    "fa_icon": "fas fa-file-code",
+                    "help_text": "Ensure the annotation file matches the one used for generating the BAM files. Supported formats: .gtf, .gff3"
+                },
+                "majiq_license": {
+                    "type": "string",
+                    "description": "Path to the MAJIQ license. Can be obtained at https://majiq.biociphers.org/app_download/.",
+                    "format": "file-path",
+                    "fa_icon": "fas fa-address-card"
+                }
+            }
+        },
+        "majiq": {
+            "title": "MAJIQ",
+            "type": "object",
+            "description": "Parameters to modify the MAJIQ Analysis",
+            "default": "",
+            "properties": {
+                "skip_psi": {
+                    "type": "boolean",
+                    "description": "If set to true, this will skip the voila psi quantification"
+                },
+                "skip_deltapsi": {
+                    "type": "boolean",
+                    "description": "If set to true, this will skip the voila deltapsi quantification"
+                },
+                "skip_heterogen": {
+                    "type": "boolean",
+                    "description": "If set to true, this will skip the voila heterogen quantification"
+                },
+                "majiq_buildgff3_args": {
+                    "type": "string"
+                },
+                "majiq_buildsj_args": {
+                    "type": "string"
+                },
+                "majiq_buildupdate_args": {
+                    "type": "string"
+                },
+                "majiq_psicoverage_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "majiq_psi_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "majiq_deltapsi_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "majiq_heterogen_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "majiq_sgcoverage_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "deltapsi_modulize_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "heterogen_modulize_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                }
+            }
+        },
+        "rseqc": {
+            "title": "RSEQC",
+            "type": "object",
+            "description": "Parameters to modify the RSEQC execution",
+            "default": "",
+            "properties": {
+                "skip_rseqc": {
+                    "type": "boolean",
+                    "description": "Skip RSEQC if set to true"
+                },
+                "rseqc_modules": {
+                    "type": "string",
+                    "default": "bam_stat,infer_experiment,junction_annotation,junction_saturation,read_duplication",
+                    "description": "Which RSEQC modules to run. Comma seperated list. \"inner_distance\" and \"read_distribution\" not available"
+                },
+                "stranded_threshold": {
+                    "type": "number",
+                    "default": 0.8
+                },
+                "unstranded_threshold": {
+                    "type": "number",
+                    "default": 0.1
+                }
+            }
+        },
+        "deeptools": {
+            "title": "DEEPTOOLS",
+            "type": "object",
+            "description": "Parameters to modify the DEEPTOOLS execution",
+            "default": "",
+            "properties": {
+                "skip_deeptools_bamcoverage": {
+                    "type": "boolean",
+                    "description": "Skip bamCoverage if set to true"
+                },
+                "deeptools_bamcoverage_args": {
+                    "type": "string",
+                    "description": "additional arguments for the bamCoverage command"
                 }
             }
         },
@@ -204,6 +320,15 @@
     "allOf": [
         {
             "$ref": "#/$defs/input_output_options"
+        },
+        {
+            "$ref": "#/$defs/majiq"
+        },
+        {
+            "$ref": "#/$defs/rseqc"
+        },
+        {
+            "$ref": "#/$defs/deeptools"
         },
         {
             "$ref": "#/$defs/institutional_config_options"
