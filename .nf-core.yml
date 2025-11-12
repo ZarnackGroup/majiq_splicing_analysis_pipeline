@@ -19,6 +19,7 @@ lint:
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
+    - conf/test_full.config
   files_unchanged:
     - .github/CONTRIBUTING.md
     - .prettierignore
