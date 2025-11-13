@@ -20,7 +20,6 @@ workflow MAJIQ {
     take:
 
     ch_bam // channel: [ val(meta), [ bam ] ]
-    ch_bai // channel: [ val(meta), [ bai ] ]
     ch_gff // channel: [ val(meta), [ gff ] ]
     ch_contrasts
 
@@ -30,8 +29,7 @@ workflow MAJIQ {
     ch_versions = Channel.empty()
 
 
-    ch_license = Channel.fromPath(params.majiq_license, checkIfExists: true)
-
+    
 
 
 
@@ -41,15 +39,14 @@ workflow MAJIQ {
     // MODULE: MAJIQ_BUILDGFF3
     //
     MAJIQ_BUILDGFF3(
-        ch_gff,
-        ch_license
+        ch_gff
     )
     ch_versions = ch_versions.mix(MAJIQ_BUILDGFF3.out.versions)
 
     ch_splicegraph = MAJIQ_BUILDGFF3.out.splicegraph
 
 
-    ch_combine = ch_bam.combine(ch_splicegraph).combine(ch_license)
+    ch_combine = ch_bam.combine(ch_splicegraph)
 
 
     MAJIQ_BUILDSJ(
@@ -81,7 +78,6 @@ workflow MAJIQ {
     MAJIQ_BUILDUPDATE(
         ch_sj,
         ch_splicegraph,
-        ch_license,
         ch_sj_condition_map
     )
     ch_versions = ch_versions.mix(MAJIQ_BUILDUPDATE.out.versions)
@@ -96,7 +92,6 @@ workflow MAJIQ {
 
     ch_combined_sj = MAJIQ_BUILDSJ.out.sj
         .combine(ch_finished_splicegraph)
-        .combine(ch_license)
 
 
 
@@ -110,8 +105,6 @@ workflow MAJIQ {
 
     ch_combined_psicoverage = MAJIQ_PSICOVERAGE.out.psi_coverage
         .combine(ch_finished_splicegraph)
-        .combine(ch_license)
-
 
 
 
@@ -137,8 +130,7 @@ workflow MAJIQ {
         .map { it -> it[1] + ['psicov2': it[2]] }
 
     ch_contrast_input = contrast_comparison_ch.combine(ch_finished_splicegraph)
-        .combine(ch_license)
-        .map { it -> [it[0].contrast, it[0].treatment, it[0].control, it[0].psicov1, it[0].psicov2, it[2], it[3]] }
+        .map { it -> [it[0].contrast, it[0].treatment, it[0].control, it[0].psicov1, it[0].psicov2, it[2]] }
 
 
     //
@@ -152,7 +144,6 @@ workflow MAJIQ {
 
     ch_sgcoverage_input = ch_condition_samples_sj
         .combine(ch_finished_splicegraph)
-        .combine(ch_license)
 
 
 
@@ -204,7 +195,6 @@ workflow MAJIQ {
             .combine(MAJIQ_DELTAPSI.out.dpsicov.collect())
             .toList()
             .combine(ch_finished_splicegraph)
-            .combine(ch_license)
 
         DELTAPSI_MODULIZE(
             ch_modulize_input_deltapsi
@@ -236,7 +226,6 @@ workflow MAJIQ {
             .combine(MAJIQ_HETEROGEN.out.hetcov.collect())
             .toList()
             .combine(ch_finished_splicegraph)
-            .combine(ch_license)
 
         HETEROGEN_MODULIZE(
             ch_modulize_input_heterogen

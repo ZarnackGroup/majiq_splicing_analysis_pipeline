@@ -1,11 +1,12 @@
 process MAJIQ_HETEROGEN {
     tag "$contrast"
     label 'process_medium'
+    secret 'MAJIQ_LICENSE'
 
 
 
     input:
-    tuple val(contrast), val(treatment), val(control), path(treatment_files), path(control_files), path(splicegraph),  path(license)  // channel: [ contrast, treatment, control ]
+    tuple val(contrast), val(treatment), val(control), path(treatment_files), path(control_files), path(splicegraph)  // channel: [ contrast, treatment, control ]
 
 
     output:
@@ -21,15 +22,18 @@ process MAJIQ_HETEROGEN {
 
     script:
     def args = task.ext.args ?: ''
-    //def prefix = task.ext.prefix ?: "${meta.id}"
+    def majiqLicense = secrets.MAJIQ_LICENSE ?
+        "export MAJIQ_LICENSE_FILE=\$(mktemp); echo -n \"\$MAJIQ_LICENSE\" >| \$MAJIQ_LICENSE_FILE; " :
+        ""
 
     """
+
+    $majiqLicense
 
     mkdir heterogen
 
     majiq \\
         heterogen \\
-        --license $license \\
         --nthreads ${task.cpus} \\
         --splicegraph $splicegraph \\
         -psi1 $control_files \\
