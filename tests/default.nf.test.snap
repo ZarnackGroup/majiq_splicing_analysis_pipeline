@@ -3,7 +3,7 @@
         "content": [
             {
                 "AGAT_CONVERTGFF2BED": {
-                    "agat": "v1.4.1"
+                    "agat": "v1.5.1"
                 },
                 "AGAT_CONVERTSPGXF2GXF": {
                     "agat": "v1.4.1"
@@ -1490,14 +1490,14 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-14T22:08:14.993163368"
+        "timestamp": "2025-11-15T00:13:55.235781747"
     },
     "Params: default - stub": {
         "content": [
             59,
             {
                 "AGAT_CONVERTGFF2BED": {
-                    "agat": "v1.4.1"
+                    "agat": "v1.5.1"
                 },
                 "AGAT_CONVERTSPGXF2GXF": {
                     "agat": "v1.4.1"
@@ -1707,6 +1707,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-14T21:43:23.299240542"
+        "timestamp": "2025-11-15T00:14:45.668948174"
     }
 }
