@@ -33,7 +33,7 @@ nextflow_pipeline {
 
     test("Params: default - stub") {
 
-        options "-stub,singularity"
+        options "-stub"
 
         when {
             params {
