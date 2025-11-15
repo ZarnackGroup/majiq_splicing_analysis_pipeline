@@ -28,12 +28,12 @@ runs:
       uses: ./.github/actions/build-majiq-container
       with:
         dockerfile: "assets/docker/majiq/Dockerfile"
-        image_name: "majiq:latest"
+        image_name: "majiq:3_0_6"
 
     - name: Configure Nextflow for MAJIQ
       uses: ./.github/actions/configure-nextflow-majiq
       with:
-        image_name: "majiq:latest"
+        image_name: "docker.io/library/majiq:3_0_6"
 
     - name: Inject MAJIQ license into Nextflow secrets
       shell: bash
