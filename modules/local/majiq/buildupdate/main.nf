@@ -1,13 +1,13 @@
 process MAJIQ_BUILDUPDATE {
     tag "$meta.id"
     label 'process_low'
+    secret 'MAJIQ_LICENSE'
 
 
 
     input:
     path(sj)
     tuple val(meta),path(splicegraph)
-    path license
     val list_conditions
 
     output:
@@ -20,8 +20,13 @@ process MAJIQ_BUILDUPDATE {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def majiqLicense = secrets.MAJIQ_LICENSE ?
+        "export MAJIQ_LICENSE_FILE=\$(mktemp); echo -n \"\$MAJIQ_LICENSE\" >| \$MAJIQ_LICENSE_FILE; " :
+        ""
 
     """
+    $majiqLicense
+
     # create experiments.tsv
     echo -e "sj\\tgroup" > config.tsv # header
 
@@ -35,7 +40,6 @@ process MAJIQ_BUILDUPDATE {
 
     majiq-build \\
         update \\
-        --license $license \\
         --nthreads $task.cpus \\
         --groups-tsv config.tsv \\
         $splicegraph \\

@@ -1,10 +1,11 @@
 process MAJIQ_PSICOVERAGE {
     tag "$meta.id"
     label 'process_single'
+    secret 'MAJIQ_LICENSE'
 
 
     input:
-    tuple val(meta), path(sj), val(meta_splicegraph), path(splicegraph), path (license)           // channel: [ val(meta), path(s
+    tuple val(meta), path(sj), val(meta_splicegraph), path(splicegraph)         // channel: [ val(meta), path(s
 
 
 
@@ -19,14 +20,19 @@ process MAJIQ_PSICOVERAGE {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def majiqLicense = secrets.MAJIQ_LICENSE ?
+        "export MAJIQ_LICENSE_FILE=\$(mktemp); echo -n \"\$MAJIQ_LICENSE\" >| \$MAJIQ_LICENSE_FILE; " :
+        ""
 
     """
+
+    $majiqLicense
+
 
     mkdir psi-coverage
 
     majiq \\
         psi-coverage \\
-        --license $license \\
         --nthreads $task.cpus \\
         $splicegraph \\
         psi-coverage/${prefix}.psicov \\

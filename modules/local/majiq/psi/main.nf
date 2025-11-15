@@ -1,9 +1,10 @@
 process MAJIQ_PSI {
     tag "$meta.id"
     label 'process_low'
+    secret 'MAJIQ_LICENSE'
 
     input:
-    tuple val(meta), path(psicov), val(meta_splicegraph), path(splicegraph), path (license)           // channel: [ val(meta), path(s
+    tuple val(meta), path(psicov), val(meta_splicegraph), path(splicegraph)          // channel: [ val(meta), path(s
 
 
     output:
@@ -16,11 +17,18 @@ process MAJIQ_PSI {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def majiqLicense = secrets.MAJIQ_LICENSE ?
+        "export MAJIQ_LICENSE_FILE=\$(mktemp); echo -n \"\$MAJIQ_LICENSE\" >| \$MAJIQ_LICENSE_FILE; " :
+        ""
+
     """
+
+    $majiqLicense
+
     mkdir psi
+
     majiq \\
         psi \\
-        --license $license \\
         --nthreads ${task.cpus} \\
         --output-tsv psi/${prefix}.psi.tsv \\
         ${psicov} \\

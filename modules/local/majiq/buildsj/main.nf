@@ -1,6 +1,7 @@
 process MAJIQ_BUILDSJ {
     tag "$meta.id"
     label 'process_single'
+    secret 'MAJIQ_LICENSE'
 
 
     input:
@@ -8,8 +9,7 @@ process MAJIQ_BUILDSJ {
         val(meta),
         path(bam),
         val(meta_splicegraph),
-        path(splicegraph),
-        path(license)
+        path(splicegraph)
         )
 
 
@@ -24,8 +24,13 @@ process MAJIQ_BUILDSJ {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def majiqLicense = secrets.MAJIQ_LICENSE ?
+        "export MAJIQ_LICENSE_FILE=\$(mktemp); echo -n \"\$MAJIQ_LICENSE\" >| \$MAJIQ_LICENSE_FILE; " :
+        ""
 
     """
+
+    $majiqLicense
 
     mkdir build
 
@@ -33,7 +38,6 @@ process MAJIQ_BUILDSJ {
 
     majiq-build \\
         sj \\
-        --license $license \\
         --nthreads $task.cpus \\
         $bam \\
         $splicegraph \\

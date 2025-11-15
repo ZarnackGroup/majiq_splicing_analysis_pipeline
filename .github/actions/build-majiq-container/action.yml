@@ -1,0 +1,23 @@
+name: "Build MAJIQ container"
+description: "Build a local Docker image for MAJIQ for use in Nextflow CI"
+inputs:
+  dockerfile:
+    description: "Path to the MAJIQ Dockerfile (relative to repo root)"
+    required: true
+  image_name:
+    description: "Name:tag for the MAJIQ Docker image (e.g. majiq:latest)"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build MAJIQ Docker image
+      shell: bash
+      run: |
+        echo "Building MAJIQ Docker image '${{ inputs.image_name }}' from Dockerfile '${{ inputs.dockerfile }}'"
+        docker build \
+          -t "${{ inputs.image_name }}" \
+          -f "${{ inputs.dockerfile }}" \
+          .
+
+        echo "Docker image '${{ inputs.image_name }}' built successfully."
