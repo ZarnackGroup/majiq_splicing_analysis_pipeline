@@ -37,8 +37,6 @@ runs:
 
     - name: Inject MAJIQ license into Nextflow secrets
       shell: bash
-      env:
-        MAJIQ_LICENSE: ${{ secrets.MAJIQ_LICENSE }}
       run: |
         nextflow secrets set MAJIQ_LICENSE "$MAJIQ_LICENSE"
 
