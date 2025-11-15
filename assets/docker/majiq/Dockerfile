@@ -43,4 +43,4 @@ RUN pip install --upgrade pip setuptools wheel \
  && pip install numpy==2.0.1 scikit-build-core \
  && pip install .
 
-CMD ["majiq", "--help"] 
+CMD ["majiq", "--help"]

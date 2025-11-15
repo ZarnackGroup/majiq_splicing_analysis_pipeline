@@ -7,7 +7,7 @@ process MAJIQ_BUILDGFF3 {
 
     input:
     tuple val(meta), path(gff)
-    
+
 
     output:
 

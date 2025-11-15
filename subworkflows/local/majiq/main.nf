@@ -29,7 +29,7 @@ workflow MAJIQ {
     ch_versions = Channel.empty()
 
 
-    
+
 
 
 
