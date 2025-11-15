@@ -18,29 +18,20 @@ runs:
       run: |
         cat > ~/.nextflow/config <<EOF
         process {
-              // majiq (required)
-              withName: 'MAJIQ_BUILDGFF3'         { container = 'majiq:latest'                   }
-              withName: 'MAJIQ_BUILDSJ'           { container = 'majiq:latest'                   }
-              withName: 'MAJIQ_BUILDUPDATE'       { container = 'majiq:latest'                   }
-              withName: 'MAJIQ_PSICOVERAGE'       { container = 'majiq:latest'                   }
-              withName: 'MAJIQ_PSI'               { container = 'majiq:latest'                   }
-              withName: 'MAJIQ_DELTAPSI'          { container = 'majiq:latest'                   }
-              withName: 'MAJIQ_HETEROGEN'         { container = 'majiq:latest'                   }
-              withName: 'MAJIQ_SGCOVERAGE'        { container = 'majiq:latest'                   }
-              withName: 'DELTAPSI_MODULIZE'       { container = 'majiq:latest'                   }
-              withName: 'HETEROGEN_MODULIZE'      { container = 'majiq:latest'                   }
-          }
+            // MAJIQ process container overrides
+            withName: 'MAJIQ_BUILDGFF3'    { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_BUILDSJ'      { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_BUILDUPDATE'  { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_PSICOVERAGE'  { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_PSI'          { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_DELTAPSI'     { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_HETEROGEN'    { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_SGCOVERAGE'   { container = '${{ inputs.image_name }}' }
+            withName: 'DELTAPSI_MODULIZE'  { container = '${{ inputs.image_name }}' }
+            withName: 'HETEROGEN_MODULIZE' { container = '${{ inputs.image_name }}' }
         }
         EOF
 
         echo "Nextflow user config (~/.nextflow/config) written successfully:"
         cat ~/.nextflow/config
 
-    - name: Inject MAJIQ license into Nextflow secrets
-      shell: bash
-      env:
-        MAJIQ_LICENSE: ${{ secrets.MAJIQ_LICENSE }}
-      run: |
-        echo "Injecting MAJIQ_LICENSE secret into nextflow secrets..."
-        nextflow secrets set MAJIQ_LICENSE "$MAJIQ_LICENSE"
-        echo "MAJIQ_LICENSE secret configured."

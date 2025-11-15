@@ -35,6 +35,13 @@ runs:
       with:
         image_name: "majiq:latest"
 
+    - name: Inject MAJIQ license into Nextflow secrets
+      shell: bash
+      env:
+        MAJIQ_LICENSE: ${{ secrets.MAJIQ_LICENSE }}
+      run: |
+        nextflow secrets set MAJIQ_LICENSE "$MAJIQ_LICENSE"
+
     - name: Set up Python
       uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
       with:
