@@ -48,7 +48,7 @@ process MAJIQ_BUILDUPDATE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        majiq: \$(majiq --version)
+        majiq: $(majiq --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
     END_VERSIONS
     """
 
