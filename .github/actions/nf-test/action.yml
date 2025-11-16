@@ -24,6 +24,22 @@ runs:
       with:
         version: "${{ env.NXF_VERSION }}"
 
+    - name: Build MAJIQ container
+      uses: ./.github/actions/build-majiq-container
+      with:
+        dockerfile: "assets/docker/majiq/Dockerfile"
+        image_name: "majiq:3_0_6"
+
+    - name: Configure Nextflow for MAJIQ
+      uses: ./.github/actions/configure-nextflow-majiq
+      with:
+        image_name: "docker.io/library/majiq:3_0_6"
+
+    - name: Inject MAJIQ license into Nextflow secrets
+      shell: bash
+      run: |
+        nextflow secrets set MAJIQ_LICENSE "$MAJIQ_LICENSE"
+
     - name: Set up Python
       uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
       with:

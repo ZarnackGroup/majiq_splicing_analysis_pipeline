@@ -11,3 +11,4 @@ testing*
 bin/
 .nf-test/
 ro-crate-metadata.json
+assets/docker/**

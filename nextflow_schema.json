@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir", "annotation", "majiq_license"],
+            "required": ["input", "annotation", "outdir"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -22,6 +22,18 @@
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
                     "fa_icon": "fas fa-file-csv"
+                },
+                "contrasts": {
+                    "type": "string",
+                    "description": "Path to comma-separated file containing information about the contrasts in the experiment."
+                },
+                "annotation": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Path to the annotation file used during alignment. Must be in GTF or GFF3 format. If a GTF is provided, it will be converted to GFF3 automatically.",
+                    "pattern": ".*\\.(gtf|gff3)$",
+                    "fa_icon": "fas fa-file-code",
+                    "help_text": "Ensure the annotation file matches the one used for generating the BAM files. Supported formats: .gtf, .gff3"
                 },
                 "outdir": {
                     "type": "string",
@@ -40,24 +52,6 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
-                },
-                "contrasts": {
-                    "type": "string",
-                    "description": "Path to comma-separated file containing information about the contrasts in the experiment."
-                },
-                "annotation": {
-                    "type": "string",
-                    "format": "file-path",
-                    "description": "Path to the annotation file used during alignment. Must be in GTF or GFF3 format. If a GTF is provided, it will be converted to GFF3 automatically.",
-                    "pattern": ".*\\.(gtf|gff3)$",
-                    "fa_icon": "fas fa-file-code",
-                    "help_text": "Ensure the annotation file matches the one used for generating the BAM files. Supported formats: .gtf, .gff3"
-                },
-                "majiq_license": {
-                    "type": "string",
-                    "description": "Path to the MAJIQ license. Can be obtained at https://majiq.biociphers.org/app_download/.",
-                    "format": "file-path",
-                    "fa_icon": "fas fa-address-card"
                 }
             }
         },

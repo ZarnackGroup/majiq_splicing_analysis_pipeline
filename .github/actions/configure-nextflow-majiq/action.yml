@@ -1,0 +1,36 @@
+name: "Configure Nextflow for MAJIQ"
+description: "Set MAJIQ container overrides and inject the MAJIQ license secret"
+inputs:
+  image_name:
+    description: "Docker image name to use for all MAJIQ processes (e.g. majiq:latest)"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create Nextflow user config directory
+      shell: bash
+      run: |
+        mkdir -p ~/.nextflow
+
+    - name: Write MAJIQ container overrides into ~/.nextflow/config
+      shell: bash
+      run: |
+        cat > ~/.nextflow/config <<EOF
+        process {
+            // MAJIQ process container overrides
+            withName: 'MAJIQ_BUILDGFF3'    { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_BUILDSJ'      { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_BUILDUPDATE'  { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_PSICOVERAGE'  { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_PSI'          { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_DELTAPSI'     { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_HETEROGEN'    { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_SGCOVERAGE'   { container = '${{ inputs.image_name }}' }
+            withName: 'DELTAPSI_MODULIZE'  { container = '${{ inputs.image_name }}' }
+            withName: 'HETEROGEN_MODULIZE' { container = '${{ inputs.image_name }}' }
+        }
+        EOF
+
+        echo "Nextflow user config (~/.nextflow/config) written successfully:"
+        cat ~/.nextflow/config

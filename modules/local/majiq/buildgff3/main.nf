@@ -1,12 +1,13 @@
 process MAJIQ_BUILDGFF3 {
     tag "$meta.id"
     label 'process_single'
+    secret 'MAJIQ_LICENSE'
 
 
 
     input:
     tuple val(meta), path(gff)
-    path license
+
 
     output:
 
@@ -19,19 +20,23 @@ process MAJIQ_BUILDGFF3 {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-
+    def majiqLicense = secrets.MAJIQ_LICENSE ?
+        "export MAJIQ_LICENSE_FILE=\$(mktemp); echo -n \"\$MAJIQ_LICENSE\" >| \$MAJIQ_LICENSE_FILE; " :
+        ""
 
     """
+
+    $majiqLicense
+
     majiq-build \\
         gff3 \\
-        --license $license \\
         $gff \\
         splicegraph.zarr \\
         $args
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        majiq: \$(majiq --version)
+        majiq: \$(majiq --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+')
     END_VERSIONS
     """
 

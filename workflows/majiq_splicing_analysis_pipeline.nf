@@ -122,7 +122,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     //
     MAJIQ (
         ch_bam,
-        SAMTOOLS_INDEX.out.bai,
         ch_gff,
         ch_contrasts
     )

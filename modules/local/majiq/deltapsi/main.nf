@@ -1,11 +1,12 @@
 process MAJIQ_DELTAPSI {
     tag "$contrast"
     label 'process_medium'
+    secret 'MAJIQ_LICENSE'
 
 
 
     input:
-    tuple val(contrast), val(treatment), val(control), path(treatment_files), path(control_files), path(splicegraph),  path(license)  // channel: [ contrast, treatment, control ]
+    tuple val(contrast), val(treatment), val(control), path(treatment_files), path(control_files), path(splicegraph)  // channel: [ contrast, treatment, control ]
     // channel: [ val(meta), path(splicegraph) ]
 
 
@@ -21,14 +22,18 @@ process MAJIQ_DELTAPSI {
 
     script:
     def args = task.ext.args ?: ''
-    //def prefix = task.ext.prefix ?: "${meta.id}"
+    def majiqLicense = secrets.MAJIQ_LICENSE ?
+        "export MAJIQ_LICENSE_FILE=\$(mktemp); echo -n \"\$MAJIQ_LICENSE\" >| \$MAJIQ_LICENSE_FILE; " :
+        ""
+
     """
+
+    $majiqLicense
 
     mkdir deltapsi
 
     majiq \\
         deltapsi \\
-        --license $license \\
         --nthreads ${task.cpus} \\
         --splicegraph $splicegraph \\
         -psi1 $control_files \\
@@ -42,7 +47,7 @@ process MAJIQ_DELTAPSI {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        majiq: \$(majiq --version)
+        majiq: \$(majiq --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+')
     END_VERSIONS
     """
 
