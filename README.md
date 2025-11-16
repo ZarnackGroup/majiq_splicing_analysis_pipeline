@@ -11,8 +11,68 @@
 
 Our in-house pipeline for analyzing alternative splicing events from RNA sequencing data, based on Nextflow and utilizing MAJIQ as the core splicing analysis tool.
 
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
+```mermaid
+flowchart TB
+  subgraph MAJIQ_SPLICING_ANALYSIS_PIPELINE
+    subgraph take
+      v0["ch_bam"]
+      v2["ch_annotation"]
+      v1["ch_contrasts"]
+    end
+    v6{ }
+    v12([AGAT_CONVERTGFF2BED])
+    v15([SAMTOOLS_INDEX])
+    v18{ }
+    v22([FASTQC])
+    v25([MAJIQ])
+    v31{ }
+    v63([MULTIQC])
+    subgraph s2[" "]
+      v8{ }
+      subgraph s3[" "]
+        v9([AGAT_CONVERTSPGXF2GXF])
+      end
+    end
+    subgraph s4[" "]
+      v19([DEEPTOOLS_BAMCOVERAGE])
+    end
+    subgraph s7[" "]
+      v32([BAM_RSEQC])
+    end
+    subgraph emit
+      v64["multiqc_report"]
+      v65["versions"]
+    end
+    v0 --> v15
+    v0 --> v19
+    v15 --> v19
+    v0 --> v22
+    v0 --> v25
+    v1 --> v25
+    v0 --> v32
+    v12 --> v32
+    v15 --> v32
+    v32 --> v63
+    v19 --> v63
+    v22 --> v63
+    v25 --> v63
+    v12 --> v63
+    v15 --> v63
+    v63 --> v64
+    v32 --> v65
+    v19 --> v65
+    v22 --> v65
+    v25 --> v65
+    v12 --> v65
+    v15 --> v65
+    v6 --> s2
+    v8 --> s3
+    v18 --> s4
+    v31 --> s7
+  end
+
+```
+
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
 1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
