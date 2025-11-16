@@ -15,7 +15,7 @@
                     "fastqc": "0.12.1"
                 },
                 "MAJIQ_BUILDGFF3": {
-                    "majiq": "majiq 3.0.6.dev1+g65397ab2"
+                    "majiq": "3.0.6"
                 },
                 "RSEQC_BAMSTAT": {
                     "rseqc": "5.0.2"
@@ -1490,7 +1490,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-15T00:13:55.235781747"
+        "timestamp": "2025-11-16T01:11:48.642945239"
     },
     "Params: default - stub": {
         "content": [

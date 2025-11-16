@@ -34,4 +34,3 @@ runs:
 
         echo "Nextflow user config (~/.nextflow/config) written successfully:"
         cat ~/.nextflow/config
-

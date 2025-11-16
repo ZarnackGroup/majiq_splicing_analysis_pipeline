@@ -187,7 +187,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,182ad26a0ed2c20a313524387016cbc3"
+                    "versions.yml:md5,dc7e4d41751381e9d271c7d8146c1d5b"
                 ],
                 "splicegraph": [
                     [
@@ -335,14 +335,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,182ad26a0ed2c20a313524387016cbc3"
+                    "versions.yml:md5,dc7e4d41751381e9d271c7d8146c1d5b"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-14T23:06:13.676503879"
+        "timestamp": "2025-11-16T01:14:18.141390359"
     }
 }
