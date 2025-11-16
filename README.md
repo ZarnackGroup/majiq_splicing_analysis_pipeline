@@ -14,34 +14,33 @@ Our in-house pipeline for analyzing alternative splicing events from RNA sequenc
 ```mermaid
 flowchart TB
   subgraph MAJIQ_SPLICING_ANALYSIS_PIPELINE
-    subgraph take
-      v0["ch_bam"]
-      v2["ch_annotation"]
-      v1["ch_contrasts"]
+    subgraph required parameters
+      v0["--input"]
+      v2["--annotation"]
+      v1["--contrasts"]
     end
-    v6{ }
-    v12([AGAT_CONVERTGFF2BED])
-    v15([SAMTOOLS_INDEX])
-    v18{ }
-    v22([FASTQC])
-    v25([MAJIQ])
-    v31{ }
-    v63([MULTIQC])
-    subgraph s2[" "]
-      v8{ }
-      subgraph s3[" "]
-        v9([AGAT_CONVERTSPGXF2GXF])
-      end
+
+    subgraph s20["converting inputs"]
+          subgraph s2["annotation formatting"]
+               v15([SAMTOOLS_INDEX])
+          end
+          subgraph s2["annotation formatting"]
+               v9([AGAT_CONVERTSPGXF2GXF])
+               v12([AGAT_CONVERTGFF2BED])
+          end
+     end
+    subgraph s3["splicing analysis"]
+      v25([MAJIQ])
     end
-    subgraph s4[" "]
+    subgraph s4["create BigWig"]
       v19([DEEPTOOLS_BAMCOVERAGE])
     end
-    subgraph s7[" "]
+    subgraph s7["quality_control"]
       v32([BAM_RSEQC])
+      v22([FASTQC])
     end
-    subgraph emit
-      v64["multiqc_report"]
-      v65["versions"]
+    subgraph report
+      v63([MULTIQC])
     end
     v0 --> v15
     v0 --> v19
@@ -50,6 +49,9 @@ flowchart TB
     v0 --> v25
     v1 --> v25
     v0 --> v32
+    v2 --> v9
+    v2 --> v12
+    v9 --> v12
     v12 --> v32
     v15 --> v32
     v32 --> v63
@@ -58,13 +60,6 @@ flowchart TB
     v25 --> v63
     v12 --> v63
     v15 --> v63
-    v63 --> v64
-    v32 --> v65
-    v19 --> v65
-    v22 --> v65
-    v25 --> v65
-    v12 --> v65
-    v15 --> v65
     v6 --> s2
     v8 --> s3
     v18 --> s4
