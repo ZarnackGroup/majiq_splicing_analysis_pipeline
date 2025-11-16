@@ -47,7 +47,7 @@ process MAJIQ_HETEROGEN {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        majiq: $(majiq --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+        majiq: \$(majiq --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+')
     END_VERSIONS
     """
 
