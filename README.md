@@ -21,7 +21,7 @@ flowchart TB
     end
 
     subgraph s20["converting inputs"]
-          subgraph s2["annotation formatting"]
+          subgraph s100["index bam files"]
                v15([SAMTOOLS_INDEX])
           end
           subgraph s2["annotation formatting"]
