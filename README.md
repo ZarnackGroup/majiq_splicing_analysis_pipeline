@@ -7,9 +7,7 @@
 
 ## Introduction
 
-**ZarnackGroup/majiq_splicing_analysis_pipeline** is a bioinformatics pipeline that ...
-
-Our in-house pipeline for analyzing alternative splicing events from RNA sequencing data, based on Nextflow and utilizing MAJIQ as the core splicing analysis tool.
+**ZarnackGroup/majiq_splicing_analysis_pipeline** is our in-house pipeline for analyzing alternative splicing events from RNA sequencing data, based on Nextflow and utilizing [`MAJIQ V3`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792) as the core splicing analysis tool.
 
 ```mermaid
 flowchart TB
@@ -65,32 +63,75 @@ flowchart TB
 
 ```
 
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
+1. **Index BAM files** 
+   - [`SAMtools index`](https://doi.org/10.1093/bioinformatics/btp352)  
+  
+2. **Convert annotation files**  
+   - [`AGAT_CONVERTSPGXF2GXF`](https://doi.org/10.5281/zenodo.3552717)  
+   - [`AGAT_CONVERTGFF2BED`](https://doi.org/10.5281/zenodo.3552717)
 
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+3. **Splicing analysis**
+   - [`MAJIQ`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792)
 
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+4. **Coverage track generation**
+   - [`deepTools bamCoverage`](https://doi.org/10.1093/nar/gkw257)
+
+5. **Quality control**
+   - [`RSeQC`](http://rseqc.sourceforge.net/)  
+   - [`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+
+6. **Reporting**
+   - [`MultiQC`](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 
 ## Usage
 
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
+### Setting up MAJIQ
+
+1. obtain a LICENSE - MAJIQ is free for Academic use but you need to visit the [homepage](https://majiq.biociphers.org/app_download/)
+2. add the license key to your [nextflow secrets](https://nextflow.io/docs/latest/secrets.html) as MAJIQ_LICENSE
+   
+   ```bash
+   nextflow secrets set MAJIQ_LICENSE "$(cat "/PATH/TO/majiq_license_academic_official.lic")"
+   ```
+
+3. installing MAJIQ - pick your preferred option, current tests are build for tag 3.0.6
+   1. set up with conda: follow the instructions on the download page
+   2. set up with docker: you can find a Dockerfile to build a majiq container in the ['assets'](assets/docker/majiq/Dockerfile) folder of this  repository
+   3. Apptainer/Singularity -> use the Dockerimage
+   4. Others: I have not tried anything else yet if you find a reliable and legal way to set up feel free to contibute here
+4. configuring the pipeline to use your majiq installation
+     You will need to create a .config file where you point to the container/conda environment for each majiq process. find an example in the `conf` folder - [`cctb.config`](conf/cctb.config). for a conda envrionment you would put "'conda'" instead of "'container'"
+     pass the created .config file with the [-c option](https://www.nextflow.io/docs/latest/config.html)
+
+### Running the pipeline
 
 First, prepare a samplesheet with your input data that looks as follows:
 
 `samplesheet.csv`:
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+sample,condition,genome_bam
+ERR188383,GBR,PATH/TO/ERR188383.Aligned.out.bam
+ERR188428,GBR,PATH/TO/ERR188428.Aligned.out.bam
+ERR188454,YRI,PATH/TO/ERR188454.Aligned.out.bam
+ERR204916,YRI,PATH/TO/ERR204916.Aligned.out.bam
+
 ```
+Each row represents a bam file. sample is an identifier, should be unique per row. condition is used to group an compare samples. genome bam -> reads need to be aligned against a genome
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
+`contrastsheet.csv`:
 
--->
+```csv
+contrast,treatment,control
+YRI-GBR,YRI,GBR
+```
+each row represents a comparison(contrast) the "control" column is used as reference in comparisons, treatment is the column for the other condition. contrast column is an identifier for that comparison
+
+`annotation`:
+Annotation file (ideally the one used during alignment). can eb provided in either .gtf or .gff3 format. MAJIQ requires .gff3, if gtf is provided, it will be converted using AGAT
 
 Now, you can run the pipeline using:
 
@@ -100,7 +141,10 @@ Now, you can run the pipeline using:
 nextflow run ZarnackGroup/majiq_splicing_analysis_pipeline \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
-   --outdir <OUTDIR>
+   --contrasts contrastsheet.csv \
+   --annotation annotation.gff3 \
+   --outdir <OUTDIR> \
+   -c majiq.config
 ```
 
 > [!WARNING]
@@ -112,7 +156,7 @@ majiq_splicing_analysis_pipeline was originally written by Felix Haidle.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
+* be the first!
 
 ## Contributions and Support
 
