@@ -1,10 +1,11 @@
-# majiq_splicing_analysis_pipeline
+# ZarnackGroup/majiq_splicing_analysis_pipeline
 
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)
+[![GitHub Actions CI Status](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/nf-test.yml/badge.svg)](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/nf-test.yml)
 [![GitHub Actions Linting Status](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/linting.yml/badge.svg)](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/linting.yml)
-[![GitHub Actions CI Status](https://github.com/nf-core/rnaseq/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/rnaseq/actions/workflows/nf-test.yml)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
+[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.04.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.5.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.5.1)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -71,12 +72,12 @@ flowchart TB
 
 2. Convert annotation: GXF conversion ([`AGAT`](https://doi.org/10.5281/zenodo.3552717))
 3. Convert annotation: BED conversion ([`AGAT`](https://doi.org/10.5281/zenodo.3552717))
-4.
-5. Splicing analysis ([`MAJIQ`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792))
-6. Coverage track generation ([`DEEPTOOLS`](https://doi.org/10.1093/nar/gkw257))
-7. Quality control: read & alignment QC ([`RSeQC`](http://rseqc.sourceforge.net/))
-8. Quality control: read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-9. Reporting ([`MultiQC`](https://pubmed.ncbi.nlm.nih.gov/27312411/))
+
+4. Splicing analysis ([`MAJIQ`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792))
+5. Coverage track generation ([`DEEPTOOLS`](https://doi.org/10.1093/nar/gkw257))
+6. Quality control: read & alignment QC ([`RSeQC`](http://rseqc.sourceforge.net/))
+7. Quality control: read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+8. Reporting ([`MultiQC`](https://pubmed.ncbi.nlm.nih.gov/27312411/))
 
 ## Usage
 
