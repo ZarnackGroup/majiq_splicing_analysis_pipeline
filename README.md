@@ -37,7 +37,7 @@ flowchart TB
     subgraph s4["create BigWig"]
       v19([DEEPTOOLS_BAMCOVERAGE])
     end
-    subgraph s7["quality_control"]
+    subgraph s7["quality control"]
       v32([BAM_RSEQC])
       v22([FASTQC])
     end
