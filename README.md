@@ -70,20 +70,13 @@ flowchart TB
 1. Index BAM files ([`SAMTOOLS`](https://doi.org/10.1093/bioinformatics/btp352))
 
 2. Convert annotation: GXF conversion ([`AGAT`](https://doi.org/10.5281/zenodo.3552717))
-   
 3. Convert annotation: BED conversion ([`AGAT`](https://doi.org/10.5281/zenodo.3552717))
-4. 
+4.
 5. Splicing analysis ([`MAJIQ`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792))
-   
 6. Coverage track generation ([`DEEPTOOLS`](https://doi.org/10.1093/nar/gkw257))
-   
 7. Quality control: read & alignment QC ([`RSeQC`](http://rseqc.sourceforge.net/))
-   
 8. Quality control: read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-   
-9.  Reporting ([`MultiQC`](https://pubmed.ncbi.nlm.nih.gov/27312411/))
-
-
+9. Reporting ([`MultiQC`](https://pubmed.ncbi.nlm.nih.gov/27312411/))
 
 ## Usage
 
@@ -100,9 +93,9 @@ flowchart TB
    ```
 
 3. Installing MAJIQ – choose your preferred option. Current tests are built for MAJIQ V3 at tag **3.0.6**:
-   1. Set up with Conda: follow the instructions on the download page.  
-   2. Set up with Docker: you can find a Dockerfile to build a MAJIQ container in the [`assets`](assets/docker/majiq/Dockerfile) folder of this repository.  
-   3. Apptainer/Singularity: use the Docker image.  
+   1. Set up with Conda: follow the instructions on the download page.
+   2. Set up with Docker: you can find a Dockerfile to build a MAJIQ container in the [`assets`](assets/docker/majiq/Dockerfile) folder of this repository.
+   3. Apptainer/Singularity: use the Docker image.
    4. Others: I have not tried anything else yet. If you find a reliable and legal way to set it up, feel free to contribute here.
 4. Configuring the pipeline to use your MAJIQ installation:  
    You need to create a `.config` file where you specify the container or Conda environment for each MAJIQ process. You can find an example in the `conf` folder – [`cctb.config`](conf/cctb.config).  
@@ -123,6 +116,7 @@ ERR188454,YRI,PATH/TO/ERR188454.Aligned.out.bam
 ERR204916,YRI,PATH/TO/ERR204916.Aligned.out.bam
 
 ```
+
 Each row represents a BAM file.  
 `sample` is a unique identifier for each row.  
 `condition` is used to group and compare samples.  
@@ -134,6 +128,7 @@ Each row represents a BAM file.
 contrast,treatment,control
 YRI-GBR,YRI,GBR
 ```
+
 Each row represents a comparison (contrast).  
 The `control` column is used as the reference in comparisons, and `treatment` specifies the other condition.  
 `contrast` is an identifier for the comparison.
@@ -142,7 +137,6 @@ The `control` column is used as the reference in comparisons, and `treatment` sp
 Provide the annotation file used during alignment. It can be in `.gtf` or `.gff3` format.  
 MAJIQ requires `.gff3`. If a GTF file is provided, it will be converted using AGAT.
 Now, you can run the pipeline using:
-
 
 ```bash
 nextflow run ZarnackGroup/majiq_splicing_analysis_pipeline \
@@ -163,7 +157,7 @@ majiq_splicing_analysis_pipeline was originally written by Felix Haidle.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-* Be the first!
+- Be the first!
 
 ## Contributions and Support
 
@@ -204,8 +198,8 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 - [SAMtools](https://doi.org/10.1093/bioinformatics/btp352)
 
-  > Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R; 1000 Genome Project Data Processing Subgroup. The Sequence Alignment/Map format and SAMtools. Bioinformatics. 2009 Aug 15;25(16):2078-2079. doi: 10.1093/bioinformatics/btp352. PubMed PMID: 19505943. 
-An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
+  > Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R; 1000 Genome Project Data Processing Subgroup. The Sequence Alignment/Map format and SAMtools. Bioinformatics. 2009 Aug 15;25(16):2078-2079. doi: 10.1093/bioinformatics/btp352. PubMed PMID: 19505943.
+  > An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
 - [Nextflow](https://pubmed.ncbi.nlm.nih.gov/28398311/)
 
