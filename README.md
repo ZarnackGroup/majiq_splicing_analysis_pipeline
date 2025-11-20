@@ -73,12 +73,12 @@ flowchart TB
 
 2. Convert annotation: GXF conversion ([`AGAT`](https://doi.org/10.5281/zenodo.3552717))
 3. Convert annotation: BED conversion ([`AGAT`](https://doi.org/10.5281/zenodo.3552717))
-4.
-5. Splicing analysis ([`MAJIQ`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792))
-6. Coverage track generation ([`DEEPTOOLS`](https://doi.org/10.1093/nar/gkw257))
-7. Quality control: read & alignment QC ([`RSeQC`](http://rseqc.sourceforge.net/))
-8. Quality control: read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-9. Reporting ([`MultiQC`](https://pubmed.ncbi.nlm.nih.gov/27312411/))
+
+4. Splicing analysis ([`MAJIQ`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792))
+5. Coverage track generation ([`DEEPTOOLS`](https://doi.org/10.1093/nar/gkw257))
+6. Quality control: read & alignment QC ([`RSeQC`](http://rseqc.sourceforge.net/))
+7. Quality control: read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+8. Reporting ([`MultiQC`](https://pubmed.ncbi.nlm.nih.gov/27312411/))
 
 ## Usage
 
