@@ -1,0 +1,58 @@
+nextflow_workflow {
+
+    name "Test Subworkflow MAJIQ"
+    script "../main.nf"
+    workflow "MAJIQ"
+
+    tag "subworkflows"
+    tag "subworkflows_"
+    tag "subworkflows/majiq"
+    tag "majiq"
+    tag "majiq/buildgff3"
+
+
+    test("rnasplice test data with BAM files") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id: 'ERR188383', condition: 'GBR' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188383.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR188428', condition: 'GBR' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188428.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR188454', condition: 'YRI' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188454.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR204916', condition: 'YRI' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam", checkIfExists: false)
+                    ],
+                )
+                input[1] = Channel.of(
+                    [
+                    [ id:'test' ], 
+                    file(params.pipelines_testdata_base_path +'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
+                    ]
+                )
+                input[2] = Channel.of(
+                    [ contrast:'GBR-YRI', control:'YRI', treatment:'GBR' ]
+                )
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+                //TODO nf-core: Add all required assertions to verify the test output.
+            )
+        }
+    }
+}
