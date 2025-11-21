@@ -3,7 +3,7 @@
 // Adapted from nf-core/rnasplice - https://github.com/nf-core/rnasplice/blob/1.0.4/subworkflows/local/contrasts_check.nf
 //
 
-include { CONTRASTSHEET_CHECK } from '../../modules/local/contrastsheet_check'
+include { CONTRASTSHEET_CHECK } from '../../../modules/local/contrastsheet'
 
 workflow CONTRASTS_CHECK {
 
