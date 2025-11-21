@@ -1,0 +1,105 @@
+// TODO nf-core: Once you have added the required tests, please run the following command to build this file:
+// nf-core modules test irfinder/buildrefprocess
+nextflow_process {
+
+    name "Test Process IRFINDER_BUILDREFPROCESS"
+    script "../main.nf"
+    process "IRFINDER_BUILDREFPROCESS"
+
+    tag "modules"
+    tag "modules_"
+    tag "irfinder"
+    tag "irfinder/buildrefprocess"
+    tag "gunzip"
+
+    // TODO nf-core: Change the test name preferably indicating the test-data and file-format used
+    test("rnasplice - gtf/fasta") {
+
+        setup {
+            run("GUNZIP") {
+                script "../../../../nf-core/gunzip/main.nf"  // Path to the gunzip module
+                process {
+                    """
+                    input[0] = channel.of(
+                    [
+                        [ id: 'test' ],
+                        file(params.pipelines_testdata_base_path + 'rnasplice/reference/X.fa.gz', checkIfExists: true)
+                    ]
+                    )
+                    """
+                }
+            }
+        }
+        when {
+            process {
+                """
+                
+                input[0] = channel.of(
+                    [
+                        [ id: 'test' ],
+                        file(params.pipelines_testdata_base_path + 'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
+                    ]
+                )
+
+                input[1] = GUNZIP.out.gunzip.map{ meta, file -> file }  // Use the unzipped file from setup
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    // TODO nf-core: Change the test name preferably indicating the test-data and file-format used but keep the " - stub" suffix.
+    test("rnasplice - gtf/fasta - stub") {
+
+        options "-stub"
+
+        setup {
+            run("GUNZIP") {
+                script "../../../../nf-core/gunzip/main.nf"  // Path to the gunzip module
+                process {
+                    """
+                    input[0] = channel.of(
+                    [
+                        [ id: 'test' ],
+                        file(params.pipelines_testdata_base_path + 'rnasplice/reference/X.fa.gz', checkIfExists: true)
+                    ]
+                    )
+                    """
+                }
+            }
+        }
+        when {
+            process {
+                """
+                
+                input[0] = channel.of(
+                    [
+                        [ id: 'test' ],
+                        file(params.pipelines_testdata_base_path + 'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
+                    ]
+                )
+
+                input[1] = GUNZIP.out.gunzip.map{ meta, file -> file }  // Use the unzipped file from setup
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

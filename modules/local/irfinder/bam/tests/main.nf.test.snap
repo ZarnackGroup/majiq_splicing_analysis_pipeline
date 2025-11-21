@@ -1,0 +1,98 @@
+{
+    "rnasplice - gtf/fasta - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "ERR188383"
+                        },
+                        "IRFinder-ChrCoverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        "IRFINDER_BAM",
+                        "IRFinder",
+                        "IRFinder version: 2.0.0"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "ERR188383"
+                        },
+                        "IRFinder-ChrCoverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions_irfinder": [
+                    [
+                        "IRFINDER_BAM",
+                        "IRFinder",
+                        "IRFinder version: 2.0.0"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-11-21T23:44:06.361315315"
+    },
+    "rnasplice - gtf/fasta": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "ERR188383"
+                        },
+                        [
+                            "IRFinder-ChrCoverage.txt:md5,b9af36c0b14ad3c4292db49eb30c2cc4",
+                            "IRFinder-IR-nondir-val.txt:md5,5136110106b6f982ec80c1e23a80538f",
+                            "IRFinder-IR-nondir.txt:md5,b0c947dd4f2d1b8009c2e04c1c2b8a24",
+                            "IRFinder-JuncCount.txt:md5,8f4f69a85926c9c2b69bd619ef38095d",
+                            "IRFinder-ROI.txt:md5,2a0cb6d10e6b2a10a9a97185b76d1092",
+                            "IRFinder-SpansPoint.txt:md5,2c48d5cd27aec07fe38d9904ae949c6e"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        "IRFINDER_BAM",
+                        "IRFinder",
+                        "IRFinder version: 2.0.0"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "ERR188383"
+                        },
+                        [
+                            "IRFinder-ChrCoverage.txt:md5,b9af36c0b14ad3c4292db49eb30c2cc4",
+                            "IRFinder-IR-nondir-val.txt:md5,5136110106b6f982ec80c1e23a80538f",
+                            "IRFinder-IR-nondir.txt:md5,b0c947dd4f2d1b8009c2e04c1c2b8a24",
+                            "IRFinder-JuncCount.txt:md5,8f4f69a85926c9c2b69bd619ef38095d",
+                            "IRFinder-ROI.txt:md5,2a0cb6d10e6b2a10a9a97185b76d1092",
+                            "IRFinder-SpansPoint.txt:md5,2c48d5cd27aec07fe38d9904ae949c6e"
+                        ]
+                    ]
+                ],
+                "versions_irfinder": [
+                    [
+                        "IRFINDER_BAM",
+                        "IRFinder",
+                        "IRFinder version: 2.0.0"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-11-21T21:28:20.860251332"
+    }
+}

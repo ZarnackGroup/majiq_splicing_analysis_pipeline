@@ -1,0 +1,117 @@
+{
+    "rnasplice - gtf/fasta": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                "exclude.directional.bed:md5,cddd43c43c0a75f55eeb23224565ad04",
+                                "exclude.omnidirectional.bed:md5,4d95a5fb8100897fc080bb4469a69794",
+                                "intergenic.ROI.bed:md5,4a2450b296ed927e737828b4efb79f55",
+                                "introns.unique.bed:md5,fb5ffbcde6a39988c49dfc5cbe3b88bc",
+                                "ref-ROI.bed:md5,e08cd7560732d39f4e3a4c0f769d7776",
+                                "ref-cover.bed:md5,92296e1619d628ddbb4888b8f549efdc",
+                                "ref-read-continues.ref:md5,c3931b0ccedfc5dfc32a7aa57b7536c7",
+                                "ref-sj.ref:md5,95f39fc9833fd4a2daee99ba19f609b6"
+                            ],
+                            [
+                                "MapabilityExclusion.bed.gz:md5,68c3398851ccc091f849746021381554"
+                            ],
+                            [
+                                "Genome:md5,c88ba3756fda45a106e89bb3675c6d92",
+                                "Log.out:md5,d357615e20b61981a9b34ff89bf180df",
+                                "SA:md5,d3d09352562d96db16cd73eff6404c83",
+                                "SAindex:md5,09e2efec07a47e2b43d4f7d89a84b21d",
+                                "chrLength.txt:md5,23747f0f9530fecb56b5c6382df53ca5",
+                                "chrName.txt:md5,253bcac7dd806bb7cf57dc19f71f2fa0",
+                                "chrNameLength.txt:md5,a78c1db8960ac1331abba8152b28962f",
+                                "chrStart.txt:md5,91d6485f0ea5b62e7fac5b1410c5d894",
+                                "exonGeTrInfo.tab:md5,e8d6ca6a8c6d8dc960dea132bc4dad48",
+                                "exonInfo.tab:md5,67de49969cb934380004c3ddf8f28713",
+                                "geneInfo.tab:md5,f6e655f33a97f274b2cbaf64cc18302f",
+                                "genomeParameters.txt:md5,890a6ef5c74e74b6af4c2e2d7c047c99",
+                                "sjdbInfo.txt:md5,63b1864c18dc01cb1a1ce2345ddb86ed",
+                                "sjdbList.fromGTF.out.tab:md5,47e7c6d8feb46fae8f837b39743ed882",
+                                "sjdbList.out.tab:md5,30a8e1a0ae6de024a67441273b5dccd4",
+                                "transcriptInfo.tab:md5,590b81beb3913ab15987cf61cf9614db"
+                            ],
+                            "genome.fa:md5,aaf58c237019f35a082793f0c5c797f1",
+                            [
+                                
+                            ],
+                            "transcripts.gtf:md5,326e7a503309e8ff500b2d8f693a65d0"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        "IRFINDER_BUILDREFPROCESS",
+                        "IRFinder",
+                        "IRFinder version: 2.0.0"
+                    ]
+                ],
+                "reference": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            [
+                                "exclude.directional.bed:md5,cddd43c43c0a75f55eeb23224565ad04",
+                                "exclude.omnidirectional.bed:md5,4d95a5fb8100897fc080bb4469a69794",
+                                "intergenic.ROI.bed:md5,4a2450b296ed927e737828b4efb79f55",
+                                "introns.unique.bed:md5,fb5ffbcde6a39988c49dfc5cbe3b88bc",
+                                "ref-ROI.bed:md5,e08cd7560732d39f4e3a4c0f769d7776",
+                                "ref-cover.bed:md5,92296e1619d628ddbb4888b8f549efdc",
+                                "ref-read-continues.ref:md5,c3931b0ccedfc5dfc32a7aa57b7536c7",
+                                "ref-sj.ref:md5,95f39fc9833fd4a2daee99ba19f609b6"
+                            ],
+                            [
+                                "MapabilityExclusion.bed.gz:md5,68c3398851ccc091f849746021381554"
+                            ],
+                            [
+                                "Genome:md5,c88ba3756fda45a106e89bb3675c6d92",
+                                "Log.out:md5,d357615e20b61981a9b34ff89bf180df",
+                                "SA:md5,d3d09352562d96db16cd73eff6404c83",
+                                "SAindex:md5,09e2efec07a47e2b43d4f7d89a84b21d",
+                                "chrLength.txt:md5,23747f0f9530fecb56b5c6382df53ca5",
+                                "chrName.txt:md5,253bcac7dd806bb7cf57dc19f71f2fa0",
+                                "chrNameLength.txt:md5,a78c1db8960ac1331abba8152b28962f",
+                                "chrStart.txt:md5,91d6485f0ea5b62e7fac5b1410c5d894",
+                                "exonGeTrInfo.tab:md5,e8d6ca6a8c6d8dc960dea132bc4dad48",
+                                "exonInfo.tab:md5,67de49969cb934380004c3ddf8f28713",
+                                "geneInfo.tab:md5,f6e655f33a97f274b2cbaf64cc18302f",
+                                "genomeParameters.txt:md5,890a6ef5c74e74b6af4c2e2d7c047c99",
+                                "sjdbInfo.txt:md5,63b1864c18dc01cb1a1ce2345ddb86ed",
+                                "sjdbList.fromGTF.out.tab:md5,47e7c6d8feb46fae8f837b39743ed882",
+                                "sjdbList.out.tab:md5,30a8e1a0ae6de024a67441273b5dccd4",
+                                "transcriptInfo.tab:md5,590b81beb3913ab15987cf61cf9614db"
+                            ],
+                            "genome.fa:md5,aaf58c237019f35a082793f0c5c797f1",
+                            [
+                                
+                            ],
+                            "transcripts.gtf:md5,326e7a503309e8ff500b2d8f693a65d0"
+                        ]
+                    ]
+                ],
+                "versions_irfinder": [
+                    [
+                        "IRFINDER_BUILDREFPROCESS",
+                        "IRFinder",
+                        "IRFinder version: 2.0.0"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-11-21T20:17:50.53258852"
+    }
+}
