@@ -103,7 +103,8 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         DEEPTOOLS_BAMCOVERAGE(
             ch_bam_with_index,
             [],
-            []
+            [],
+            [[],[]]
         )
         ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions.first())
     }
