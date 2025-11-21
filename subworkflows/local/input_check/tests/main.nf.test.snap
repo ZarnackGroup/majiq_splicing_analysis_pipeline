@@ -1,0 +1,103 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "ERR188383",
+                            "genome_bam": "https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188383.Aligned.out.bam",
+                            "condition": "GBR"
+                        },
+                        [
+                            "/nf-core/test-datasets/rnasplice/testdata/ERR188383.Aligned.out.bam"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "ERR188428",
+                            "genome_bam": "https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188428.Aligned.out.bam",
+                            "condition": "GBR"
+                        },
+                        [
+                            "/nf-core/test-datasets/rnasplice/testdata/ERR188428.Aligned.out.bam"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "ERR188454",
+                            "genome_bam": "https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188454.Aligned.out.bam",
+                            "condition": "YRI"
+                        },
+                        [
+                            "/nf-core/test-datasets/rnasplice/testdata/ERR188454.Aligned.out.bam"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "ERR204916",
+                            "genome_bam": "https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam",
+                            "condition": "YRI"
+                        },
+                        [
+                            "/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,bfed1657542e0b3ca9ff577966bfb4ad"
+                ],
+                "reads": [
+                    [
+                        {
+                            "id": "ERR188383",
+                            "genome_bam": "https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188383.Aligned.out.bam",
+                            "condition": "GBR"
+                        },
+                        [
+                            "/nf-core/test-datasets/rnasplice/testdata/ERR188383.Aligned.out.bam"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "ERR188428",
+                            "genome_bam": "https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188428.Aligned.out.bam",
+                            "condition": "GBR"
+                        },
+                        [
+                            "/nf-core/test-datasets/rnasplice/testdata/ERR188428.Aligned.out.bam"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "ERR188454",
+                            "genome_bam": "https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188454.Aligned.out.bam",
+                            "condition": "YRI"
+                        },
+                        [
+                            "/nf-core/test-datasets/rnasplice/testdata/ERR188454.Aligned.out.bam"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "ERR204916",
+                            "genome_bam": "https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam",
+                            "condition": "YRI"
+                        },
+                        [
+                            "/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,bfed1657542e0b3ca9ff577966bfb4ad"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-11-21T15:20:43.769701539"
+    }
+}

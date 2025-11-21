@@ -3,7 +3,7 @@
 // Adapted from nf-core/rnasplice - https://github.com/nf-core/rnasplice/blob/1.0.4/subworkflows/local/input_check.nf
 //
 
-include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
+include { SAMPLESHEET_CHECK } from '../../../modules/local/samplesheet'
 
 workflow INPUT_CHECK {
     take:

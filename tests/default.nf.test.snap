@@ -6,7 +6,7 @@
                     "agat": "v1.5.1"
                 },
                 "AGAT_CONVERTSPGXF2GXF": {
-                    "agat": "v1.4.1"
+                    "agat": "v1.5.1"
                 },
                 "DEEPTOOLS_BAMCOVERAGE": {
                     "deeptools": "3.5.5"
@@ -33,7 +33,7 @@
                     "rseqc": "5.0.2"
                 },
                 "SAMTOOLS_INDEX": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "Workflow": {
                     "ZarnackGroup/majiq_splicing_analysis_pipeline": "v1.0.0dev"
@@ -1487,6 +1487,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-20T16:23:24.4397752"
+        "timestamp": "2025-11-21T17:22:32.235891932"
     }
 }

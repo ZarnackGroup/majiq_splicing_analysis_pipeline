@@ -1,0 +1,43 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "contrast": "GBR-YRI",
+                        "control": "YRI",
+                        "treatment": "GBR"
+                    },
+                    {
+                        "contrast": "YRI-GBR",
+                        "control": "GBR",
+                        "treatment": "YRI"
+                    }
+                ],
+                "1": [
+                    "versions.yml:md5,e9a37fd63d09d1d5d0afeb22c9be4e34"
+                ],
+                "contrasts": [
+                    {
+                        "contrast": "GBR-YRI",
+                        "control": "YRI",
+                        "treatment": "GBR"
+                    },
+                    {
+                        "contrast": "YRI-GBR",
+                        "control": "GBR",
+                        "treatment": "YRI"
+                    }
+                ],
+                "versions": [
+                    "versions.yml:md5,e9a37fd63d09d1d5d0afeb22c9be4e34"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-11-21T15:09:22.735716936"
+    }
+}
