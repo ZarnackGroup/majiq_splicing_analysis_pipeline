@@ -25,3 +25,6 @@ majiq/**
 processed_inputs/annotation/*.log
 irfinder/REF/test/STAR/Log.out
 irfinder/REF/test/STAR/genomeParameters.txt
+irfinder/**/irfinder.stderr
+irfinder/**/irfinder.stdout
+irfinder/**/WARNINGS

@@ -4,7 +4,7 @@ nextflow_workflow {
     script "subworkflows/local/irfinder/main.nf"
     workflow "IRFINDER"
 
-    test("Should run without failures") {
+    test("buildrefprocess + bam, no differential ir") {
 
         when {
             params {
@@ -26,7 +26,7 @@ nextflow_workflow {
                     ]
                 )
                 input[2] = channel.of([
-                    [ id:'test2.paired_end.markduplicates' ],
+                    [ id:'test2_paired_end_markduplicates'],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.markduplicates.sorted.bam', checkIfExists: true),
                 ])
                 """

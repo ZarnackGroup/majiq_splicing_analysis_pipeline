@@ -10,7 +10,7 @@ process IRFINDER_BAM {
     path(ir_finder_reference)
 
     output:
-    tuple val(meta), path("*.txt"), emit: bam
+    tuple val(meta), path("${meta.id}"), emit: bam
     tuple val("${task.process}"), val('IRFinder'), eval("IRFinder --version"), topic: versions, emit: versions_irfinder
 
     when:
@@ -19,12 +19,12 @@ process IRFINDER_BAM {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    
     """
     IRFinder \\
         BAM \\
         -r $ir_finder_reference \\
         $args \\
+        -d ${prefix} \\
         -t ${task.cpus} \\
         $bam
     """
