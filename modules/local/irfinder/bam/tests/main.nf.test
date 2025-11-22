@@ -15,33 +15,24 @@ nextflow_process {
     test("rnasplice - gtf/fasta") {
 
         setup {
-            run("GUNZIP") {
-                script "../../../../nf-core/gunzip/main.nf"  // Path to the gunzip module
-                process {
-                    """
-                    input[0] = channel.of(
-                    [
-                        [ id: 'test' ],
-                        file(params.pipelines_testdata_base_path + 'rnasplice/reference/X.fa.gz', checkIfExists: true)
-                    ]
-                    )
-                    """
-                }
-            }
             run("IRFINDER_BUILDREFPROCESS") {
                 script "../../buildrefprocess/main.nf"  // Path to the irfinder/buildrefprocess module
                 process {
                     """
-                    input[0] = channel.of(
-                        [
-                            [ id: 'test' ],
-                            file(params.pipelines_testdata_base_path + 'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
-                        ]
-                    )
+                
+                input[0] = channel.of(
+                    [
+                        [ id: 'test' ],
+                        file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/chr21_gencode.gtf', checkIfExists: true)
+                    ]
+                )
 
-                    input[1] = GUNZIP.out.gunzip.map{ meta, file -> file }  // Use the unzipped file from setup
-
-                    """
+                input[1] = channel.of(
+                    [
+                        file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                    ]
+                )
+                """
                 }
             }
         }
@@ -49,8 +40,8 @@ nextflow_process {
             process {
                 """
                 input[0] = channel.of([
-                    [ id:'ERR188383' ],
-                    file(params.pipelines_testdata_base_path + '/rnasplice/testdata/ERR188383.Aligned.out.bam', checkIfExists: true),
+                    [ id:'test2.paired_end.markduplicates' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.markduplicates.sorted.bam', checkIfExists: true),
                 ])
                 input[1] = IRFINDER_BUILDREFPROCESS.out.ir_finder_reference.map{ meta, file -> file }  // Use the reference from setup
                 """
@@ -66,48 +57,38 @@ nextflow_process {
 
     }
 
-    // TODO nf-core: Change the test name preferably indicating the test-data and file-format used but keep the " - stub" suffix.
     test("rnasplice - gtf/fasta - stub") {
 
         options "-stub"
 
         setup {
-            run("GUNZIP") {
-                script "../../../../nf-core/gunzip/main.nf"  // Path to the gunzip module
-                process {
-                    """
-                    input[0] = channel.of(
-                    [
-                        [ id: 'test' ],
-                        file(params.pipelines_testdata_base_path + 'rnasplice/reference/X.fa.gz', checkIfExists: true)
-                    ]
-                    )
-                    """
-                }
-            }
             run("IRFINDER_BUILDREFPROCESS") {
                 script "../../buildrefprocess/main.nf"  // Path to the irfinder/buildrefprocess module
                 process {
                     """
-                    input[0] = channel.of(
-                        [
-                            [ id: 'test' ],
-                            file(params.pipelines_testdata_base_path + 'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
-                        ]
-                    )
+                
+                input[0] = channel.of(
+                    [
+                        [ id: 'test' ],
+                        file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/chr21_gencode.gtf', checkIfExists: true)
+                    ]
+                )
 
-                    input[1] = GUNZIP.out.gunzip.map{ meta, file -> file }  // Use the unzipped file from setup
-
-                    """
+                input[1] = channel.of(
+                    [
+                        file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                    ]
+                )
+                """
                 }
             }
         }
         when {
             process {
-                """                
+                """
                 input[0] = channel.of([
-                    [ id:'ERR188383' ],
-                    file(params.pipelines_testdata_base_path + '/rnasplice/testdata/ERR188383.Aligned.out.bam', checkIfExists: true),
+                    [ id:'test2.paired_end.markduplicates' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.markduplicates.sorted.bam', checkIfExists: true),
                 ])
                 input[1] = IRFINDER_BUILDREFPROCESS.out.ir_finder_reference.map{ meta, file -> file }  // Use the reference from setup
                 """
