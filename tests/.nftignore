@@ -23,3 +23,5 @@ pipeline_info/*.{html,json,txt,yml}
 quality_control/rseqc/**
 majiq/**
 processed_inputs/annotation/*.log
+irfinder/REF/test/STAR/Log.out
+irfinder/REF/test/STAR/genomeParameters.txt
