@@ -1,14 +1,14 @@
-process MAJIQ_PSI {
-    tag "$meta.id"
+process MAJIQ_QUANTIFY {
+    tag "$condition"
     label 'process_low'
     secret 'MAJIQ_LICENSE'
 
     input:
-    tuple val(meta), path(psicov), val(meta_splicegraph), path(splicegraph)          // channel: [ val(meta), path(s
+    tuple val(condition), path(psicov), val(meta_splicegraph), path(splicegraph)          // channel: [ val(meta), path(s
 
 
     output:
-    tuple val(meta), path("psi/*.psi.tsv"), emit: psi_tsv
+    tuple val(condition), path("quantify/*.tsv"), emit: psi_tsv
     path "versions.yml"           , emit: versions
 
     when:
@@ -16,7 +16,7 @@ process MAJIQ_PSI {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${condition}"
     def majiqLicense = secrets.MAJIQ_LICENSE ?
         "export MAJIQ_LICENSE_FILE=\$(mktemp); echo -n \"\$MAJIQ_LICENSE\" >| \$MAJIQ_LICENSE_FILE; " :
         ""
@@ -25,12 +25,12 @@ process MAJIQ_PSI {
 
     $majiqLicense
 
-    mkdir psi
+    mkdir quantify
 
-    majiq \\
-        psi \\
+    majiq-v3 \\
+        quantify \\
         --nthreads ${task.cpus} \\
-        --output-tsv psi/${prefix}.psi.tsv \\
+        --output-tsv quantify/${prefix}.tsv \\
         ${psicov} \\
         --splicegraph $splicegraph \\
         $args
@@ -44,7 +44,7 @@ process MAJIQ_PSI {
     stub:
     """
     mkdir -p psi
-    echo -e "gene_id\\tpsi_value\\nGENE1\\t0.85\\nGENE2\\t0.92" > psi/${meta.id}.psi.tsv
+    echo -e "gene_id\\tpsi_value\\nGENE1\\t0.85\\nGENE2\\t0.92" > psi/${condition}.psi.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -2,12 +2,15 @@ include { MAJIQ_BUILDGFF3           }       from '../../../modules/local/majiq/b
 include { MAJIQ_BUILDSJ             }       from '../../../modules/local/majiq/buildsj/main'
 include { MAJIQ_BUILDUPDATE         }       from '../../../modules/local/majiq/buildupdate/main'
 include { MAJIQ_PSICOVERAGE         }       from '../../../modules/local/majiq/psicoverage/main'
-include { MAJIQ_PSI                 }       from '../../../modules/local/majiq/psi/main'
+include { MAJIQ_QUANTIFY            }       from '../../../modules/local/majiq/quantify/main'
 include { MAJIQ_DELTAPSI            }       from '../../../modules/local/majiq/deltapsi/main'
 include { MAJIQ_HETEROGEN           }       from '../../../modules/local/majiq/heterogen/main'
 include { MAJIQ_SGCOVERAGE          }       from '../../../modules/local/majiq/sgcoverage/main'
+include { MAJIQ_MODULIZE as QUANTIFY_MODULIZE            }       from '../../../modules/local/majiq/modulize/main'
 include { MAJIQ_MODULIZE as DELTAPSI_MODULIZE            }       from '../../../modules/local/majiq/modulize/main'
 include { MAJIQ_MODULIZE as HETEROGEN_MODULIZE           }       from '../../../modules/local/majiq/modulize/main'
+
+
 
 workflow MAJIQ {
 
@@ -79,20 +82,20 @@ workflow MAJIQ {
 
     ch_finished_splicegraph = MAJIQ_BUILDUPDATE.out.splicegraph
 
+    // combine sj files by condition
+    ch_condition_samples_sj = MAJIQ_BUILDSJ.out.sj
+        .map { pair ->
+            tuple(pair[0].condition, pair[1])  }
+        .groupTuple()
+        .combine(ch_finished_splicegraph)
+
 
     //
     // MODULE: MAJIQ_PSICOVERAGE
     //
 
-    ch_combined_sj = MAJIQ_BUILDSJ.out.sj
-        .combine(ch_finished_splicegraph)
-
-
-
-
-
     MAJIQ_PSICOVERAGE(
-        ch_combined_sj
+        ch_condition_samples_sj
     )
 
     ch_versions = ch_versions.mix(MAJIQ_PSICOVERAGE.out.versions)
@@ -108,43 +111,29 @@ workflow MAJIQ {
         .collect()
 
 
-
-    ch_condition_samples = MAJIQ_PSICOVERAGE.out.psi_coverage
-        .map { pair ->
-            tuple(pair[0].condition, pair[1])  }
-        .groupTuple()
-
-
-    contrast_comparison_ch = ch_contrasts
-        .map { it -> [it['treatment'], it] }
-        .combine ( ch_condition_samples, by: 0 )
-        .map { it -> it[1] + ['psicov1': it[2]] }
-        .map { it -> [it['control'], it] }
-        .combine ( ch_condition_samples, by: 0 )
-        .map { it -> it[1] + ['psicov2': it[2]] }
-
-    ch_contrast_input = contrast_comparison_ch.combine(ch_finished_splicegraph)
-        .map { it -> [it[0].contrast, it[0].treatment, it[0].control, it[0].psicov1, it[0].psicov2, it[2]] }
-
-
+    
     //
     // MODULE: MAJIQ_SGCOVERAGE
     //
 
-    ch_condition_samples_sj = MAJIQ_BUILDSJ.out.sj
-        .map { pair ->
-            tuple(pair[0].condition, pair[1])  }
-        .groupTuple()
-
-    ch_sgcoverage_input = ch_condition_samples_sj
-        .combine(ch_finished_splicegraph)
-
-
-
     MAJIQ_SGCOVERAGE(
-        ch_sgcoverage_input
+        ch_condition_samples_sj
     )
     ch_versions = ch_versions.mix(MAJIQ_SGCOVERAGE.out.versions)
+
+    
+    
+    contrast_comparison_ch = ch_contrasts
+        .map { it -> [it['treatment'], it] }
+        .combine ( MAJIQ_PSICOVERAGE.out.psi_coverage, by: 0 )
+        .map { it -> it[1] + ['psicov1': it[2]] }
+        .map { it -> [it['control'], it] }
+        .combine ( MAJIQ_PSICOVERAGE.out.psi_coverage, by: 0 )
+        .map { it -> it[1] + ['psicov2': it[2]] }
+
+    ch_contrast_input = contrast_comparison_ch.combine(ch_finished_splicegraph)
+        .map { it -> [it[0].contrast, it[0].treatment, it[0].control, it[0].psicov1, it[0].psicov2, it[2]] }
+    
 
 
     //
@@ -159,14 +148,29 @@ workflow MAJIQ {
         // MODULE: MAJIQ_PSI
         //
 
-        MAJIQ_PSI(
-            ch_combined_psicoverage
+        MAJIQ_QUANTIFY(
+            MAJIQ_PSICOVERAGE.out.psi_coverage.combine(ch_finished_splicegraph)
         )
 
-        ch_versions = ch_versions.mix(MAJIQ_PSI.out.versions)
+        ch_versions = ch_versions.mix(MAJIQ_QUANTIFY.out.versions)
+
+        //
+        // MODULE: MAJIQ_MODULIZE
+        //
+        ch_modulize_input_quantify = MAJIQ_SGCOVERAGE.out.sgc_files
+            .collect{  it[1]  }
+            .combine(MAJIQ_PSICOVERAGE.out.psi_coverage.collect{  it[1]  })
+            .toList()
+            .combine(ch_finished_splicegraph)
+
+        QUANTIFY_MODULIZE(
+            ch_modulize_input_quantify
+        )
+
+        ch_versions = ch_versions.mix(MAJIQ_QUANTIFY.out.versions)
     }
 
-
+    
     if ( !params.skip_deltapsi ) {
 
         //
@@ -189,7 +193,7 @@ workflow MAJIQ {
             .combine(MAJIQ_DELTAPSI.out.dpsicov.collect())
             .toList()
             .combine(ch_finished_splicegraph)
-
+        
         DELTAPSI_MODULIZE(
             ch_modulize_input_deltapsi
     )
@@ -197,6 +201,7 @@ workflow MAJIQ {
 
 
     ch_versions = ch_versions.mix(DELTAPSI_MODULIZE.out.versions)
+    
     }
 
 
@@ -221,19 +226,21 @@ workflow MAJIQ {
             .toList()
             .combine(ch_finished_splicegraph)
 
+        
         HETEROGEN_MODULIZE(
             ch_modulize_input_heterogen
         )
+        
 
 
 
         ch_versions = ch_versions.mix(HETEROGEN_MODULIZE.out.versions)
-
+        
     }
 
 
 
-
+    
 
 
 
