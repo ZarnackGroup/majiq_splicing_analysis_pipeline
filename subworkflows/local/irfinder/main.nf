@@ -8,6 +8,7 @@ workflow IRFINDER {
     ch_gtf          // channel: [ val(meta), path(gtf) ]
     ch_fasta        // channel: path(fasta)
     ch_bam          // channel: [ val(meta), [ bam ] ]
+    ch_contrasts
 
     main:
 

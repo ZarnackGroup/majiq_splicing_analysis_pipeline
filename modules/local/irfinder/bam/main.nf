@@ -11,6 +11,7 @@ process IRFINDER_BAM {
 
     output:
     tuple val(meta), path("${meta.id}"), emit: bam
+    tuple val(meta), path("${meta.id}/IRFinder-IR-nondir.txt"), emit: irfinder_nondir
     tuple val("${task.process}"), val('IRFinder'), eval("IRFinder --version"), topic: versions, emit: versions_irfinder
 
     when:
