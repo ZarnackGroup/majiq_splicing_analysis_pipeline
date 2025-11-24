@@ -1,17 +1,17 @@
 process MAJIQ_PSICOVERAGE {
-    tag "$meta.id"
+    tag "$condition"
     label 'process_single'
     secret 'MAJIQ_LICENSE'
 
 
     input:
-    tuple val(meta), path(sj), val(meta_splicegraph), path(splicegraph)         // channel: [ val(meta), path(s
+    tuple val(condition), path(sj), val(meta_splicegraph), path(splicegraph)         // channel: [ val(meta), path(s
 
 
 
     output:
 
-    tuple val(meta), path("psi-coverage/*.psicov"), emit: psi_coverage
+    tuple val(condition), path("psi-coverage/*.psicov"), emit: psi_coverage
     path "versions.yml"           , emit: versions
 
     when:
@@ -19,7 +19,7 @@ process MAJIQ_PSICOVERAGE {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${condition}"
     def majiqLicense = secrets.MAJIQ_LICENSE ?
         "export MAJIQ_LICENSE_FILE=\$(mktemp); echo -n \"\$MAJIQ_LICENSE\" >| \$MAJIQ_LICENSE_FILE; " :
         ""
@@ -49,7 +49,7 @@ process MAJIQ_PSICOVERAGE {
     stub:
     """
     mkdir -p psi-coverage
-    touch psi-coverage/${meta.id}.psicov
+    touch psi-coverage/${condition}.psicov
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

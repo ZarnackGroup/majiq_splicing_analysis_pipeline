@@ -11,9 +11,26 @@ nextflow_workflow {
     tag "majiq/buildgff3"
 
 
-    test("rnasplice test data with BAM files") {
-
+    test("nf-core/rnasplice test data") {
+        setup {
+                run("AGAT_CONVERTSPGXF2GXF") {
+                    script "../../../../modules/nf-core/agat/convertspgxf2gxf/main.nf"  // Path to the agat module
+                    process {
+                        """
+                        input[0] = Channel.of(
+                            [
+                            [ id:'chrX' ],
+                            file(params.pipelines_testdata_base_path +'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
+                            ]
+                        )
+                        """
+                    }
+                }
+            }
         when {
+            params {
+                outdir = "$outputDir"
+            }
             workflow {
                 """
                 input[0] = Channel.of(
@@ -34,12 +51,7 @@ nextflow_workflow {
                         file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam", checkIfExists: false)
                     ],
                 )
-                input[1] = Channel.of(
-                    [
-                    [ id:'test' ],
-                    file(params.pipelines_testdata_base_path +'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
-                    ]
-                )
+                input[1] = AGAT_CONVERTSPGXF2GXF.out.output_gff
                 input[2] = Channel.of(
                     [ contrast:'GBR-YRI', control:'YRI', treatment:'GBR' ]
                 )
@@ -48,10 +60,19 @@ nextflow_workflow {
         }
 
         then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
-                { assert workflow.success},
-                { assert snapshot(workflow.out).match()}
-                //TODO nf-core: Add all required assertions to verify the test output.
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out,
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                    ).match() }
             )
         }
     }

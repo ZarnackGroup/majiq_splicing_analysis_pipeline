@@ -21,8 +21,16 @@ multiqc/multiqc_data/junction_saturation_novel.txt
 quality_control/fastqc/*_fastqc.{html,zip}
 pipeline_info/*.{html,json,txt,yml}
 quality_control/rseqc/**
-majiq/**
 processed_inputs/annotation/*.log
+majiq/**/.zmetadata
+majiq/**/.zattrs
+majiq/**/*.logger.txt
+majiq/**/modulize/*
+majiq/**/0.*
+majiq/**/1.*
+majiq/**/0
+majiq/**/1
+majiq/**/*.tsv
 irfinder/REF/test/STAR/Log.out
 irfinder/REF/test/STAR/genomeParameters.txt
 irfinder/**/irfinder.stderr

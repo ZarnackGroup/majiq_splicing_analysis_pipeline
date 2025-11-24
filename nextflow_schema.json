@@ -89,10 +89,6 @@
                     "type": "string",
                     "description": "Additional parameters to pass to the underlying command. Provide as a single string."
                 },
-                "majiq_psi_args": {
-                    "type": "string",
-                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
-                },
                 "majiq_deltapsi_args": {
                     "type": "string",
                     "description": "Additional parameters to pass to the underlying command. Provide as a single string."
@@ -110,6 +106,14 @@
                     "description": "Additional parameters to pass to the underlying command. Provide as a single string."
                 },
                 "heterogen_modulize_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "majiq_quantify_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "majiq_quantify_modulize_args": {
                     "type": "string",
                     "description": "Additional parameters to pass to the underlying command. Provide as a single string."
                 }
