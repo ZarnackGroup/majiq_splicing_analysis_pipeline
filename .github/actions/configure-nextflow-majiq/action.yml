@@ -23,12 +23,13 @@ runs:
             withName: 'MAJIQ_BUILDSJ'      { container = '${{ inputs.image_name }}' }
             withName: 'MAJIQ_BUILDUPDATE'  { container = '${{ inputs.image_name }}' }
             withName: 'MAJIQ_PSICOVERAGE'  { container = '${{ inputs.image_name }}' }
-            withName: 'MAJIQ_PSI'          { container = '${{ inputs.image_name }}' }
+            withName: 'MAJIQ_QUANTIFY'     { container = '${{ inputs.image_name }}' }
             withName: 'MAJIQ_DELTAPSI'     { container = '${{ inputs.image_name }}' }
             withName: 'MAJIQ_HETEROGEN'    { container = '${{ inputs.image_name }}' }
             withName: 'MAJIQ_SGCOVERAGE'   { container = '${{ inputs.image_name }}' }
             withName: 'DELTAPSI_MODULIZE'  { container = '${{ inputs.image_name }}' }
             withName: 'HETEROGEN_MODULIZE' { container = '${{ inputs.image_name }}' }
+            withName: 'QUANTIFY_MODULIZE'  { container = '${{ inputs.image_name }}' }
         }
         EOF
 

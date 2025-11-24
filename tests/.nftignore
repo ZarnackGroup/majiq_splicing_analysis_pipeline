@@ -26,8 +26,8 @@ majiq/**/.zmetadata
 majiq/**/.zattrs
 majiq/**/*.logger.txt
 majiq/**/modulize/*
-majiq/**/*.deltapsi.tsv
 majiq/**/0.*
 majiq/**/1.*
 majiq/**/0
 majiq/**/1
+majiq/**/*.tsv

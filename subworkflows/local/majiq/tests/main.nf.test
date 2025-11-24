@@ -19,7 +19,7 @@ nextflow_workflow {
                         """
                         input[0] = Channel.of(
                             [
-                            [ id:'test' ],
+                            [ id:'chrX' ],
                             file(params.pipelines_testdata_base_path +'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
                             ]
                         )

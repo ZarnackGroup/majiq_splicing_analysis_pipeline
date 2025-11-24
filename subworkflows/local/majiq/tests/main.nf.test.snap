@@ -1,5 +1,5 @@
 {
-    "rnasplice test data with BAM files": {
+    "nf-core/rnasplice test data": {
         "content": [
             {
                 "0": [
@@ -972,8 +972,8 @@
                 "pipeline_info",
                 "processed_inputs",
                 "processed_inputs/annotation",
-                "processed_inputs/annotation/genes_chrX.agat.log",
-                "processed_inputs/annotation/test.agat.gff"
+                "processed_inputs/annotation/chrX.agat.gff",
+                "processed_inputs/annotation/genes_chrX.agat.log"
             ],
             [
                 ".zgroup:md5,e20297935e73dd0154104d4ea53040ab",
@@ -1192,16 +1192,13 @@
                 ".zarray:md5,049fc5d073532435822189d5c4a4c273",
                 ".zarray:md5,b031f0b819a35724d18676d7dcf15df7",
                 ".zarray:md5,4497590daf23de72bf231cf0312e1fb6",
-                "GBR-YRI.heterogen.tsv:md5,aea72449f0e6b7098139a24b678ccb35",
-                "GBR.tsv:md5,c535ca20d36a810c0d1f3fb4beaf53f6",
-                "YRI.tsv:md5,6bddf3a8d866d1d582c33f01eae606c0",
-                "test.agat.gff:md5,4b0db27ba7b45ea37f487cf8361ca358"
+                "chrX.agat.gff:md5,4b0db27ba7b45ea37f487cf8361ca358"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-11-24T17:56:26.263884159"
+        "timestamp": "2025-11-24T18:47:01.48730253"
     }
 }

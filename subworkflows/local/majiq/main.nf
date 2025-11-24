@@ -23,28 +23,23 @@ workflow MAJIQ {
 
     main:
 
-    ch_versions = Channel.empty()
-
-
-
-
-
-
-
+    ch_versions = channel.empty()
 
     //
     // MODULE: MAJIQ_BUILDGFF3
     //
+
     MAJIQ_BUILDGFF3(
         ch_gff
     )
     ch_versions = ch_versions.mix(MAJIQ_BUILDGFF3.out.versions)
 
     ch_splicegraph = MAJIQ_BUILDGFF3.out.splicegraph
-
-
     ch_combine = ch_bam.combine(ch_splicegraph)
 
+    //
+    // MODULE: MAJIQ_BUILDSJ
+    //
 
     MAJIQ_BUILDSJ(
         ch_combine
@@ -145,7 +140,7 @@ workflow MAJIQ {
     if( !params.skip_psi ) {
 
         //
-        // MODULE: MAJIQ_PSI
+        // MODULE: MAJIQ_QUANTIFY
         //
 
         MAJIQ_QUANTIFY(
