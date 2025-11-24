@@ -106,7 +106,7 @@ workflow MAJIQ {
         .collect()
 
 
-    
+
     //
     // MODULE: MAJIQ_SGCOVERAGE
     //
@@ -116,8 +116,8 @@ workflow MAJIQ {
     )
     ch_versions = ch_versions.mix(MAJIQ_SGCOVERAGE.out.versions)
 
-    
-    
+
+
     contrast_comparison_ch = ch_contrasts
         .map { it -> [it['treatment'], it] }
         .combine ( MAJIQ_PSICOVERAGE.out.psi_coverage, by: 0 )
@@ -128,7 +128,7 @@ workflow MAJIQ {
 
     ch_contrast_input = contrast_comparison_ch.combine(ch_finished_splicegraph)
         .map { it -> [it[0].contrast, it[0].treatment, it[0].control, it[0].psicov1, it[0].psicov2, it[2]] }
-    
+
 
 
     //
@@ -165,7 +165,7 @@ workflow MAJIQ {
         ch_versions = ch_versions.mix(MAJIQ_QUANTIFY.out.versions)
     }
 
-    
+
     if ( !params.skip_deltapsi ) {
 
         //
@@ -188,7 +188,7 @@ workflow MAJIQ {
             .combine(MAJIQ_DELTAPSI.out.dpsicov.collect())
             .toList()
             .combine(ch_finished_splicegraph)
-        
+
         DELTAPSI_MODULIZE(
             ch_modulize_input_deltapsi
     )
@@ -196,7 +196,7 @@ workflow MAJIQ {
 
 
     ch_versions = ch_versions.mix(DELTAPSI_MODULIZE.out.versions)
-    
+
     }
 
 
@@ -221,21 +221,21 @@ workflow MAJIQ {
             .toList()
             .combine(ch_finished_splicegraph)
 
-        
+
         HETEROGEN_MODULIZE(
             ch_modulize_input_heterogen
         )
-        
+
 
 
 
         ch_versions = ch_versions.mix(HETEROGEN_MODULIZE.out.versions)
-        
+
     }
 
 
 
-    
+
 
 
 
