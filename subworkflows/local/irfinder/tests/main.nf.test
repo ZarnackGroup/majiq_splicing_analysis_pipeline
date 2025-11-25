@@ -29,6 +29,9 @@ nextflow_workflow {
                     [ id:'test2_paired_end_markduplicates'],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.markduplicates.sorted.bam', checkIfExists: true),
                 ])
+                input[3] = channel.of(
+                [ contrast:'x', control:'y', treatment:'z' ]
+                )
                 """
             }
         }
@@ -51,5 +54,8 @@ nextflow_workflow {
         }
 
     }
+
+    // no further tests for now, only IRFinder Diff is implemented and the test is covered by the module test.
+    // if more differential options are added later, tests can be added here as well.
 
 }

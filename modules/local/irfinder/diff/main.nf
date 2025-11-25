@@ -9,7 +9,7 @@ process IRFINDER_DIFF {
     tuple val(contrast), val(treatment), val(control), path(treatment_files), path(control_files)
 
     output:
-    tuple val(contrast), path("diff/${contrast}"), emit: dif_results
+    tuple val(contrast), path("diff/${contrast}"), emit: diff_results
     tuple val("${task.process}"), val('IRFinder'), eval("IRFinder --version"), topic: versions, emit: versions_irfinder
 
     when:
@@ -35,7 +35,6 @@ process IRFINDER_DIFF {
 
     stub:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
     // TODO nf-core: A stub section should mimic the execution of the original module as best as possible
     //               Have a look at the following examples:
     //               Simple example: https://github.com/nf-core/modules/blob/818474a292b4860ae8ff88e149fbcda68814114d/modules/nf-core/bcftools/annotate/main.nf#L47-L63
@@ -44,8 +43,7 @@ process IRFINDER_DIFF {
     //               - The definition of args `def args = task.ext.args ?: ''` above.
     //               - The use of the variable in the script `echo $args ` below.
     """
-    echo $args
     
-    touch ${prefix}.bam
+    mkdir -p "diff/${contrast}"
     """
 }
