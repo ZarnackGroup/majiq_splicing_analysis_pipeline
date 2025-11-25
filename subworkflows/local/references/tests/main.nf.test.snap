@@ -1,0 +1,340 @@
+{
+    "Compressed GTF annotation + compressed genome": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_gtf"
+                        },
+                        "chr19.filtered.gtf:md5,29ea9f8629c84868b4b0ce5cd4f57632"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test_gtf"
+                        },
+                        "test_gtf.agat.gff:md5,d5761e0b66732e4e143ae92987be5b54"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test_gtf"
+                        },
+                        "test_gtf.bed:md5,ab6bd09b94d32bd8e1967832ec16716f"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test_fasta"
+                        },
+                        "chr19.fa:md5,dd9375c0cfa5de18757a0608411ff608"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,5a6062b64e9b8870106b8885913ea435",
+                    "versions.yml:md5,b0a15146d0911ba4884df150e250a768",
+                    "versions.yml:md5,c5d8f0ff4f5372ff64d867eff14cd30a",
+                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
+                ],
+                "bed": [
+                    [
+                        {
+                            "id": "test_gtf"
+                        },
+                        "test_gtf.bed:md5,ab6bd09b94d32bd8e1967832ec16716f"
+                    ]
+                ],
+                "genome_fasta": [
+                    [
+                        {
+                            "id": "test_fasta"
+                        },
+                        "chr19.fa:md5,dd9375c0cfa5de18757a0608411ff608"
+                    ]
+                ],
+                "gff3": [
+                    [
+                        {
+                            "id": "test_gtf"
+                        },
+                        "test_gtf.agat.gff:md5,d5761e0b66732e4e143ae92987be5b54"
+                    ]
+                ],
+                "gtf": [
+                    [
+                        {
+                            "id": "test_gtf"
+                        },
+                        "chr19.filtered.gtf:md5,29ea9f8629c84868b4b0ce5cd4f57632"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5a6062b64e9b8870106b8885913ea435",
+                    "versions.yml:md5,b0a15146d0911ba4884df150e250a768",
+                    "versions.yml:md5,c5d8f0ff4f5372ff64d867eff14cd30a",
+                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-11-25T18:14:57.602967109"
+    },
+    "GFF3 annotation + uncompressed genome": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "chr21.agat.gtf:md5,be1c396ac00fd5a84dc08a36d84ff8c5"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/sarscov2/genome/genome.gff3"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "chr21.bed:md5,d424ee1b9d9982f129412f491fca709e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,65a5bb329e2f9d9fb9f81135e5ffd770",
+                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
+                ],
+                "bed": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "chr21.bed:md5,d424ee1b9d9982f129412f491fca709e"
+                    ]
+                ],
+                "genome_fasta": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta"
+                    ]
+                ],
+                "gff3": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/sarscov2/genome/genome.gff3"
+                    ]
+                ],
+                "gtf": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "chr21.agat.gtf:md5,be1c396ac00fd5a84dc08a36d84ff8c5"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,65a5bb329e2f9d9fb9f81135e5ffd770",
+                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-11-25T18:15:08.825781695"
+    },
+    "GTF annotation + uncompressed genome": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_gtf"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/homo_sapiens/genome/chr21/sequence/chr21_gencode.gtf"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test_gtf"
+                        },
+                        "test_gtf.agat.gff:md5,bf149491a02b14c674c74af5a4745495"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test_gtf"
+                        },
+                        "test_gtf.bed:md5,11c545a73cf34072c3b4ceb54f73ab71"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test_fasta"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,b0a15146d0911ba4884df150e250a768",
+                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
+                ],
+                "bed": [
+                    [
+                        {
+                            "id": "test_gtf"
+                        },
+                        "test_gtf.bed:md5,11c545a73cf34072c3b4ceb54f73ab71"
+                    ]
+                ],
+                "genome_fasta": [
+                    [
+                        {
+                            "id": "test_fasta"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta"
+                    ]
+                ],
+                "gff3": [
+                    [
+                        {
+                            "id": "test_gtf"
+                        },
+                        "test_gtf.agat.gff:md5,bf149491a02b14c674c74af5a4745495"
+                    ]
+                ],
+                "gtf": [
+                    [
+                        {
+                            "id": "test_gtf"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/homo_sapiens/genome/chr21/sequence/chr21_gencode.gtf"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,b0a15146d0911ba4884df150e250a768",
+                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-11-25T18:14:21.132618985"
+    },
+    "compressed GFF3 annotation + uncompressed genome": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "chr21.agat.gtf:md5,1e8820a497ddb0320986f4c2001ee948"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "genome.gff3:md5,b30f37cc2020975f33fd2a3d61889445"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "chr21.bed:md5,c1c1eb36c47724291fb26ab8eadf5cd0"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,5a6062b64e9b8870106b8885913ea435",
+                    "versions.yml:md5,65a5bb329e2f9d9fb9f81135e5ffd770",
+                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
+                ],
+                "bed": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "chr21.bed:md5,c1c1eb36c47724291fb26ab8eadf5cd0"
+                    ]
+                ],
+                "genome_fasta": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta"
+                    ]
+                ],
+                "gff3": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "genome.gff3:md5,b30f37cc2020975f33fd2a3d61889445"
+                    ]
+                ],
+                "gtf": [
+                    [
+                        {
+                            "id": "chr21"
+                        },
+                        "chr21.agat.gtf:md5,1e8820a497ddb0320986f4c2001ee948"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5a6062b64e9b8870106b8885913ea435",
+                    "versions.yml:md5,65a5bb329e2f9d9fb9f81135e5ffd770",
+                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-11-25T18:15:22.935604692"
+    }
+}

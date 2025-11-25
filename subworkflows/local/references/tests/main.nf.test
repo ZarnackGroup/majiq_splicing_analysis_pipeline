@@ -1,0 +1,129 @@
+nextflow_workflow {
+
+    name "Test Subworkflow REFERENCES"
+    script "../main.nf"
+    workflow "REFERENCES"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "subworkflows/references"
+    tag "agat"
+    tag "agat/convertspgxf2gxf"
+    tag "agat/convertgff2bed"
+    tag "agat/convertspgff2gtf"
+    tag "gunzip"
+
+    test("GTF annotation + uncompressed genome") {
+
+        when {
+            workflow {
+                """
+                input[0] = channel.of(
+                    [
+                        [ id: 'test_gtf' ],
+                        file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/chr21_gencode.gtf', checkIfExists: true)
+                    ]
+                )
+
+                input[1] = channel.of(
+                    [
+                        [ id: 'test_fasta' ],
+                        file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                    ]
+                )
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("Compressed GTF annotation + compressed genome") {
+
+        when {
+            workflow {
+                """
+                input[0] = channel.of(
+                    [
+                        [ id: 'test_gtf' ],
+                        file(params.modules_testdata_base_path + '/genomics/mus_musculus/genome/chr19.filtered.gtf.gz', checkIfExists: true)
+                    ]
+                )
+
+                input[1] = channel.of(
+                    [
+                        [ id: 'test_fasta' ],
+                        file(params.modules_testdata_base_path + '/genomics/mus_musculus/genome/chr19.fa.gz', checkIfExists: true)
+                    ]
+                )
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("GFF3 annotation + uncompressed genome") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'chr21' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gff3', checkIfExists: true)
+                ])
+                input[1] = channel.of(
+                    [
+                        [ id: 'chr21' ],
+                        file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                    ]
+                )
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("compressed GFF3 annotation + uncompressed genome") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'chr21' ],
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/actinidia_chinensis/genome/chr1/genome.gff3.gz', checkIfExists: true)
+                ])
+                input[1] = channel.of(
+                    [
+                        [ id: 'chr21' ],
+                        file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                    ]
+                )
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+}
