@@ -31,8 +31,12 @@ majiq/**/1.*
 majiq/**/0
 majiq/**/1
 majiq/**/*.tsv
-irfinder/REF/test/STAR/Log.out
-irfinder/REF/test/STAR/genomeParameters.txt
+irfinder/REF/*/STAR/Log.out
+irfinder/REF/*/STAR/genomeParameters.txt
 irfinder/**/irfinder.stderr
 irfinder/**/irfinder.stdout
 irfinder/**/WARNINGS
+irfinder/diff/*/suppa.psivec
+irfinder/diff/*/groups.tsv
+irfinder/diff/*/*.tpm.tsv
+irfinder/diff/*/*.psi.tsv

@@ -1,22 +1,15 @@
 
 process IRFINDER_DIFF {
-    tag "$meta.id"
+    tag "$contrast"
     label 'process_medium'
 
-    // TODO nf-core: See section in main README for further information regarding finding and adding container addresses to the section below.
-    conda "${moduleDir}/environment.yml"
     container "docker://cloxd/irfinder:2.0"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(contrast), val(treatment), val(control), path(treatment_files), path(control_files)
 
     output:
-    // TODO nf-core: Named file extensions MUST be emitted for ALL output channels
-    tuple val(meta), path("*.bam"), emit: bam
-    // TODO nf-core: List additional required output channels/values here
-    // TODO nf-core: Update the command here to obtain the version number of the software used in this module
-    // TODO nf-core: If multiple software packages are used in this module, all MUST be added here
-    //               by copying the line below and replacing the current tool with the extra tool(s)
+    tuple val(contrast), path("diff/${contrast}"), emit: dif_results
     tuple val("${task.process}"), val('IRFinder'), eval("IRFinder --version"), topic: versions, emit: versions_irfinder
 
     when:
@@ -24,15 +17,20 @@ process IRFINDER_DIFF {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    // Collect all control file paths 
+    def control_files_list = control_files.collect { dir -> "./${dir}/IRFinder-IR-nondir.txt" }.join(' ')
+    // Collect all treatment file paths 
+    def treatment_files_list = treatment_files.collect { dir -> "./${dir}/IRFinder-IR-nondir.txt" }.join(' ')
+
     """
-    mkdir
-    IRFinder \\ 
-        Diff \\
+    mkdir -p "diff/${contrast}"
+
+    IRFinder Diff \\
+        -g:"${control}" ${control_files_list} \\
+        -g:"${treatment}" ${treatment_files_list} \\
         $args \\
-        -t $task.cpus \\
-        -o ${prefix}.bam \\
-        $bam
+        -v \\
+        -o "diff/${contrast}"  
     """
 
     stub:
