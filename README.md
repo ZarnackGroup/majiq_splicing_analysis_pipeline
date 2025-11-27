@@ -21,6 +21,7 @@ flowchart TB
       v0["--input"]
       v2["--annotation"]
       v1["--contrasts"]
+      
     end
 
     subgraph s20["converting inputs"]
@@ -45,6 +46,7 @@ flowchart TB
     subgraph report
       v63([MULTIQC])
     end
+    v2 --> v9
     v0 --> v15
     v0 --> v19
     v15 --> v19
@@ -54,7 +56,6 @@ flowchart TB
     v0 --> v26
     v1 --> v26
     v0 --> v32
-    v2 --> v9
     v9 --> v25
     v9 --> v26
     v9 --> v32
