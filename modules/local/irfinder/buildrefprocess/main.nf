@@ -13,7 +13,7 @@ process IRFINDER_BUILDREFPROCESS {
     
     tuple val(meta), path("REF/${meta.id}"), emit: ir_finder_reference
     
-    tuple val("${task.process}"), val('IRFinder'), eval("IRFinder --version"), topic: versions, emit: versions_irfinder
+    tuple val("${task.process}"), val('IRFinder'), eval("IRFinder --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+' | tail -n1"), topic: versions, emit: versions_irfinder
 
     when:
     task.ext.when == null || task.ext.when

@@ -25,13 +25,11 @@ workflow IRFINDER {
         .first()
     )
 
-    // Add these view statements to debug:
-ch_dirs_by_condition = IRFINDER_BAM.out.irfinder_bam_directory
-    .map { meta, dir -> 
-        [meta.condition, dir]
-    }
-    .groupTuple()
-    .view { "Dirs by condition: $it" }
+    ch_dirs_by_condition = IRFINDER_BAM.out.irfinder_bam_directory
+        .map { meta, dir -> 
+            [meta.condition, dir]
+        }
+        .groupTuple()
 
     contrast_comparison_ch = ch_contrasts
         .map { contrast -> [contrast.treatment, contrast] }

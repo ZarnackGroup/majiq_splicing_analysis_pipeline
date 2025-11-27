@@ -10,7 +10,7 @@ process IRFINDER_DIFF {
 
     output:
     tuple val(contrast), path("diff/${contrast}"), emit: diff_results
-    tuple val("${task.process}"), val('IRFinder'), eval("IRFinder --version"), topic: versions, emit: versions_irfinder
+    tuple val("${task.process}"), val('IRFinder'), eval("IRFinder --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+' | tail -n1"), topic: versions, emit: versions_irfinder
 
     when:
     task.ext.when == null || task.ext.when
