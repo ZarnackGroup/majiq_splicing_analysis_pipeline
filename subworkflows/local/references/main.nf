@@ -11,7 +11,8 @@ workflow REFERENCES {
     ch_genome_input     // channel: [ val(meta), path(genome) ]
     
     main:
-    ch_versions = Channel.empty()
+    
+    ch_versions = channel.empty()
 
     //
     // Branch annotation based on compression

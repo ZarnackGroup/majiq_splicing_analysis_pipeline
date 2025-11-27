@@ -13,34 +13,49 @@ workflow IRFINDER {
 
     main:
 
-    ch_versions = channel.empty()
-
     IRFINDER_BUILDREFPROCESS ( 
         ch_gtf,
         ch_fasta
         )
-    ch_versions = ch_versions.mix(IRFINDER_BUILDREFPROCESS.out.versions_irfinder.first())
 
     IRFINDER_BAM ( 
         ch_bam,
-        IRFINDER_BUILDREFPROCESS.out.ir_finder_reference.map{ meta, file -> file }
+        IRFINDER_BUILDREFPROCESS.out.ir_finder_reference
+        .map{ meta, file -> file }
+        .first()
     )
-    ch_versions = ch_versions.mix(IRFINDER_BUILDREFPROCESS.out.versions_irfinder.first())
 
+    // Add these view statements to debug:
+ch_dirs_by_condition = IRFINDER_BAM.out.irfinder_bam_directory
+    .map { meta, dir -> 
+        [meta.condition, dir]
+    }
+    .groupTuple()
+    .view { "Dirs by condition: $it" }
 
     contrast_comparison_ch = ch_contrasts
-        .map { it -> [it['treatment'], it] }
-        .combine ( IRFINDER_BAM.out.irfinder_bam_directory, by: 0 )
-        .map { it -> it[1] + ['g1': it[2]] }
-        .map { it -> [it['control'], it] }
-        .combine ( IRFINDER_BAM.out.irfinder_bam_directory, by: 0 )
-        .map { it -> it[1] + ['g2': it[2]] }
+        .map { contrast -> [contrast.treatment, contrast] }
+        .combine(ch_dirs_by_condition, by: 0)
+        .map { treatment_cond, contrast, treatment_dirs ->
+            [contrast.control, contrast, treatment_dirs]
+        }
+        .combine(ch_dirs_by_condition, by: 0)
+        .map { control_cond, contrast, treatment_dirs, control_dirs ->
+            tuple(
+                contrast.contrast,
+                contrast.treatment,
+                contrast.control,
+                treatment_dirs,
+                control_dirs
+            )
+        }
 
     IRFINDER_DIFF (
         contrast_comparison_ch
     )
-    ch_versions = ch_versions.mix(IRFINDER_DIFF.out.versions_irfinder.first())
-
+    
     emit:
-    versions                 = ch_versions                     
+    irfinder_bam_directory   = IRFINDER_BAM.out.irfinder_bam_directory
+    irfinder_diff_results    = IRFINDER_DIFF.out.diff_results
+    ir_finder_reference      = IRFINDER_BUILDREFPROCESS.out.ir_finder_reference                   
 }

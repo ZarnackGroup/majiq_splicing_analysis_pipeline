@@ -252,21 +252,59 @@
         },
         "timestamp": "2025-11-25T18:14:21.132618985"
     },
+    "compressed GFF3 annotation - no genome": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "chr1"
+                    },
+                    "chr1.agat.gtf:md5,1e8820a497ddb0320986f4c2001ee948"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "chr1"
+                    },
+                    "genome.gff3:md5,b30f37cc2020975f33fd2a3d61889445"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "chr1"
+                    },
+                    "chr1.bed:md5,c1c1eb36c47724291fb26ab8eadf5cd0"
+                ]
+            ],
+            [
+                "versions.yml:md5,5a6062b64e9b8870106b8885913ea435",
+                "versions.yml:md5,65a5bb329e2f9d9fb9f81135e5ffd770",
+                "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-11-25T18:28:27.222520544"
+    },
     "compressed GFF3 annotation + uncompressed genome": {
         "content": [
             {
                 "0": [
                     [
                         {
-                            "id": "chr21"
+                            "id": "chr1"
                         },
-                        "chr21.agat.gtf:md5,1e8820a497ddb0320986f4c2001ee948"
+                        "chr1.agat.gtf:md5,1e8820a497ddb0320986f4c2001ee948"
                     ]
                 ],
                 "1": [
                     [
                         {
-                            "id": "chr21"
+                            "id": "chr1"
                         },
                         "genome.gff3:md5,b30f37cc2020975f33fd2a3d61889445"
                     ]
@@ -274,9 +312,9 @@
                 "2": [
                     [
                         {
-                            "id": "chr21"
+                            "id": "chr1"
                         },
-                        "chr21.bed:md5,c1c1eb36c47724291fb26ab8eadf5cd0"
+                        "chr1.bed:md5,c1c1eb36c47724291fb26ab8eadf5cd0"
                     ]
                 ],
                 "3": [
@@ -295,9 +333,9 @@
                 "bed": [
                     [
                         {
-                            "id": "chr21"
+                            "id": "chr1"
                         },
-                        "chr21.bed:md5,c1c1eb36c47724291fb26ab8eadf5cd0"
+                        "chr1.bed:md5,c1c1eb36c47724291fb26ab8eadf5cd0"
                     ]
                 ],
                 "genome_fasta": [
@@ -311,7 +349,7 @@
                 "gff3": [
                     [
                         {
-                            "id": "chr21"
+                            "id": "chr1"
                         },
                         "genome.gff3:md5,b30f37cc2020975f33fd2a3d61889445"
                     ]
@@ -319,9 +357,9 @@
                 "gtf": [
                     [
                         {
-                            "id": "chr21"
+                            "id": "chr1"
                         },
-                        "chr21.agat.gtf:md5,1e8820a497ddb0320986f4c2001ee948"
+                        "chr1.agat.gtf:md5,1e8820a497ddb0320986f4c2001ee948"
                     ]
                 ],
                 "versions": [
@@ -335,6 +373,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-11-25T18:15:22.935604692"
+        "timestamp": "2025-11-25T18:30:37.311688247"
     }
 }

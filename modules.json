@@ -10,6 +10,11 @@
                         "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
                         "installed_by": ["modules"]
                     },
+                    "agat/convertspgff2gtf": {
+                        "branch": "master",
+                        "git_sha": "55ed5f4aabcdcd7a4cc44e1700f956756c7e8532",
+                        "installed_by": ["modules"]
+                    },
                     "agat/convertspgxf2gxf": {
                         "branch": "master",
                         "git_sha": "55ed5f4aabcdcd7a4cc44e1700f956756c7e8532",
@@ -32,7 +37,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "82a79183037a403ad1b6714e5dbcff25500efaf6",
+                        "git_sha": "8deffd6a402233ebf905c66dbf804bd4c2637946",
                         "installed_by": ["modules"]
                     },
                     "rseqc/bamstat": {

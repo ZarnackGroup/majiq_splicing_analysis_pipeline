@@ -106,7 +106,7 @@ nextflow_workflow {
             workflow {
                 """
                 input[0] = Channel.of([
-                    [ id:'chr21' ],
+                    [ id:'chr1' ],
                     file(params.modules_testdata_base_path + 'genomics/eukaryotes/actinidia_chinensis/genome/chr1/genome.gff3.gz', checkIfExists: true)
                 ])
                 input[1] = channel.of(
@@ -126,4 +126,33 @@ nextflow_workflow {
             )
         }
     }
+
+    test("compressed GFF3 annotation - no genome") {
+
+    when {
+        workflow {
+            """
+            input[0] = Channel.of([
+                    [ id:'chr1' ],
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/actinidia_chinensis/genome/chr1/genome.gff3.gz', checkIfExists: true)
+                ])
+            input[1] = channel.empty()
+            """
+        }
+    }
+
+    then {
+        assertAll(
+            { assert workflow.success },
+            { assert snapshot(
+                workflow.out.gtf,
+                workflow.out.gff3,
+                workflow.out.bed,
+                workflow.out.versions
+            ).match() },
+            // Verify genome output is empty
+            { assert workflow.out.genome_fasta.toList().size() == 0 }
+        )
+    }
+}
 }

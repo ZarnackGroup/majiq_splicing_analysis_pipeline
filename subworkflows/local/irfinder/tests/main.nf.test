@@ -4,33 +4,59 @@ nextflow_workflow {
     script "subworkflows/local/irfinder/main.nf"
     workflow "IRFINDER"
 
-    test("buildrefprocess + bam, no differential ir") {
-
+    test("buildrefprocess + bam + diff") {
+        setup {
+            run("GUNZIP") {
+                script "../../../../modules/nf-core/gunzip/main.nf"  // Path to the gunzip module
+                process {
+                    """
+                
+                input[0] = channel.of(
+                    [
+                        [ id: 'chrX_fa' ],
+                        file(params.pipelines_testdata_base_path +'rnasplice/reference/X.fa.gz', checkIfExists: true)
+                    ]
+                )
+                """
+                }
+            }
+        }
         when {
             params {
                 outdir = "$outputDir"
+                irfinder_diff_args = "-m suppa"
             }
             workflow {
                 
                 """
-                input[0] = channel.of(
-                    [
-                        [ id: 'test' ],
-                        file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/chr21_gencode.gtf', checkIfExists: true)
-                    ]
-                )
+                input[0] = Channel.of(
+                            [
+                            [ id:'chrX_gtf' ],
+                            file(params.pipelines_testdata_base_path +'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
+                            ]
+                        )
 
-                input[1] = channel.of(
+                input[1] = GUNZIP.out.gunzip.map { meta, file -> file }
+                input[2] = Channel.of(
                     [
-                        file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
-                    ]
+                        [ id: 'ERR188383', condition: 'GBR' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188383.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR188428', condition: 'GBR' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188428.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR188454', condition: 'YRI' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188454.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR204916', condition: 'YRI' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam", checkIfExists: false)
+                    ],
                 )
-                input[2] = channel.of([
-                    [ id:'test2_paired_end_markduplicates'],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.markduplicates.sorted.bam', checkIfExists: true),
-                ])
-                input[3] = channel.of(
-                [ contrast:'x', control:'y', treatment:'z' ]
+                input[3] = Channel.of(
+                    [ contrast:'GBR-YRI', control:'YRI', treatment:'GBR' ]
                 )
                 """
             }
@@ -44,7 +70,6 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out,
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
@@ -54,8 +79,5 @@ nextflow_workflow {
         }
 
     }
-
-    // no further tests for now, only IRFinder Diff is implemented and the test is covered by the module test.
-    // if more differential options are added later, tests can be added here as well.
 
 }
