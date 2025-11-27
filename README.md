@@ -21,6 +21,7 @@ flowchart TB
       v0["--input"]
       v2["--annotation"]
       v1["--contrasts"]
+      v3["genome_fasta"]
       
     end
 
@@ -54,11 +55,12 @@ flowchart TB
     v0 --> v25
     v0 --> v26
     v0 --> v32
-    v1 --> v26
-    v1 --> v25
     v9 --> v25
     v9 --> v26
     v9 --> v32
+    v1 --> v26
+    v1 --> v25
+    v3 --> v26
     v15 --> v32
     v32 --> v63
     v19 --> v63
