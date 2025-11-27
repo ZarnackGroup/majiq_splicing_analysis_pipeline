@@ -33,7 +33,7 @@ flowchart TB
      end
     subgraph s3["splicing analysis"]
       v25([MAJIQ])
-      v26([IRFinder-S])
+      v26([IRFINDER-S])
     end
     subgraph s4["create BigWig"]
       v19([DEEPTOOLS_BAMCOVERAGE])
@@ -51,13 +51,12 @@ flowchart TB
     v0 --> v22
     v0 --> v25
     v1 --> v25
-    v2 --> v25
     v0 --> v26
     v1 --> v26
-    v2 --> v26
     v0 --> v32
     v2 --> v9
     v9 --> v25
+    v9 --> v26
     v9 --> v32
     v15 --> v32
     v32 --> v63
