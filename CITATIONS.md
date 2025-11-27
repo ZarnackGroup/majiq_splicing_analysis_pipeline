@@ -14,6 +14,10 @@
 
 > Aicher JK, Slaff B, Jewell S, Barash Y. MAJIQ V3 offers improvements in accuracy, performance, and usability for splicing analysis from RNA sequencing. bioRxiv. 2024. doi: 10.1101/2024.07.02.601792.
 
+- [IRFinder-S](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02515-8)
+
+> Lorenzi C, Barriere S, Arnold K, et al. IRFinder-S: a comprehensive suite to discover and explore intron retention. Genome Biology. 2021;22:307. doi: 10.1186/s13059-021-02515-8.
+
 - [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
 > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
