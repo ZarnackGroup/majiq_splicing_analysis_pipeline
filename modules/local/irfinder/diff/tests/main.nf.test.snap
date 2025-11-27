@@ -5,12 +5,10 @@
                 [
                     "IRFINDER_DIFF",
                     "IRFinder",
-                    "IRFinder version: 2.0.0"
+                    "2.0.0"
                 ]
             ],
             [
-                "gunzip",
-                "gunzip/X.fa",
                 "irfinder",
                 "irfinder/ERR188383",
                 "irfinder/ERR188383/IRFinder-ChrCoverage.txt",
@@ -106,7 +104,6 @@
                 "pipeline_info"
             ],
             [
-                "X.fa:md5,aaf58c237019f35a082793f0c5c797f1",
                 "IRFinder-ChrCoverage.txt:md5,b9af36c0b14ad3c4292db49eb30c2cc4",
                 "IRFinder-IR-nondir-val.txt:md5,5136110106b6f982ec80c1e23a80538f",
                 "IRFinder-IR-nondir.txt:md5,b0c947dd4f2d1b8009c2e04c1c2b8a24",
@@ -168,6 +165,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-11-25T13:41:46.522111842"
+        "timestamp": "2025-11-27T18:11:37.548513971"
     }
 }

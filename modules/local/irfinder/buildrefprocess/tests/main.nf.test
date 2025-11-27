@@ -15,6 +15,9 @@ nextflow_process {
     test("chromosome 21 - gtf/fasta") {
 
         when {
+            params {
+                outdir = "$outputDir"
+            }
             process {
                 """
 
@@ -35,44 +38,21 @@ nextflow_process {
         }
 
         then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() }
+                { assert snapshot(
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                    ).match() }
             )
         }
 
-    }
-
-        test("chromosome 21 - gtf/fasta - stub") {
-
-        options "-stub"
-
-        when {
-            process {
-                """
-
-                input[0] = channel.of(
-                    [
-                        [ id: 'test' ],
-                        file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/chr21_gencode.gtf', checkIfExists: true)
-                    ]
-                )
-
-                input[1] = channel.of(
-                    [
-                        file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
-                    ]
-                )
-                """
-            }
-        }
-
-        then {
-            assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
-            )
-        }
     }
 
 }

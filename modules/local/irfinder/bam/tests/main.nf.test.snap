@@ -1,98 +1,92 @@
 {
-    "rnasplice - gtf/fasta - stub": {
-        "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test2.paired_end.markduplicates"
-                        },
-                        "IRFinder-ChrCoverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "1": [
-                    [
-                        "IRFINDER_BAM",
-                        "IRFinder",
-                        "IRFinder version: 2.0.0"
-                    ]
-                ],
-                "bam": [
-                    [
-                        {
-                            "id": "test2.paired_end.markduplicates"
-                        },
-                        "IRFinder-ChrCoverage.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "versions_irfinder": [
-                    [
-                        "IRFINDER_BAM",
-                        "IRFinder",
-                        "IRFinder version: 2.0.0"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
-        },
-        "timestamp": "2025-11-22T12:45:02.448726683"
-    },
     "rnasplice - gtf/fasta": {
         "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test2.paired_end.markduplicates"
-                        },
-                        [
-                            "IRFinder-ChrCoverage.txt:md5,21b7a3ef814f71e8f4f84fbef25679d0",
-                            "IRFinder-IR-nondir-val.txt:md5,ac71c8d27a4206de6353532a3d8bb2be",
-                            "IRFinder-IR-nondir.txt:md5,7c0ff0c3db070314874ebfaa816e261d",
-                            "IRFinder-JuncCount.txt:md5,e10043dc9bc5c6d802d18c8d2233356a",
-                            "IRFinder-ROI.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "IRFinder-SpansPoint.txt:md5,1e35b51880bf3be08a286d3537837255"
-                        ]
-                    ]
-                ],
-                "1": [
-                    [
-                        "IRFINDER_BAM",
-                        "IRFinder",
-                        "IRFinder version: 2.0.0"
-                    ]
-                ],
-                "bam": [
-                    [
-                        {
-                            "id": "test2.paired_end.markduplicates"
-                        },
-                        [
-                            "IRFinder-ChrCoverage.txt:md5,21b7a3ef814f71e8f4f84fbef25679d0",
-                            "IRFinder-IR-nondir-val.txt:md5,ac71c8d27a4206de6353532a3d8bb2be",
-                            "IRFinder-IR-nondir.txt:md5,7c0ff0c3db070314874ebfaa816e261d",
-                            "IRFinder-JuncCount.txt:md5,e10043dc9bc5c6d802d18c8d2233356a",
-                            "IRFinder-ROI.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                            "IRFinder-SpansPoint.txt:md5,1e35b51880bf3be08a286d3537837255"
-                        ]
-                    ]
-                ],
-                "versions_irfinder": [
-                    [
-                        "IRFINDER_BAM",
-                        "IRFinder",
-                        "IRFinder version: 2.0.0"
-                    ]
-                ]
-            }
+            [
+                "irfinder",
+                "irfinder/REF",
+                "irfinder/REF/test",
+                "irfinder/REF/test/IRFinder",
+                "irfinder/REF/test/IRFinder/exclude.directional.bed",
+                "irfinder/REF/test/IRFinder/exclude.omnidirectional.bed",
+                "irfinder/REF/test/IRFinder/intergenic.ROI.bed",
+                "irfinder/REF/test/IRFinder/introns.unique.bed",
+                "irfinder/REF/test/IRFinder/ref-ROI.bed",
+                "irfinder/REF/test/IRFinder/ref-cover.bed",
+                "irfinder/REF/test/IRFinder/ref-read-continues.ref",
+                "irfinder/REF/test/IRFinder/ref-sj.ref",
+                "irfinder/REF/test/Mapability",
+                "irfinder/REF/test/Mapability/MapabilityExclusion.bed.gz",
+                "irfinder/REF/test/STAR",
+                "irfinder/REF/test/STAR/Genome",
+                "irfinder/REF/test/STAR/Log.out",
+                "irfinder/REF/test/STAR/SA",
+                "irfinder/REF/test/STAR/SAindex",
+                "irfinder/REF/test/STAR/chrLength.txt",
+                "irfinder/REF/test/STAR/chrName.txt",
+                "irfinder/REF/test/STAR/chrNameLength.txt",
+                "irfinder/REF/test/STAR/chrStart.txt",
+                "irfinder/REF/test/STAR/exonGeTrInfo.tab",
+                "irfinder/REF/test/STAR/exonInfo.tab",
+                "irfinder/REF/test/STAR/geneInfo.tab",
+                "irfinder/REF/test/STAR/genomeParameters.txt",
+                "irfinder/REF/test/STAR/sjdbInfo.txt",
+                "irfinder/REF/test/STAR/sjdbList.fromGTF.out.tab",
+                "irfinder/REF/test/STAR/sjdbList.out.tab",
+                "irfinder/REF/test/STAR/transcriptInfo.tab",
+                "irfinder/REF/test/genome.fa",
+                "irfinder/REF/test/logSTARbuild",
+                "irfinder/REF/test/transcripts.gtf",
+                "irfinder/test2.paired_end.markduplicates",
+                "irfinder/test2.paired_end.markduplicates/IRFinder-ChrCoverage.txt",
+                "irfinder/test2.paired_end.markduplicates/IRFinder-IR-nondir-val.txt",
+                "irfinder/test2.paired_end.markduplicates/IRFinder-IR-nondir.txt",
+                "irfinder/test2.paired_end.markduplicates/IRFinder-JuncCount.txt",
+                "irfinder/test2.paired_end.markduplicates/IRFinder-ROI.txt",
+                "irfinder/test2.paired_end.markduplicates/IRFinder-SpansPoint.txt",
+                "irfinder/test2.paired_end.markduplicates/WARNINGS",
+                "irfinder/test2.paired_end.markduplicates/logs",
+                "irfinder/test2.paired_end.markduplicates/logs/irfinder.stderr",
+                "irfinder/test2.paired_end.markduplicates/logs/irfinder.stdout",
+                "pipeline_info"
+            ],
+            [
+                "exclude.directional.bed:md5,e3a5f89bbe837e4f1943a60e1cb21c6e",
+                "exclude.omnidirectional.bed:md5,cd4eaf28b8523bd5462fe62da99afff7",
+                "intergenic.ROI.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "introns.unique.bed:md5,fdffbb697dbfdf24780a495a749c1096",
+                "ref-ROI.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ref-cover.bed:md5,9bc357e32296d02ad7e375c89d5e34fd",
+                "ref-read-continues.ref:md5,957a0983c0bc1b20e67f2e9fcd104962",
+                "ref-sj.ref:md5,0c4be303166a8e0135f4c1a037b8755b",
+                "MapabilityExclusion.bed.gz:md5,0ca7c30c1fcf60edc0bd358bc7a68d4a",
+                "Genome:md5,fe1dfedfbf8ac529c29ed6c5e4f1073a",
+                "SA:md5,a07d3bd57b883c4cb58a67d1be8c4551",
+                "SAindex:md5,9b6cdd21ef66edefe466ae8b510958b9",
+                "chrLength.txt:md5,b0be0a56ddefa84552742c72d4859eac",
+                "chrName.txt:md5,e99d7d1051eee43ceab5563c2d09fcee",
+                "chrNameLength.txt:md5,c985a141685e8431ec27c782816cb744",
+                "chrStart.txt:md5,6925b594ea2eeb964ba87cd6d42ab98f",
+                "exonGeTrInfo.tab:md5,4df909658a0492ecbd3a06ce609e6321",
+                "exonInfo.tab:md5,7cfa1b212f335c497705834a4c96cdcd",
+                "geneInfo.tab:md5,ad1720994386644d3b1907433f4a5043",
+                "sjdbInfo.txt:md5,308927b3e981027e814e9e7cfe793507",
+                "sjdbList.fromGTF.out.tab:md5,0a0674059c3be4ccf69d572c9560f5d7",
+                "sjdbList.out.tab:md5,be8b2978e8ac3a2c8266c798c7c34b90",
+                "transcriptInfo.tab:md5,5a6ee447f3efac16042d8c99f653747b",
+                "genome.fa:md5,69bd44ef67566a76d6cbb8aa4a25ae35",
+                "transcripts.gtf:md5,ce686c14239318799f34a3183a0a0684",
+                "IRFinder-ChrCoverage.txt:md5,21b7a3ef814f71e8f4f84fbef25679d0",
+                "IRFinder-IR-nondir-val.txt:md5,ac71c8d27a4206de6353532a3d8bb2be",
+                "IRFinder-IR-nondir.txt:md5,7c0ff0c3db070314874ebfaa816e261d",
+                "IRFinder-JuncCount.txt:md5,e10043dc9bc5c6d802d18c8d2233356a",
+                "IRFinder-ROI.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "IRFinder-SpansPoint.txt:md5,1e35b51880bf3be08a286d3537837255"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-11-22T12:44:47.07944723"
+        "timestamp": "2025-11-27T18:27:59.36868529"
     }
 }
