@@ -140,7 +140,11 @@ The `control` column is used as the reference in comparisons, and `treatment` sp
 
 `annotation`:  
 Provide the annotation file used during alignment. It can be in `.gtf` or `.gff3` format.  
-MAJIQ requires `.gff3`. If a GTF file is provided, it will be converted using AGAT.
+MAJIQ requires `.gff3`. If a GTF file is provided, it will be converted using AGAT. `.gz` are allowed and files will be unzipped.
+
+`genome_fasta`:
+**Optional** input that is required to run **IRFinder**. `.gz` are allowed and files will be unzipped.
+
 Now, you can run the pipeline using:
 
 ```bash
@@ -149,6 +153,7 @@ nextflow run ZarnackGroup/majiq_splicing_analysis_pipeline \
    --input samplesheet.csv \
    --contrasts contrastsheet.csv \
    --annotation annotation.gff3 \
+   --genome_fasta reference.fa \
    --outdir <OUTDIR> \
    -c majiq.config
 ```
