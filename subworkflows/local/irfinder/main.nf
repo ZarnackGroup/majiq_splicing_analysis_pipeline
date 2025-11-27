@@ -13,12 +13,12 @@ workflow IRFINDER {
 
     main:
 
-    IRFINDER_BUILDREFPROCESS ( 
+    IRFINDER_BUILDREFPROCESS (
         ch_gtf,
         ch_fasta
         )
 
-    IRFINDER_BAM ( 
+    IRFINDER_BAM (
         ch_bam,
         IRFINDER_BUILDREFPROCESS.out.ir_finder_reference
         .map{ meta, file -> file }
@@ -26,7 +26,7 @@ workflow IRFINDER {
     )
 
     ch_dirs_by_condition = IRFINDER_BAM.out.irfinder_bam_directory
-        .map { meta, dir -> 
+        .map { meta, dir ->
             [meta.condition, dir]
         }
         .groupTuple()
@@ -51,9 +51,9 @@ workflow IRFINDER {
     IRFINDER_DIFF (
         contrast_comparison_ch
     )
-    
+
     emit:
     irfinder_bam_directory   = IRFINDER_BAM.out.irfinder_bam_directory
     irfinder_diff_results    = IRFINDER_DIFF.out.diff_results
-    ir_finder_reference      = IRFINDER_BUILDREFPROCESS.out.ir_finder_reference                   
+    ir_finder_reference      = IRFINDER_BUILDREFPROCESS.out.ir_finder_reference
 }

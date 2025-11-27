@@ -1,6 +1,6 @@
 include { AGAT_CONVERTSPGXF2GXF  } from '../../../modules/nf-core/agat/convertspgxf2gxf/main'
 include { AGAT_CONVERTGFF2BED    } from '../../../modules/nf-core/agat/convertgff2bed/main'
-include { AGAT_CONVERTSPGFF2GTF  } from '../../../modules/nf-core/agat/convertspgff2gtf/main'     
+include { AGAT_CONVERTSPGFF2GTF  } from '../../../modules/nf-core/agat/convertspgff2gtf/main'
 include { GUNZIP as GUNZIP_ANNOTATION                 } from '../../../modules/nf-core/gunzip/main'
 include { GUNZIP as GUNZIP_GENOME                     } from '../../../modules/nf-core/gunzip/main'
 
@@ -9,9 +9,9 @@ workflow REFERENCES {
     take:
     ch_annotation_input // channel: [ val(meta), path(annotation) ]
     ch_genome_input     // channel: [ val(meta), path(genome) ]
-    
+
     main:
-    
+
     ch_versions = channel.empty()
 
     //

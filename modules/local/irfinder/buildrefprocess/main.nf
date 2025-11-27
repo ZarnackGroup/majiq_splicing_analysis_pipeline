@@ -10,9 +10,9 @@ process IRFINDER_BUILDREFPROCESS {
     path fasta
 
     output:
-    
+
     tuple val(meta), path("REF/${meta.id}"), emit: ir_finder_reference
-    
+
     tuple val("${task.process}"), val('IRFinder'), eval("IRFinder --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+' | tail -n1"), topic: versions, emit: versions_irfinder
 
     when:
@@ -21,7 +21,7 @@ process IRFINDER_BUILDREFPROCESS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    
+
     """
 
     mkdir -p REF/${prefix}
@@ -30,7 +30,7 @@ process IRFINDER_BUILDREFPROCESS {
     mv $fasta REF/${prefix}/genome.fa
     mv $gtf REF/${prefix}/transcripts.gtf
 
-    
+
 
     IRFinder BuildRefProcess \\
         -r REF/${prefix} \\
@@ -40,13 +40,13 @@ process IRFINDER_BUILDREFPROCESS {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    
+
     """
-    
+
     mkdir -p REF/${prefix}
     touch REF/${prefix}/genome.fa
     touch REF/${prefix}/transcripts.gtf
-    
+
 
     """
 }

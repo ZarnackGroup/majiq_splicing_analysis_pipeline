@@ -44,22 +44,22 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     ch_multiqc_files = channel.empty()
 
 
-    
+
     //
     // SUBWORKFLOW: REFERENCES
     //
 
     // Create genome channel - empty if not provided
-    ch_genome = params.genome_fasta 
-        ? channel.fromPath(params.genome_fasta).map { file -> 
+    ch_genome = params.genome_fasta
+        ? channel.fromPath(params.genome_fasta).map { file ->
             def prefix = file.getBaseName()
-            [[ id: prefix ], file] 
+            [[ id: prefix ], file]
         }
         : channel.empty()
 
-    ch_annotation = channel.fromPath(params.annotation).map { file -> 
+    ch_annotation = channel.fromPath(params.annotation).map { file ->
             def prefix = file.getBaseName()
-            [[ id: prefix ], file] 
+            [[ id: prefix ], file]
     }
 
 
@@ -229,7 +229,7 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
             versions_file: entry instanceof Path
             versions_tuple: true
         }
-    
+
 
     def topic_versions_string = topic_versions.versions_tuple
         .map { process, tool, version ->

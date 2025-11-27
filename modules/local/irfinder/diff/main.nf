@@ -17,9 +17,9 @@ process IRFINDER_DIFF {
 
     script:
     def args = task.ext.args ?: ''
-    // Collect all control file paths 
+    // Collect all control file paths
     def control_files_list = control_files.collect { dir -> "./${dir}/IRFinder-IR-nondir.txt" }.join(' ')
-    // Collect all treatment file paths 
+    // Collect all treatment file paths
     def treatment_files_list = treatment_files.collect { dir -> "./${dir}/IRFinder-IR-nondir.txt" }.join(' ')
 
     """
@@ -30,7 +30,7 @@ process IRFINDER_DIFF {
         -g:"${treatment}" ${treatment_files_list} \\
         $args \\
         -v \\
-        -o "diff/${contrast}"  
+        -o "diff/${contrast}"
     """
 
     stub:
@@ -43,7 +43,7 @@ process IRFINDER_DIFF {
     //               - The definition of args `def args = task.ext.args ?: ''` above.
     //               - The use of the variable in the script `echo $args ` below.
     """
-    
+
     mkdir -p "diff/${contrast}"
     """
 }

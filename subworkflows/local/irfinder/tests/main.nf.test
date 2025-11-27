@@ -10,14 +10,14 @@ nextflow_workflow {
                 script "../../../../modules/nf-core/gunzip/main.nf"  // Path to the gunzip module
                 process {
                     """
-                
-                input[0] = channel.of(
-                    [
-                        [ id: 'chrX_fa' ],
-                        file(params.pipelines_testdata_base_path +'rnasplice/reference/X.fa.gz', checkIfExists: true)
-                    ]
-                )
-                """
+
+                    input[0] = channel.of(
+                        [
+                            [ id: 'chrX_fa' ],
+                            file(params.pipelines_testdata_base_path +'rnasplice/reference/X.fa.gz', checkIfExists: true)
+                        ]
+                    )
+                    """
                 }
             }
         }
@@ -27,7 +27,7 @@ nextflow_workflow {
                 irfinder_diff_args = "-m suppa"
             }
             workflow {
-                
+
                 """
                 input[0] = Channel.of(
                             [

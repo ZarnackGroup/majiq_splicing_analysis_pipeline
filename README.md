@@ -22,7 +22,7 @@ flowchart TB
       v2["--annotation"]
       v1["--contrasts"]
       v3["genome_fasta"]
-      
+
     end
 
     subgraph s20["converting inputs"]

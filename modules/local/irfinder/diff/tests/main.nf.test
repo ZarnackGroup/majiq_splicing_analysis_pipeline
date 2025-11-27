@@ -16,38 +16,38 @@ nextflow_process {
                 script "../../../../nf-core/gunzip/main.nf"  // Path to the gunzip module
                 process {
                     """
-                
-                input[0] = channel.of(
-                    [
-                        [ id: 'chrX_fa' ],
-                        file(params.pipelines_testdata_base_path +'rnasplice/reference/X.fa.gz', checkIfExists: true)
-                    ]
-                )
-                """
+
+                    input[0] = channel.of(
+                        [
+                            [ id: 'chrX_fa' ],
+                            file(params.pipelines_testdata_base_path +'rnasplice/reference/X.fa.gz', checkIfExists: true)
+                        ]
+                    )
+                    """
                 }
             }
             run("IRFINDER_BUILDREFPROCESS") {
                 script "../../buildrefprocess/main.nf"  // Path to the irfinder/buildrefprocess module
                 process {
                     """
-                
-                input[0] = Channel.of(
-                            [
-                            [ id:'chrX_gtf' ],
-                            file(params.pipelines_testdata_base_path +'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
-                            ]
-                        )
 
-                input[1] = GUNZIP.out.gunzip.map { meta, file -> file }
-                
-                """
+                    input[0] = Channel.of(
+                                [
+                                [ id:'chrX_gtf' ],
+                                file(params.pipelines_testdata_base_path +'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
+                                ]
+                            )
+
+                    input[1] = GUNZIP.out.gunzip.map { meta, file -> file }
+
+                    """
                 }
             }
             run("IRFINDER_BAM") {
                 script "../../bam/main.nf"  // Path to the irfinder/bam module
                 process {
                     """
-                
+
                     input[0] = Channel.of(
                     [
                         [ id: 'ERR188383', condition: 'GBR' ],
@@ -92,12 +92,12 @@ nextflow_process {
                         .findAll { meta, files -> meta.condition == 'GBR' }
                         .collect { meta, files -> files }
                         .flatten()
-                    
+
                     def yri_files = all_results
                         .findAll { meta, files -> meta.condition == 'YRI' }
                         .collect { meta, files -> files }
                         .flatten()
-                    
+
                     // Return the tuple in the expected format
                     return tuple(
                         'GBR-YRI',      // contrast
