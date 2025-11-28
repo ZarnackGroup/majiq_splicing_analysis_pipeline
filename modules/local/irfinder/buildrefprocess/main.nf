@@ -4,6 +4,9 @@ process IRFINDER_BUILDREFPROCESS {
     label 'process_high'
 
     container "docker.io/cloxd/irfinder:2.0"
+    containerOptions {
+        workflow.containerEngine == 'docker' ? '--entrypoint=""' : ''
+    }
 
     input:
     tuple val(meta), path(gtf)
