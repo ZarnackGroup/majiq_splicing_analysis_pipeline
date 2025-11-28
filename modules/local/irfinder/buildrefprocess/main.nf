@@ -3,7 +3,7 @@ process IRFINDER_BUILDREFPROCESS {
     tag "$meta.id"
     label 'process_high'
 
-    container "docker://cloxd/irfinder:2.0"
+    container "docker.io/cloxd/irfinder:2.0"
 
     input:
     tuple val(meta), path(gtf)

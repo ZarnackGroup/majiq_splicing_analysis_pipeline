@@ -3,7 +3,7 @@ process IRFINDER_DIFF {
     tag "$contrast"
     label 'process_medium'
 
-    container "docker://cloxd/irfinder:2.0"
+    container "docker.io/cloxd/irfinder:2.0"
 
     input:
     tuple val(contrast), val(treatment), val(control), path(treatment_files), path(control_files)
