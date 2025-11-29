@@ -4,8 +4,9 @@ nextflow_workflow {
     script "subworkflows/local/input_check/main.nf"
     workflow "INPUT_CHECK"
 
-    test("Should run without failures") {
+    tag "ci"
 
+    test("Should run without failures") {
         when {
             workflow {
                 """

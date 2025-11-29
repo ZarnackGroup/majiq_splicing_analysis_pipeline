@@ -8,13 +8,13 @@
 include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { SAMTOOLS_INDEX         } from '../modules/nf-core/samtools/index/main'
-include { AGAT_CONVERTSPGXF2GXF  } from '../modules/nf-core/agat/convertspgxf2gxf/main'
-include { AGAT_CONVERTGFF2BED    } from '../modules/nf-core/agat/convertgff2bed/main'
 include { DEEPTOOLS_BAMCOVERAGE  } from '../modules/nf-core/deeptools/bamcoverage/main'
 
 // SUBWORKFLOWS
 include { MAJIQ                  } from '../subworkflows/local/majiq/main'
 include { BAM_RSEQC              } from '../subworkflows/nf-core/bam_rseqc/main'
+include { IRFINDER               } from '../subworkflows/local/irfinder/main'
+include { REFERENCES             } from '../subworkflows/local/references/main'
 
 // FUNCTIONS
 include { paramsSummaryMap       } from 'plugin/nf-schema'
@@ -37,50 +37,40 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     take:
         ch_bam          // channel: bam file inputs
         ch_contrasts    // channel: contrasts input
-        ch_annotation   // channel: annotation input
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
+    ch_versions = channel.empty()
+    ch_multiqc_files = channel.empty()
+
 
 
     //
-    // MODULE: AGAT_CONVERTSPGXF2GXF
+    // SUBWORKFLOW: REFERENCES
     //
 
-    ch_annotation = Channel.fromPath(params.annotation, checkIfExists: true)
-        .map { file ->
-        def meta = [ id: file.baseName ]
-        tuple(meta, file)
+    // Create genome channel - empty if not provided
+    ch_genome = params.genome_fasta
+        ? channel.fromPath(params.genome_fasta).map { file ->
+            def prefix = file.getBaseName()
+            [[ id: prefix ], file]
+        }
+        : channel.empty()
+
+    ch_annotation = channel.fromPath(params.annotation).map { file ->
+            def prefix = file.getBaseName()
+            [[ id: prefix ], file]
     }
 
 
-    // Handle annotation file input
-    if (params.annotation.endsWith('.gff3')) {
-        // Use GFF3
-        ch_gff = ch_annotation
-
-    } else if (params.annotation.endsWith('.gtf')) {
-
-        AGAT_CONVERTSPGXF2GXF(
-            ch_annotation
-            )
-
-        ch_gff = AGAT_CONVERTSPGXF2GXF.out.output_gff
-        ch_versions = ch_versions.mix(AGAT_CONVERTSPGXF2GXF.out.versions)
-    }
-
-    //
-    // MODULE: AGAT_CONVERTGFF2BED
-    //
-    AGAT_CONVERTGFF2BED(
-        ch_gff
+    REFERENCES (
+        ch_annotation,
+        ch_genome
     )
-    .bed
-    .set { ch_bed }
+    ch_versions = ch_versions.mix(REFERENCES.out.versions)
 
-    ch_versions = ch_versions.mix(AGAT_CONVERTGFF2BED.out.versions)
+
+
 
     //
     // MODULE: SAMTOOLS_INDEX
@@ -123,10 +113,22 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     //
     MAJIQ (
         ch_bam,
-        ch_gff,
+        REFERENCES.out.gff3,
         ch_contrasts
     )
-    ch_versions = ch_versions.mix(MAJIQ.out.versions.first())
+    ch_versions = ch_versions.mix(MAJIQ.out.versions)
+
+    //
+    // SUBWORKFLOW: IRFinder
+    //
+    if (!params.skip_irfinder) {
+        IRFINDER (
+            REFERENCES.out.gtf,
+            REFERENCES.out.genome_fasta.map{ meta, file -> file },
+            ch_bam,
+            ch_contrasts
+        )
+    }
 
     //
     // SUBWORKFLOW: RSEQC
@@ -142,7 +144,7 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     }.set { ch_bam_bai }
 
 
-    ch_bed
+    REFERENCES.out.bed
     .map   { meta, bed -> bed }  // drop meta
     .unique()
     .first()
@@ -221,12 +223,13 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     //
     // Collate and save software versions
     //
-    def topic_versions = Channel.topic("versions")
+    def topic_versions = channel.topic("versions")
         .distinct()
         .branch { entry ->
             versions_file: entry instanceof Path
             versions_tuple: true
         }
+
 
     def topic_versions_string = topic_versions.versions_tuple
         .map { process, tool, version ->

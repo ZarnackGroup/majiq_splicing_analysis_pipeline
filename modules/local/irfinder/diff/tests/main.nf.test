@@ -1,0 +1,134 @@
+nextflow_process {
+
+    name "Test Process IRFINDER_DIFF"
+    script "../main.nf"
+    process "IRFINDER_DIFF"
+
+    tag "modules"
+    tag "modules_"
+    tag "irfinder"
+    tag "irfinder/diff"
+
+    test("nf-core/rnasplice test data") {
+
+        setup {
+            run("GUNZIP") {
+                script "../../../../nf-core/gunzip/main.nf"  // Path to the gunzip module
+                process {
+                    """
+
+                    input[0] = channel.of(
+                        [
+                            [ id: 'chrX_fa' ],
+                            file(params.pipelines_testdata_base_path +'rnasplice/reference/X.fa.gz', checkIfExists: true)
+                        ]
+                    )
+                    """
+                }
+            }
+            run("IRFINDER_BUILDREFPROCESS") {
+                script "../../buildrefprocess/main.nf"  // Path to the irfinder/buildrefprocess module
+                process {
+                    """
+
+                    input[0] = Channel.of(
+                                [
+                                [ id:'chrX_gtf' ],
+                                file(params.pipelines_testdata_base_path +'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
+                                ]
+                            )
+
+                    input[1] = GUNZIP.out.gunzip.map { meta, file -> file }
+
+                    """
+                }
+            }
+            run("IRFINDER_BAM") {
+                script "../../bam/main.nf"  // Path to the irfinder/bam module
+                process {
+                    """
+
+                    input[0] = Channel.of(
+                    [
+                        [ id: 'ERR188383', condition: 'GBR' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188383.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR188428', condition: 'GBR' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188428.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR188454', condition: 'YRI' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188454.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR204916', condition: 'YRI' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam", checkIfExists: false)
+                    ],
+                )
+
+                    input[1] = IRFINDER_BUILDREFPROCESS.out.ir_finder_reference
+                                .map { meta, file -> file }
+                                .first()
+
+                """
+                }
+            }
+        }
+
+        when {
+            params {
+                outdir = "$outputDir"
+                irfinder_diff_args = '-m suppa'
+            }
+            process {
+            """
+            // Wait for all IRFINDER_BAM processes to complete and collect results
+            input[0] = IRFINDER_BAM.out.irfinder_bam_directory
+                .toList()
+                .map { all_results ->
+                    // Extract files by condition from the collected list
+                    def gbr_files = all_results
+                        .findAll { meta, files -> meta.condition == 'GBR' }
+                        .collect { meta, files -> files }
+                        .flatten()
+
+                    def yri_files = all_results
+                        .findAll { meta, files -> meta.condition == 'YRI' }
+                        .collect { meta, files -> files }
+                        .flatten()
+
+                    // Return the tuple in the expected format
+                    return tuple(
+                        'GBR-YRI',      // contrast
+                        'GBR',          // treatment
+                        'YRI',          // control
+                        gbr_files,      // treatment_files
+                        yri_files       // control_files
+                    )
+                }
+            """
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.versions_irfinder,
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                    ).match() }
+            )
+        }
+
+    }
+
+
+}

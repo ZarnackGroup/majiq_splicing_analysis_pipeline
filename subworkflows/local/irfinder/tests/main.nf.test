@@ -1,40 +1,43 @@
 nextflow_workflow {
 
-    name "Test Subworkflow MAJIQ"
-    script "../main.nf"
-    workflow "MAJIQ"
+    name "Test Workflow IRFINDER"
+    script "subworkflows/local/irfinder/main.nf"
+    workflow "IRFINDER"
 
-    tag "subworkflows"
-    tag "subworkflows_"
-    tag "subworkflows/majiq"
-    tag "majiq"
-    tag "majiq/buildgff3"
-    tag "ci"
-
-
-    test("nf-core/rnasplice test data") {
+    test("buildrefprocess + bam + diff") {
         setup {
-                run("AGAT_CONVERTSPGXF2GXF") {
-                    script "../../../../modules/nf-core/agat/convertspgxf2gxf/main.nf"  // Path to the agat module
-                    process {
-                        """
-                        input[0] = Channel.of(
-                            [
-                            [ id:'chrX' ],
-                            file(params.pipelines_testdata_base_path +'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
-                            ]
-                        )
-                        """
-                    }
+            run("GUNZIP") {
+                script "../../../../modules/nf-core/gunzip/main.nf"  // Path to the gunzip module
+                process {
+                    """
+
+                    input[0] = channel.of(
+                        [
+                            [ id: 'chrX_fa' ],
+                            file(params.pipelines_testdata_base_path +'rnasplice/reference/X.fa.gz', checkIfExists: true)
+                        ]
+                    )
+                    """
                 }
             }
+        }
         when {
             params {
                 outdir = "$outputDir"
+                irfinder_diff_args = "-m suppa"
             }
             workflow {
+
                 """
                 input[0] = Channel.of(
+                            [
+                            [ id:'chrX_gtf' ],
+                            file(params.pipelines_testdata_base_path +'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
+                            ]
+                        )
+
+                input[1] = GUNZIP.out.gunzip.map { meta, file -> file }
+                input[2] = Channel.of(
                     [
                         [ id: 'ERR188383', condition: 'GBR' ],
                         file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188383.Aligned.out.bam", checkIfExists: false)
@@ -52,8 +55,7 @@ nextflow_workflow {
                         file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam", checkIfExists: false)
                     ],
                 )
-                input[1] = AGAT_CONVERTSPGXF2GXF.out.output_gff
-                input[2] = Channel.of(
+                input[3] = Channel.of(
                     [ contrast:'GBR-YRI', control:'YRI', treatment:'GBR' ]
                 )
                 """
@@ -68,7 +70,6 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out,
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
@@ -76,5 +77,7 @@ nextflow_workflow {
                     ).match() }
             )
         }
+
     }
+
 }

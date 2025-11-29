@@ -21,19 +21,21 @@ flowchart TB
       v0["--input"]
       v2["--annotation"]
       v1["--contrasts"]
+      v3["genome_fasta"]
+
     end
 
     subgraph s20["converting inputs"]
           subgraph s100["index bam files"]
                v15([SAMTOOLS_INDEX])
           end
-          subgraph s2["annotation formatting"]
-               v9([AGAT_CONVERTSPGXF2GXF])
-               v12([AGAT_CONVERTGFF2BED])
+          subgraph s2["annotation format handling"]
+               v9([AGAT])
           end
      end
     subgraph s3["splicing analysis"]
       v25([MAJIQ])
+      v26([IRFINDER-S])
     end
     subgraph s4["create BigWig"]
       v19([DEEPTOOLS_BAMCOVERAGE])
@@ -45,39 +47,41 @@ flowchart TB
     subgraph report
       v63([MULTIQC])
     end
-    v0 --> v15
+    v2 --> v9
     v0 --> v19
-    v15 --> v19
+    v0 --> v15
     v0 --> v22
     v0 --> v25
-    v1 --> v25
+    v0 --> v26
     v0 --> v32
-    v2 --> v9
-    v2 --> v12
-    v9 --> v12
     v9 --> v25
-    v12 --> v32
+    v9 --> v26
+    v9 --> v32
+    v1 --> v26
+    v1 --> v25
+    v3 --> v26
+    v15 --> v19
     v15 --> v32
-    v32 --> v63
     v19 --> v63
+    v32 --> v63
     v22 --> v63
-    v25 --> v63
-    v12 --> v63
     v15 --> v63
+    v9 --> v63
+    v25 --> v63
+    v26 --> v63
   end
 
 ```
 
 1. Index BAM files ([`SAMTOOLS`](https://doi.org/10.1093/bioinformatics/btp352))
-
 2. Convert annotation: GXF conversion ([`AGAT`](https://doi.org/10.5281/zenodo.3552717))
 3. Convert annotation: BED conversion ([`AGAT`](https://doi.org/10.5281/zenodo.3552717))
-
 4. Splicing analysis ([`MAJIQ`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792))
-5. Coverage track generation ([`DEEPTOOLS`](https://doi.org/10.1093/nar/gkw257))
-6. Quality control: read & alignment QC ([`RSeQC`](http://rseqc.sourceforge.net/))
-7. Quality control: read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-8. Reporting ([`MultiQC`](https://pubmed.ncbi.nlm.nih.gov/27312411/))
+5. Intron Retention analysis ([`IRFINDER`](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02515-8))
+6. Coverage track generation ([`DEEPTOOLS`](https://doi.org/10.1093/nar/gkw257))
+7. Quality control: read & alignment QC ([`RSeQC`](http://rseqc.sourceforge.net/))
+8. Quality control: read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+9. Reporting ([`MultiQC`](https://pubmed.ncbi.nlm.nih.gov/27312411/))
 
 ## Usage
 
@@ -136,7 +140,11 @@ The `control` column is used as the reference in comparisons, and `treatment` sp
 
 `annotation`:  
 Provide the annotation file used during alignment. It can be in `.gtf` or `.gff3` format.  
-MAJIQ requires `.gff3`. If a GTF file is provided, it will be converted using AGAT.
+MAJIQ requires `.gff3`. If a GTF file is provided, it will be converted using AGAT. `.gz` are allowed and files will be unzipped.
+
+`genome_fasta`:
+**Optional** input that is required to run **IRFinder**. `.gz` are allowed and files will be unzipped.
+
 Now, you can run the pipeline using:
 
 ```bash
@@ -145,6 +153,7 @@ nextflow run ZarnackGroup/majiq_splicing_analysis_pipeline \
    --input samplesheet.csv \
    --contrasts contrastsheet.csv \
    --annotation annotation.gff3 \
+   --genome_fasta reference.fa \
    --outdir <OUTDIR> \
    -c majiq.config
 ```
@@ -175,6 +184,10 @@ If you would like to contribute to this pipeline, please see the [contributing g
 - [MAJIQ v3](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792)
 
 > Aicher JK, Slaff B, Jewell S, Barash Y. MAJIQ V3 offers improvements in accuracy, performance, and usability for splicing analysis from RNA sequencing. bioRxiv. 2024. doi: 10.1101/2024.07.02.601792.
+
+- [IRFinder-S](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02515-8)
+
+> Lorenzi C, Barriere S, Arnold K, et al. IRFinder-S: a comprehensive suite to discover and explore intron retention. Genome Biology. 2021;22:307. doi: 10.1186/s13059-021-02515-8.
 
 - [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 

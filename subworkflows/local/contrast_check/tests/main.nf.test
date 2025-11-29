@@ -4,6 +4,8 @@ nextflow_workflow {
     script "subworkflows/local/contrast_check/main.nf"
     workflow "CONTRASTS_CHECK"
 
+    tag "ci"
+
     test("Should run without failures") {
 
         when {
