@@ -9,6 +9,7 @@ nextflow_workflow {
     tag "subworkflows/majiq"
     tag "majiq"
     tag "majiq/buildgff3"
+    tag "ci"
 
 
     test("nf-core/rnasplice test data") {

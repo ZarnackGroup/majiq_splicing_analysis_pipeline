@@ -8,6 +8,7 @@ nextflow_process {
     tag "modules_"
     tag "majiq"
     tag "majiq/buildgff3"
+    tag "ci"
 
     test("gff3") {
 

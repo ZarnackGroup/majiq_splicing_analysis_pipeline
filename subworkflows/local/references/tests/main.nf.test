@@ -12,6 +12,7 @@ nextflow_workflow {
     tag "agat/convertgff2bed"
     tag "agat/convertspgff2gtf"
     tag "gunzip"
+    tag "ci"
 
     test("GTF annotation + uncompressed genome") {
 
