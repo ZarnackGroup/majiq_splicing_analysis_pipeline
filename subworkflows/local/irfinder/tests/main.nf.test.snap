@@ -159,5 +159,32 @@
             "nextflow": "25.04.6"
         },
         "timestamp": "2025-11-27T14:23:28.730629625"
+    },
+    "buildrefprocess + bam + diff - STUB": {
+        "content": [
+            [
+                "irfinder",
+                "irfinder/ERR188383",
+                "irfinder/ERR188383/IRFinder-ChrCoverage.txt",
+                "irfinder/ERR188428",
+                "irfinder/ERR188428/IRFinder-ChrCoverage.txt",
+                "irfinder/ERR188454",
+                "irfinder/ERR188454/IRFinder-ChrCoverage.txt",
+                "irfinder/ERR204916",
+                "irfinder/ERR204916/IRFinder-ChrCoverage.txt",
+                "irfinder/REF",
+                "irfinder/REF/chrX_gtf",
+                "irfinder/REF/chrX_gtf/genome.fa",
+                "irfinder/REF/chrX_gtf/transcripts.gtf",
+                "irfinder/diff",
+                "irfinder/diff/GBR-YRI",
+                "pipeline_info"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-12-04T11:26:48.086870248"
     }
 }

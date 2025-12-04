@@ -36,6 +36,7 @@ process IRFINDER_BAM {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    touch IRFinder-ChrCoverage.txt
+    mkdir -p ${prefix}
+    touch ${prefix}/IRFinder-ChrCoverage.txt
     """
 }
