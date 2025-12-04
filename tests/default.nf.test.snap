@@ -3561,5 +3561,252 @@
             "nextflow": "25.04.6"
         },
         "timestamp": "2025-11-29T15:47:48.926404822"
+    },
+    "-profile test,stub": {
+        "content": [
+            {
+                "AGAT_CONVERTGFF2BED": {
+                    "agat": "v1.5.1"
+                },
+                "AGAT_CONVERTSPGXF2GXF": {
+                    "agat": "v1.5.1"
+                },
+                "DEEPTOOLS_BAMCOVERAGE": {
+                    "deeptools": "3.5.5"
+                },
+                "DELTAPSI_MODULIZE": {
+                    "majiq": "stub-version"
+                },
+                "FASTQC": {
+                    "fastqc": "0.12.1"
+                },
+                "GUNZIP_GENOME": {
+                    "gunzip": 1.13
+                },
+                "HETEROGEN_MODULIZE": {
+                    "majiq": "stub-version"
+                },
+                "IRFINDER_BAM": {
+                    "IRFinder": "2.0.0"
+                },
+                "IRFINDER_BUILDREFPROCESS": {
+                    "IRFinder": "2.0.0"
+                },
+                "IRFINDER_DIFF": {
+                    "IRFinder": "2.0.0"
+                },
+                "MAJIQ_BUILDGFF3": {
+                    "majiq": "stub-version"
+                },
+                "MAJIQ_BUILDSJ": {
+                    "majiq": "stub-version"
+                },
+                "MAJIQ_BUILDUPDATE": {
+                    "majiq": "stub-version"
+                },
+                "MAJIQ_DELTAPSI": {
+                    "majiq": "stub-version"
+                },
+                "MAJIQ_HETEROGEN": {
+                    "majiq": "stub-version"
+                },
+                "MAJIQ_PSICOVERAGE": {
+                    "majiq": "stub-version"
+                },
+                "MAJIQ_QUANTIFY": {
+                    "majiq": "3.0.6"
+                },
+                "MAJIQ_SGCOVERAGE": {
+                    "majiq": "stub-version"
+                },
+                "RSEQC_BAMSTAT": {
+                    "rseqc": "5.0.2"
+                },
+                "RSEQC_INFEREXPERIMENT": {
+                    "rseqc": "5.0.2"
+                },
+                "RSEQC_JUNCTIONANNOTATION": {
+                    "rseqc": "5.0.2"
+                },
+                "RSEQC_JUNCTIONSATURATION": {
+                    "rseqc": "5.0.2"
+                },
+                "RSEQC_READDUPLICATION": {
+                    "rseqc": "5.0.2"
+                },
+                "SAMTOOLS_INDEX": {
+                    "samtools": "1.22.1"
+                },
+                "Workflow": {
+                    "ZarnackGroup/majiq_splicing_analysis_pipeline": "v1.0.0dev"
+                }
+            },
+            [
+                "bigWig",
+                "bigWig/ERR188383.bigWig",
+                "bigWig/ERR188428.bigWig",
+                "bigWig/ERR188454.bigWig",
+                "bigWig/ERR204916.bigWig",
+                "irfinder",
+                "irfinder/ERR188383",
+                "irfinder/ERR188383/IRFinder-ChrCoverage.txt",
+                "irfinder/ERR188428",
+                "irfinder/ERR188428/IRFinder-ChrCoverage.txt",
+                "irfinder/ERR188454",
+                "irfinder/ERR188454/IRFinder-ChrCoverage.txt",
+                "irfinder/ERR204916",
+                "irfinder/ERR204916/IRFinder-ChrCoverage.txt",
+                "irfinder/REF",
+                "irfinder/REF/genes_chrX",
+                "irfinder/REF/genes_chrX/genome.fa",
+                "irfinder/REF/genes_chrX/transcripts.gtf",
+                "irfinder/diff",
+                "irfinder/diff/GBR-YRI",
+                "irfinder/diff/YRI-GBR",
+                "majiq",
+                "majiq/build",
+                "majiq/build/psi-coverage",
+                "majiq/build/psi-coverage/GBR.psicov",
+                "majiq/build/psi-coverage/YRI.psicov",
+                "majiq/build/sg-coverage",
+                "majiq/build/sg-coverage/GBR.sgc",
+                "majiq/build/sg-coverage/YRI.sgc",
+                "majiq/build/sj",
+                "majiq/build/sj/ERR188383.sj",
+                "majiq/build/sj/ERR188428.sj",
+                "majiq/build/sj/ERR188454.sj",
+                "majiq/build/sj/ERR204916.sj",
+                "majiq/build/splicegraph.zarr",
+                "majiq/deltapsi",
+                "majiq/deltapsi/deltapsi",
+                "majiq/deltapsi/deltapsi/GBR-YRI.deltapsi.logger.txt",
+                "majiq/deltapsi/deltapsi/GBR-YRI.deltapsi.tsv",
+                "majiq/deltapsi/deltapsi/GBR-YRI.dpsicov",
+                "majiq/deltapsi/deltapsi/YRI-GBR.deltapsi.logger.txt",
+                "majiq/deltapsi/deltapsi/YRI-GBR.deltapsi.tsv",
+                "majiq/deltapsi/deltapsi/YRI-GBR.dpsicov",
+                "majiq/deltapsi/modulize",
+                "majiq/deltapsi/modulize/dummy_output.txt",
+                "majiq/deltapsi/modulize/module.logger.txt",
+                "majiq/heterogen",
+                "majiq/heterogen/heterogen",
+                "majiq/heterogen/heterogen/GBR-YRI.hetcov",
+                "majiq/heterogen/heterogen/GBR-YRI.heterogen.logger.txt",
+                "majiq/heterogen/heterogen/GBR-YRI.heterogen.tsv",
+                "majiq/heterogen/heterogen/YRI-GBR.hetcov",
+                "majiq/heterogen/heterogen/YRI-GBR.heterogen.logger.txt",
+                "majiq/heterogen/heterogen/YRI-GBR.heterogen.tsv",
+                "majiq/heterogen/modulize",
+                "majiq/heterogen/modulize/dummy_output.txt",
+                "majiq/heterogen/modulize/module.logger.txt",
+                "majiq/quantify",
+                "majiq/quantify/GBR.psi.tsv",
+                "majiq/quantify/YRI.psi.tsv",
+                "majiq/quantify/modulize",
+                "majiq/quantify/modulize/dummy_output.txt",
+                "majiq/quantify/modulize/module.logger.txt",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/majiq_splicing_analysis_pipeline_software_mqc_versions.yml",
+                "processed_inputs",
+                "processed_inputs/annotation",
+                "processed_inputs/annotation/genes_chrX.agat.gff",
+                "processed_inputs/annotation/genes_chrX.bed",
+                "processed_inputs/annotation/genes_chrX.gtf.agat.log",
+                "processed_inputs/contrastsheet",
+                "processed_inputs/contrastsheet/contrastsheet.valid.csv",
+                "processed_inputs/samplesheet",
+                "processed_inputs/samplesheet/samplesheet.valid.csv",
+                "processed_inputs/samtools",
+                "processed_inputs/samtools/ERR188383.Aligned.out.bam.bai",
+                "processed_inputs/samtools/ERR188428.Aligned.out.bam.bai",
+                "processed_inputs/samtools/ERR188454.Aligned.out.bam.bai",
+                "processed_inputs/samtools/ERR204916.Aligned.out.bam.bai",
+                "quality_control",
+                "quality_control/fastqc",
+                "quality_control/fastqc/ERR188383.html",
+                "quality_control/fastqc/ERR188383.zip",
+                "quality_control/fastqc/ERR188428.html",
+                "quality_control/fastqc/ERR188428.zip",
+                "quality_control/fastqc/ERR188454.html",
+                "quality_control/fastqc/ERR188454.zip",
+                "quality_control/fastqc/ERR204916.html",
+                "quality_control/fastqc/ERR204916.zip",
+                "quality_control/rseqc",
+                "quality_control/rseqc/ERR188383",
+                "quality_control/rseqc/ERR188383/ERR188383.DupRate_plot.pdf",
+                "quality_control/rseqc/ERR188383/ERR188383.DupRate_plot.r",
+                "quality_control/rseqc/ERR188383/ERR188383.Interact.bed",
+                "quality_control/rseqc/ERR188383/ERR188383.bam_stat.txt",
+                "quality_control/rseqc/ERR188383/ERR188383.events.pdf",
+                "quality_control/rseqc/ERR188383/ERR188383.infer_experiment.txt",
+                "quality_control/rseqc/ERR188383/ERR188383.junction.bed",
+                "quality_control/rseqc/ERR188383/ERR188383.junction.pdf",
+                "quality_control/rseqc/ERR188383/ERR188383.junction.xls",
+                "quality_control/rseqc/ERR188383/ERR188383.junctionSaturation_plot.pdf",
+                "quality_control/rseqc/ERR188383/ERR188383.junctionSaturation_plot.r",
+                "quality_control/rseqc/ERR188383/ERR188383.junction_annotation.log",
+                "quality_control/rseqc/ERR188383/ERR188383.junction_plot.r",
+                "quality_control/rseqc/ERR188383/ERR188383.pos.DupRate.xls",
+                "quality_control/rseqc/ERR188383/ERR188383.seq.DupRate.xls",
+                "quality_control/rseqc/ERR188428",
+                "quality_control/rseqc/ERR188428/ERR188428.DupRate_plot.pdf",
+                "quality_control/rseqc/ERR188428/ERR188428.DupRate_plot.r",
+                "quality_control/rseqc/ERR188428/ERR188428.Interact.bed",
+                "quality_control/rseqc/ERR188428/ERR188428.bam_stat.txt",
+                "quality_control/rseqc/ERR188428/ERR188428.events.pdf",
+                "quality_control/rseqc/ERR188428/ERR188428.infer_experiment.txt",
+                "quality_control/rseqc/ERR188428/ERR188428.junction.bed",
+                "quality_control/rseqc/ERR188428/ERR188428.junction.pdf",
+                "quality_control/rseqc/ERR188428/ERR188428.junction.xls",
+                "quality_control/rseqc/ERR188428/ERR188428.junctionSaturation_plot.pdf",
+                "quality_control/rseqc/ERR188428/ERR188428.junctionSaturation_plot.r",
+                "quality_control/rseqc/ERR188428/ERR188428.junction_annotation.log",
+                "quality_control/rseqc/ERR188428/ERR188428.junction_plot.r",
+                "quality_control/rseqc/ERR188428/ERR188428.pos.DupRate.xls",
+                "quality_control/rseqc/ERR188428/ERR188428.seq.DupRate.xls",
+                "quality_control/rseqc/ERR188454",
+                "quality_control/rseqc/ERR188454/ERR188454.DupRate_plot.pdf",
+                "quality_control/rseqc/ERR188454/ERR188454.DupRate_plot.r",
+                "quality_control/rseqc/ERR188454/ERR188454.Interact.bed",
+                "quality_control/rseqc/ERR188454/ERR188454.bam_stat.txt",
+                "quality_control/rseqc/ERR188454/ERR188454.events.pdf",
+                "quality_control/rseqc/ERR188454/ERR188454.infer_experiment.txt",
+                "quality_control/rseqc/ERR188454/ERR188454.junction.bed",
+                "quality_control/rseqc/ERR188454/ERR188454.junction.pdf",
+                "quality_control/rseqc/ERR188454/ERR188454.junction.xls",
+                "quality_control/rseqc/ERR188454/ERR188454.junctionSaturation_plot.pdf",
+                "quality_control/rseqc/ERR188454/ERR188454.junctionSaturation_plot.r",
+                "quality_control/rseqc/ERR188454/ERR188454.junction_annotation.log",
+                "quality_control/rseqc/ERR188454/ERR188454.junction_plot.r",
+                "quality_control/rseqc/ERR188454/ERR188454.pos.DupRate.xls",
+                "quality_control/rseqc/ERR188454/ERR188454.seq.DupRate.xls",
+                "quality_control/rseqc/ERR204916",
+                "quality_control/rseqc/ERR204916/ERR204916.DupRate_plot.pdf",
+                "quality_control/rseqc/ERR204916/ERR204916.DupRate_plot.r",
+                "quality_control/rseqc/ERR204916/ERR204916.Interact.bed",
+                "quality_control/rseqc/ERR204916/ERR204916.bam_stat.txt",
+                "quality_control/rseqc/ERR204916/ERR204916.events.pdf",
+                "quality_control/rseqc/ERR204916/ERR204916.infer_experiment.txt",
+                "quality_control/rseqc/ERR204916/ERR204916.junction.bed",
+                "quality_control/rseqc/ERR204916/ERR204916.junction.pdf",
+                "quality_control/rseqc/ERR204916/ERR204916.junction.xls",
+                "quality_control/rseqc/ERR204916/ERR204916.junctionSaturation_plot.pdf",
+                "quality_control/rseqc/ERR204916/ERR204916.junctionSaturation_plot.r",
+                "quality_control/rseqc/ERR204916/ERR204916.junction_annotation.log",
+                "quality_control/rseqc/ERR204916/ERR204916.junction_plot.r",
+                "quality_control/rseqc/ERR204916/ERR204916.pos.DupRate.xls",
+                "quality_control/rseqc/ERR204916/ERR204916.seq.DupRate.xls"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-12-04T11:36:33.0101376"
     }
 }

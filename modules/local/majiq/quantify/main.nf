@@ -43,12 +43,12 @@ process MAJIQ_QUANTIFY {
 
     stub:
     """
-    mkdir -p psi
-    echo -e "gene_id\\tpsi_value\\nGENE1\\t0.85\\nGENE2\\t0.92" > psi/${condition}.psi.tsv
+    mkdir -p quantify
+    echo -e "gene_id\\tpsi_value\\nGENE1\\t0.85\\nGENE2\\t0.92" > quantify/${condition}.psi.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        majiq: "stub-version"
+        majiq: \$(majiq --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+')
     END_VERSIONS
     """
 }
