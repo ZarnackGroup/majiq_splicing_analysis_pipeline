@@ -69,7 +69,7 @@ nextflow_pipeline {
         then {
             // For stub tests, only check file structure, not content
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            
+
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(

@@ -83,9 +83,9 @@ nextflow_workflow {
     test("buildrefprocess + bam + diff - STUB") {
     tag "stub"
     tag "ci"
-    
+
     options "-stub"
-    
+
     setup {
         run("GUNZIP") {
             script "../../../../modules/nf-core/gunzip/main.nf"
@@ -101,7 +101,7 @@ nextflow_workflow {
             }
         }
     }
-    
+
     when {
         params {
             outdir = "$outputDir"
@@ -145,7 +145,7 @@ nextflow_workflow {
     then {
         // For stub tests, check that the workflow completes and generates expected file structure
         def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-        
+
         assertAll(
             { assert workflow.success },
             { assert snapshot(
