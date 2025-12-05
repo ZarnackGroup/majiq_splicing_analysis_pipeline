@@ -116,7 +116,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         REFERENCES.out.gff3,
         ch_contrasts
     )
-    ch_versions = ch_versions.mix(MAJIQ.out.versions)
 
     //
     // SUBWORKFLOW: IRFinder

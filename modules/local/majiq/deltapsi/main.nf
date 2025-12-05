@@ -15,7 +15,8 @@ process MAJIQ_DELTAPSI {
     path("deltapsi/${contrast}.deltapsi.tsv") , emit: deltapsi_tsv
     path("deltapsi/${contrast}.dpsicov")      , emit: dpsicov
     path "deltapsi/${contrast}.deltapsi.logger.txt"               , emit: logger
-    path "versions.yml"                      , emit: versions
+    tuple val("${task.process}"), val('majiq'), eval('majiq --version | grep -oE "[0-9]+\\.[0-9]+\\.[0-9]+"'), emit: versions_majiq, topic: versions
+
 
     when:
     task.ext.when == null || task.ext.when
@@ -45,10 +46,6 @@ process MAJIQ_DELTAPSI {
         --debug \\
         $args
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        majiq: \$(majiq --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+')
-    END_VERSIONS
     """
 
     stub:
@@ -58,9 +55,5 @@ process MAJIQ_DELTAPSI {
     touch deltapsi/${contrast}.dpsicov
     echo "This is a stub log file for ${contrast}" > deltapsi/${contrast}.deltapsi.logger.txt
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        majiq: "stub-version"
-    END_VERSIONS
     """
 }

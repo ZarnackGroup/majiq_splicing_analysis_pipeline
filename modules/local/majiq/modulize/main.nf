@@ -8,7 +8,8 @@ process MAJIQ_MODULIZE {
 
     output:
     path("modulize/*"), emit: modulize_files
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('voila'), eval('voila --version | grep -oE "[0-9]+\\.[0-9]+\\.[0-9]+"'), emit: versions_majiq, topic: versions
+
 
     when:
     task.ext.when == null || task.ext.when
@@ -34,10 +35,6 @@ process MAJIQ_MODULIZE {
         --nproc ${task.cpus} \\
         $args
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        majiq: \$(majiq --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+')
-    END_VERSIONS
     """
 
     stub:
@@ -46,9 +43,5 @@ process MAJIQ_MODULIZE {
     touch modulize/dummy_output.txt
     echo "This is a stub log file" > modulize/module.logger.txt
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        majiq: "stub-version"
-    END_VERSIONS
     """
 }

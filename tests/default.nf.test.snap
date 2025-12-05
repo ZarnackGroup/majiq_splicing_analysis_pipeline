@@ -12,7 +12,7 @@
                     "deeptools": "3.5.5"
                 },
                 "DELTAPSI_MODULIZE": {
-                    "majiq": "3.0.6"
+                    "voila": "3.0.6"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -21,7 +21,7 @@
                     "gunzip": 1.13
                 },
                 "HETEROGEN_MODULIZE": {
-                    "majiq": "3.0.6"
+                    "voila": "3.0.6"
                 },
                 "IRFINDER_BAM": {
                     "IRFinder": "2.0.0"
@@ -55,6 +55,9 @@
                 },
                 "MAJIQ_SGCOVERAGE": {
                     "majiq": "3.0.6"
+                },
+                "QUANTIFY_MODULIZE": {
+                    "voila": "3.0.6"
                 },
                 "RSEQC_BAMSTAT": {
                     "rseqc": "5.0.2"
@@ -1866,7 +1869,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-11-27T15:55:38.178606252"
+        "timestamp": "2025-12-05T11:22:08.273607709"
     },
     "Pipeline without IRFinder (GitHub actions friendly)": {
         "content": [
@@ -1881,7 +1884,7 @@
                     "deeptools": "3.5.5"
                 },
                 "DELTAPSI_MODULIZE": {
-                    "majiq": "3.0.6"
+                    "voila": "3.0.6"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -1890,7 +1893,7 @@
                     "gunzip": 1.13
                 },
                 "HETEROGEN_MODULIZE": {
-                    "majiq": "3.0.6"
+                    "voila": "3.0.6"
                 },
                 "MAJIQ_BUILDGFF3": {
                     "majiq": "3.0.6"
@@ -1915,6 +1918,9 @@
                 },
                 "MAJIQ_SGCOVERAGE": {
                     "majiq": "3.0.6"
+                },
+                "QUANTIFY_MODULIZE": {
+                    "voila": "3.0.6"
                 },
                 "RSEQC_BAMSTAT": {
                     "rseqc": "5.0.2"
@@ -3560,7 +3566,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-11-29T15:47:48.926404822"
+        "timestamp": "2025-12-05T11:25:36.689670697"
     },
     "-profile test,stub": {
         "content": [
@@ -3575,7 +3581,7 @@
                     "deeptools": "3.5.5"
                 },
                 "DELTAPSI_MODULIZE": {
-                    "majiq": "stub-version"
+                    "voila": "3.0.6"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -3584,7 +3590,7 @@
                     "gunzip": 1.13
                 },
                 "HETEROGEN_MODULIZE": {
-                    "majiq": "stub-version"
+                    "voila": "3.0.6"
                 },
                 "IRFINDER_BAM": {
                     "IRFinder": "2.0.0"
@@ -3596,28 +3602,31 @@
                     "IRFinder": "2.0.0"
                 },
                 "MAJIQ_BUILDGFF3": {
-                    "majiq": "stub-version"
+                    "majiq": "3.0.6"
                 },
                 "MAJIQ_BUILDSJ": {
-                    "majiq": "stub-version"
+                    "majiq": "3.0.6"
                 },
                 "MAJIQ_BUILDUPDATE": {
-                    "majiq": "stub-version"
+                    "majiq": "3.0.6"
                 },
                 "MAJIQ_DELTAPSI": {
-                    "majiq": "stub-version"
+                    "majiq": "3.0.6"
                 },
                 "MAJIQ_HETEROGEN": {
-                    "majiq": "stub-version"
+                    "majiq": "3.0.6"
                 },
                 "MAJIQ_PSICOVERAGE": {
-                    "majiq": "stub-version"
+                    "majiq": "3.0.6"
                 },
                 "MAJIQ_QUANTIFY": {
                     "majiq": "3.0.6"
                 },
                 "MAJIQ_SGCOVERAGE": {
-                    "majiq": "stub-version"
+                    "majiq": "3.0.6"
+                },
+                "QUANTIFY_MODULIZE": {
+                    "voila": "3.0.6"
                 },
                 "RSEQC_BAMSTAT": {
                     "rseqc": "5.0.2"
@@ -3805,8 +3814,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-12-04T11:36:33.0101376"
+        "timestamp": "2025-12-05T11:26:46.161092985"
     }
 }

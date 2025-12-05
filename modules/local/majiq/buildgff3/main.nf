@@ -12,7 +12,8 @@ process MAJIQ_BUILDGFF3 {
     output:
 
     tuple val(meta), path("splicegraph.zarr"), emit: splicegraph
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('majiq'), eval('majiq --version | grep -oE "[0-9]+\\.[0-9]+\\.[0-9]+"'), emit: versions_majiq, topic: versions
+
 
     when:
     task.ext.when == null || task.ext.when
@@ -34,10 +35,7 @@ process MAJIQ_BUILDGFF3 {
         splicegraph.zarr \\
         $args
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        majiq: \$(majiq --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+')
-    END_VERSIONS
+
     """
 
    stub:
@@ -46,9 +44,5 @@ process MAJIQ_BUILDGFF3 {
         mkdir -p splicegraph.zarr
         echo "Stub splicegraph content" > splicegraph.zarr/dummy_file.txt
 
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            majiq: "stub-version"
-        END_VERSIONS
         """
 }

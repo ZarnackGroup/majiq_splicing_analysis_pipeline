@@ -23,7 +23,6 @@ workflow MAJIQ {
 
     main:
 
-    ch_versions = channel.empty()
 
     //
     // MODULE: MAJIQ_BUILDGFF3
@@ -32,7 +31,6 @@ workflow MAJIQ {
     MAJIQ_BUILDGFF3(
         ch_gff
     )
-    ch_versions = ch_versions.mix(MAJIQ_BUILDGFF3.out.versions)
 
     ch_splicegraph = MAJIQ_BUILDGFF3.out.splicegraph
     ch_combine = ch_bam.combine(ch_splicegraph)
@@ -45,7 +43,6 @@ workflow MAJIQ {
         ch_combine
     )
 
-    ch_versions = ch_versions.mix(MAJIQ_BUILDSJ.out.versions)
 
     ch_sj_condition_map = MAJIQ_BUILDSJ.out.sj
         .collect()
@@ -72,7 +69,6 @@ workflow MAJIQ {
         ch_splicegraph,
         ch_sj_condition_map
     )
-    ch_versions = ch_versions.mix(MAJIQ_BUILDUPDATE.out.versions)
 
 
     ch_finished_splicegraph = MAJIQ_BUILDUPDATE.out.splicegraph
@@ -93,7 +89,6 @@ workflow MAJIQ {
         ch_condition_samples_sj
     )
 
-    ch_versions = ch_versions.mix(MAJIQ_PSICOVERAGE.out.versions)
 
     ch_combined_psicoverage = MAJIQ_PSICOVERAGE.out.psi_coverage
         .combine(ch_finished_splicegraph)
@@ -114,7 +109,6 @@ workflow MAJIQ {
     MAJIQ_SGCOVERAGE(
         ch_condition_samples_sj
     )
-    ch_versions = ch_versions.mix(MAJIQ_SGCOVERAGE.out.versions)
 
 
 
@@ -147,7 +141,6 @@ workflow MAJIQ {
             MAJIQ_PSICOVERAGE.out.psi_coverage.combine(ch_finished_splicegraph)
         )
 
-        ch_versions = ch_versions.mix(MAJIQ_QUANTIFY.out.versions)
 
         //
         // MODULE: MAJIQ_MODULIZE
@@ -162,7 +155,6 @@ workflow MAJIQ {
             ch_modulize_input_quantify
         )
 
-        ch_versions = ch_versions.mix(MAJIQ_QUANTIFY.out.versions)
     }
 
 
@@ -176,7 +168,6 @@ workflow MAJIQ {
             ch_contrast_input
         )
 
-        ch_versions = ch_versions.mix(MAJIQ_DELTAPSI.out.versions)
 
         //
         // MODULE: MAJIQ_MODULIZE
@@ -195,8 +186,6 @@ workflow MAJIQ {
 
 
 
-    ch_versions = ch_versions.mix(DELTAPSI_MODULIZE.out.versions)
-
     }
 
 
@@ -209,7 +198,6 @@ workflow MAJIQ {
             ch_contrast_input
         )
 
-        ch_versions = ch_versions.mix(MAJIQ_HETEROGEN.out.versions)
 
         //
         // MODULE: MAJIQ_MODULIZE
@@ -229,7 +217,6 @@ workflow MAJIQ {
 
 
 
-        ch_versions = ch_versions.mix(HETEROGEN_MODULIZE.out.versions)
 
     }
 
@@ -242,5 +229,7 @@ workflow MAJIQ {
 
 
     emit:
-    versions = ch_versions                     // channel: [ versions.yml ]
+    deltapsi_modulize         = DELTAPSI_MODULIZE.out.modulize_files
+    heterogen_modulize        = HETEROGEN_MODULIZE.out.modulize_files
+
 }
