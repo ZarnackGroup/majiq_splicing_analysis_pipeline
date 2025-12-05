@@ -12,7 +12,8 @@ process MAJIQ_BUILDUPDATE {
 
     output:
     tuple val(meta), path("./build/splicegraph.zarr"), emit: splicegraph
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('majiq'), eval('majiq --version | grep -oE "[0-9]+\\.[0-9]+\\.[0-9]+"'), emit: versions_majiq, topic: versions
+
 
     when:
     task.ext.when == null || task.ext.when
@@ -46,10 +47,6 @@ process MAJIQ_BUILDUPDATE {
         ./build/splicegraph.zarr \\
         $args \\
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        majiq: \$(majiq --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+')
-    END_VERSIONS
     """
 
     stub:
@@ -57,9 +54,5 @@ process MAJIQ_BUILDUPDATE {
     mkdir -p build
     touch build/splicegraph.zarr
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        majiq: "stub-version"
-    END_VERSIONS
     """
 }

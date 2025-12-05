@@ -14,7 +14,8 @@ process MAJIQ_HETEROGEN {
     path("heterogen/${contrast}.heterogen.tsv") , emit: heterogen_tsv
     path("heterogen/${contrast}.hetcov")        , emit: hetcov
     path "heterogen/${contrast}.heterogen.logger.txt"                , emit: logger
-    path "versions.yml"                        , emit: versions
+    tuple val("${task.process}"), val('majiq'), eval('majiq --version | grep -oE "[0-9]+\\.[0-9]+\\.[0-9]+"'), emit: versions_majiq, topic: versions
+
 
 
     when:
@@ -45,10 +46,6 @@ process MAJIQ_HETEROGEN {
         --debug \\
         $args
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        majiq: \$(majiq --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+')
-    END_VERSIONS
     """
 
     stub:
@@ -58,9 +55,5 @@ process MAJIQ_HETEROGEN {
     touch heterogen/${contrast}.hetcov
     echo "This is a stub log file" > heterogen/${contrast}.heterogen.logger.txt
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        majiq: "stub-version"
-    END_VERSIONS
     """
 }

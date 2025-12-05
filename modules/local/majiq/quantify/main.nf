@@ -9,7 +9,8 @@ process MAJIQ_QUANTIFY {
 
     output:
     tuple val(condition), path("quantify/*.tsv"), emit: psi_tsv
-    path "versions.yml"           , emit: versions
+    tuple val("${task.process}"), val('majiq'), eval('majiq --version | grep -oE "[0-9]+\\.[0-9]+\\.[0-9]+"'), emit: versions_majiq, topic: versions
+
 
     when:
     task.ext.when == null || task.ext.when
@@ -35,10 +36,6 @@ process MAJIQ_QUANTIFY {
         --splicegraph $splicegraph \\
         $args
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        majiq: \$(majiq --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+')
-    END_VERSIONS
     """
 
     stub:
@@ -46,9 +43,5 @@ process MAJIQ_QUANTIFY {
     mkdir -p quantify
     echo -e "gene_id\\tpsi_value\\nGENE1\\t0.85\\nGENE2\\t0.92" > quantify/${condition}.psi.tsv
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        majiq: \$(majiq --version | grep -oE '[0-9]+\\.[0-9]+\\.[0-9]+')
-    END_VERSIONS
     """
 }
