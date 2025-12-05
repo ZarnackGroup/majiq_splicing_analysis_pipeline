@@ -1,0 +1,95 @@
+---
+title: "Delta PSI Analysis Report"
+author: "Nextflow Pipeline"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    toc: true
+    toc-depth: 2
+    code-fold: true
+    embed-resources: true
+params:
+  meta: NULL
+  cpus: 1
+  artifact_dir: "artifacts"
+  sample_id: "default"
+  modulize_dir: "modulize"
+  analysis_date: "2024-01-01"
+  output_prefix: "sample"
+---
+
+## Analysis Overview
+
+This report was generated for sample: **`r params$sample_id`**
+
+Analysis date: **`r params$analysis_date`**
+
+Modulize directory: **`r params$modulize_dir`**
+
+```{r}
+print(params)
+```
+
+
+---
+
+## Libraries
+```{r setup}
+#| echo: false
+#| message: false
+library(tidyverse)
+library(writexl)
+```
+
+## Input Files
+
+
+```{r}
+#| echo: false
+
+# List all files in the modulize directory
+modulize_path <- params$modulize_dir
+
+loadTSVs <- function(tsvDir){
+  return(
+    list(cassette=read.table(paste0(tsvDir,"/cassette.tsv"), header=T, sep="\t"),
+        alternative_intron=read.table(paste0(tsvDir,"/alternative_intron.tsv"), header=T, sep="\t"),
+        alt5prime=read.table(paste0(tsvDir,"/alt5prime.tsv"), header=T, sep="\t"),
+        alt3prime=read.table(paste0(tsvDir,"/alt3prime.tsv"), header=T, sep="\t"),
+        alt3and5prime=read.table(paste0(tsvDir,"/alt3and5prime.tsv"), header=T, sep="\t"),
+        alternate_first_exon=read.table(paste0(tsvDir,"/alternate_first_exon.tsv"), header=T, sep="\t"),
+        alternate_last_exon=read.table(paste0(tsvDir,"/alternate_last_exon.tsv"), header=T, sep="\t"),
+        p_alt5prime=read.table(paste0(tsvDir,"/p_alt5prime.tsv"), header=T, sep="\t"),
+        p_alt3prime=read.table(paste0(tsvDir,"/p_alt3prime.tsv"), header=T, sep="\t"),
+        p_alternate_first_exon=read.table(paste0(tsvDir,"/p_alternate_first_exon.tsv"), header=T, sep="\t"),
+        p_alternate_last_exon=read.table(paste0(tsvDir,"/p_alternate_last_exon.tsv"), header=T, sep="\t"),
+        mutually_exclusive=read.table(paste0(tsvDir,"/mutually_exclusive.tsv"), header=T, sep="\t"),
+        tandem_cassette=read.table(paste0(tsvDir,"/tandem_cassette.tsv"), header=T, sep="\t"),
+        multi_exon_spanning=read.table(paste0(tsvDir,"/multi_exon_spanning.tsv"), header=T, sep="\t")
+    )  
+  )
+}
+
+files <- loadTSVs(modulize_path)
+```
+
+## All Parameters
+
+```{r}
+#| echo: true
+
+# Display all parameters passed to this notebook
+print("All parameters:")
+str(params)
+```
+
+
+
+
+## Session Information 
+
+```{r}
+#| echo: false
+
+sessionInfo()
+```

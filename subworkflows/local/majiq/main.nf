@@ -230,6 +230,6 @@ workflow MAJIQ {
 
     emit:
     deltapsi_modulize         = DELTAPSI_MODULIZE.out.modulize_files
-    heterogen_modulize        = HETEROGEN_MODULIZE.out.modulize_files
+    // heterogen_modulize        = HETEROGEN_MODULIZE.out.modulize_files
 
 }

@@ -1,0 +1,96 @@
+// TODO nf-core: Once you have added the required tests, please run the following command to build this file:
+// nf-core subworkflows test downstream_analysis
+nextflow_workflow {
+
+    name "Test Subworkflow DOWNSTREAM_ANALYSIS"
+    script "../main.nf"
+    workflow "DOWNSTREAM_ANALYSIS"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "subworkflows/downstream_analysis"
+    tag "downstream_analysis"
+    tag "quartonotebook"
+    tag "ci"
+
+    test("nf-core/rnasplice test data - with MAJIQ deltapsi output") {
+        
+        setup {
+            // First, run AGAT to convert GTF to GFF3
+            run("AGAT_CONVERTSPGXF2GXF") {
+                script "../../../../modules/nf-core/agat/convertspgxf2gxf/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of(
+                        [
+                            [ id:'chrX' ],
+                            file(params.pipelines_testdata_base_path + 'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
+                        ]
+                    )
+                    """
+                }
+            }
+            
+            // Second, run the MAJIQ workflow with skip parameters for speed
+            run("MAJIQ") {
+                script "../../majiq/main.nf"  // Adjust path as needed
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                        [
+                            [ id: 'ERR188383', condition: 'GBR' ],
+                            file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188383.Aligned.out.bam", checkIfExists: false)
+                        ],
+                        [
+                            [ id: 'ERR188428', condition: 'GBR' ],
+                            file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188428.Aligned.out.bam", checkIfExists: false)
+                        ],
+                        [
+                            [ id: 'ERR188454', condition: 'YRI' ],
+                            file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188454.Aligned.out.bam", checkIfExists: false)
+                        ],
+                        [
+                            [ id: 'ERR204916', condition: 'YRI' ],
+                            file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam", checkIfExists: false)
+                        ]
+                    )
+                    input[1] = AGAT_CONVERTSPGXF2GXF.out.output_gff
+                    input[2] = Channel.of(
+                        [ contrast:'GBR-YRI', control:'YRI', treatment:'GBR' ]
+                    )
+                    """
+                }
+            }
+        }
+
+        when {
+            params {
+                outdir = "$outputDir"
+                skip_heterogen = true
+                skip_psi = true
+                majiq_buildupdate_args = "--no-simplify"
+                deltapsi_modulize_args = "--show-all"
+
+            }
+            workflow {
+                """
+                // Use the deltapsi_modulize output from MAJIQ workflow
+                input[0] = MAJIQ.out.deltapsi_modulize
+                """
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    stable_name,
+                    stable_path,
+                    workflow.out.deltapsi_html
+                ).match() }
+            )
+        }
+    }
+}
