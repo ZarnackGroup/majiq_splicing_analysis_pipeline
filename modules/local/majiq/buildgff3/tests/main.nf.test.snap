@@ -14,7 +14,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,36042572efe20490e506b26603b7fdae"
+                    [
+                        "MAJIQ_BUILDGFF3",
+                        "majiq",
+                        "3.0.6"
+                    ]
                 ],
                 "splicegraph": [
                     [
@@ -27,8 +31,12 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,36042572efe20490e506b26603b7fdae"
+                "versions_majiq": [
+                    [
+                        "MAJIQ_BUILDGFF3",
+                        "majiq",
+                        "3.0.6"
+                    ]
                 ]
             }
         ],
@@ -36,7 +44,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-11-14T23:06:26.9128031"
+        "timestamp": "2025-12-05T11:47:34.357597178"
     },
     "gff3": {
         "content": [
@@ -187,7 +195,11 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,dc7e4d41751381e9d271c7d8146c1d5b"
+                    [
+                        "MAJIQ_BUILDGFF3",
+                        "majiq",
+                        "3.0.6"
+                    ]
                 ],
                 "splicegraph": [
                     [
@@ -334,15 +346,19 @@
                         ]
                     ]
                 ],
-                "versions": [
-                    "versions.yml:md5,dc7e4d41751381e9d271c7d8146c1d5b"
+                "versions_majiq": [
+                    [
+                        "MAJIQ_BUILDGFF3",
+                        "majiq",
+                        "3.0.6"
+                    ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-11-16T01:14:18.141390359"
+        "timestamp": "2025-12-05T11:47:24.098965971"
     }
 }

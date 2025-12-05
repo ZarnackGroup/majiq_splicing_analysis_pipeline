@@ -68,7 +68,6 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out,
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
