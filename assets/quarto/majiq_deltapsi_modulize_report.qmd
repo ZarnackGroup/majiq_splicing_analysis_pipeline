@@ -1,6 +1,6 @@
 ---
-title: "Delta PSI Analysis Report"
-author: "Nextflow Pipeline"
+title: "Deltapsi Modulize Report"
+author: "ZarnackGroup/majiq_splicing_analysis_pipeline"
 date: "`r Sys.Date()`"
 format: 
   html:
@@ -20,10 +20,10 @@ params:
 
 ## Libraries
 
-The libraries used to create this report. The `tidyverse` package is used to reduce the amount of dependencies. The `openxlsx` package is added on top because `tidyverse` includes no package that can wirte excel sheets. 
+The libraries used to create this report. The `tidyverse` package is used to reduce the number of dependencies. The `openxlsx` package is added on top because `tidyverse` does not include a package that can write Excel files. 
 
 ```{r libraries}
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 
@@ -66,7 +66,7 @@ knitr::kable(
 
 ## Voila modulize command overview
 
-Summary on the `voila modulize` command used to create the inputs for this report. Thresholds are used later to identify changing and non-changing events between conditions.
+Summary of the `voila modulize` command used to create the inputs for this report. Thresholds are used later to identify changing events between conditions.
 
 ```{r voila modulize meta data}
 
@@ -134,14 +134,14 @@ dpsi_probability_changing_threshold <-
 
 # need to do some regex magic here because the parameter needs to be extracted from the command as it is not provided as entry in the json header
 num01 <- "(0(?:\\.\\d+)?|1(?:\\.0+)?)"
+pat   <- paste0("--changing-between-group-dpsi-secondary\\s+(", num01, ")")
+
 changing_between_group_dpsi_secondary <-
-  suppressWarnings(as.numeric(
-    sub(
-      paste0(".*--changing-between-group-dpsi-secondary\\s+(", num01, ").*"),
-      "\\1",
-      command_used
-    )
-  )) %||% changing_between_group_dpsi_secondary_default
+  if (!is.na(command_used) && grepl(pat, command_used, perl = TRUE)) {
+    as.numeric(sub(paste0(".*", pat, ".*"), "\\1", command_used, perl = TRUE))
+  } else {
+    changing_between_group_dpsi_secondary_default
+  }
 
 
 
@@ -171,7 +171,7 @@ tibble(
 
 ## Sanitize inputs
 
-Here the actual splicing results are read in.  
+Here, the `voila modulize` outputs are read in.
 
 ```{r read in event files}
 # define list of relevant event types to read in
@@ -294,7 +294,7 @@ cleaned_results <- lapply(sanitized_results, convert_na_probability_to_0)
 ```
 
 
-here "empty" events are removed - if all junctions have no coverage (every psi value is 0), the event is also removed.
+Here, “empty” events are removed. If all junctions have no coverage (i.e. every PSI value is 0), the event is also removed.
 
 ```{r}
 
@@ -324,13 +324,13 @@ non_empty_results <- remove_no_coverage_events(cleaned_results) %>% discard(~ nr
 
 ## Identify significant events
 
-After cleaning up the tables we annotate each event in every contrast wether it is significantly changing or significantly non-changing. An event is considered significantly changing if it satifies the following criteria:
+After cleaning up the tables, we annotate each event in every contrast id it is significantly changing. An event is considered significantly changing if it satisfies the following criteria:
 
-1. at least one junction of the event meets the `–-changing-between-group-dpsi` threshold (dpsi > `r dpsi_changing_threshold`)
+1. At least one junction of the event meets the `–-changing-between-group-dpsi` threshold (dpsi > `r dpsi_changing_threshold`)
 
-2. all junctions meet the `-–changing-between-group-dpsi-secondary` threshold (dpsi > `r changing_between_group_dpsi_secondary`)
+2. All junctions meet the `-–changing-between-group-dpsi-secondary` threshold (dpsi > `r changing_between_group_dpsi_secondary`)
 
-3. all junctions meet the `-–probability-changing-threshold` threshold (P(dpsi > `r dpsi_changing_threshold`) > `r dpsi_probability_changing_threshold` )
+3. All junctions meet the `-–probability-changing-threshold` threshold (P(dpsi > `r dpsi_changing_threshold`) > `r dpsi_probability_changing_threshold` )
 
 ```{r}
 
@@ -419,7 +419,7 @@ add_contrast_boolean_calls_majiq <- function(
 }
 
 annotated_results <- add_contrast_boolean_calls_majiq(
-  cleaned_results,
+  non_empty_results,
   dpsi_changing_threshold,
   dpsi_probability_changing_threshold,
   changing_between_group_dpsi_secondary
@@ -503,8 +503,26 @@ overview_tbl %>%
 
 ## Save results
 
+Here, results are saved to Excel files for sharing and as `.rds` objects to allow for further work on the results.
 
-```{r}
+```{r save to rds}
+
+dir.create(paste0(params$artifact_dir, "/rds"), recursive = TRUE, showWarnings = FALSE)
+
+saveRDS(
+  annotated_results,
+  file = paste0(params$artifact_dir, "/rds/annotated_results.rds")
+)
+saveRDS(
+  overview_tbl,
+  file = paste0(params$artifact_dir, "/rds/overview_table.rds")
+)
+
+
+```
+
+```{r save to excel}
+dir.create(paste0(params$artifact_dir, "/excel"), recursive = TRUE, showWarnings = FALSE)
 # ---- helpers ----
 sanitize_sheet_names <- function(x) {
   # Excel sheet name rules: <= 31 chars, no : \ / ? * [ ]
@@ -514,6 +532,10 @@ sanitize_sheet_names <- function(x) {
   # ensure unique (Excel also requires unique names)
   make.unique(x, sep = "_")
 }
+
+dir.create(paste0(params$artifact_dir, "/rds"), recursive = TRUE, showWarnings = FALSE)
+
+
 
 write_event_list_xlsx <- function(event_list, outfile) {
   stopifnot(is.list(event_list))
@@ -542,8 +564,7 @@ write_event_list_xlsx <- function(event_list, outfile) {
 
 # ---- 1) save your two event lists ----
 # replace "regulated_results" with your actual object name if different
-write_event_list_xlsx(annotated_results, "annotated_results.xlsx")
-# write_event_list_xlsx(changing_events_only, "regulated_results.xlsx")
+write_event_list_xlsx(annotated_results, paste0(params$artifact_dir,"/excel/annotated_results.xlsx"))
 
 # ---- 2) save overview table as .xlsx ----
 # overview_tbl is your wide table (contrast rows, event types columns)
@@ -551,12 +572,12 @@ wb_overview <- createWorkbook()
 addWorksheet(wb_overview, "overview")
 writeDataTable(wb_overview, "overview", overview_tbl, withFilter = TRUE)
 setColWidths(wb_overview, "overview", cols = 1:ncol(overview_tbl), widths = "auto")
-saveWorkbook(wb_overview, "overview_table.xlsx", overwrite = TRUE)
+saveWorkbook(wb_overview, paste0(params$artifact_dir,"/excel/overview_table.xlsx"), overwrite = TRUE)
 
 # ---- 3) save overview table as .tsv ----
 write.table(
   overview_tbl,
-  file = "overview_table.tsv",
+  file = paste0(params$artifact_dir,"/overview_table.tsv"),
   sep = "\t",
   quote = FALSE,
   row.names = FALSE
@@ -564,7 +585,7 @@ write.table(
 
 ```
 
-## Session Information 
+## Session information 
 
 ```{r}
 #| echo: false
