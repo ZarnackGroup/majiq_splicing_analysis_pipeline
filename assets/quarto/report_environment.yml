@@ -1,13 +1,10 @@
 channels:
-  - conda-forge
-  - bioconda
+- conda-forge
+- bioconda
 dependencies:
-  - conda-forge::matplotlib=3.10.3
-  - conda-forge::papermill=2.6.0
-  - conda-forge::quarto=1.7.31
-  - conda-forge::r-rmarkdown=2.30
-  - conda-forge::r-tidyverse=2.0.0
-  - conda-forge::r-writexl=1.5.4
-  - pip
-  - pip:
-    - jupyter==1.1.1
+- conda-forge::matplotlib=3.10.3
+- conda-forge::papermill=2.6.0
+- conda-forge::quarto=1.7.31
+- conda-forge::r-openxlsx=4.2.8.1
+- conda-forge::r-rmarkdown=2.30
+- conda-forge::r-tidyverse=2.0.0
