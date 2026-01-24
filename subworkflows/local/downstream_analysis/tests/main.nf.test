@@ -56,7 +56,8 @@ nextflow_workflow {
                     )
                     input[1] = AGAT_CONVERTSPGXF2GXF.out.output_gff
                     input[2] = Channel.of(
-                        [ contrast:'GBR-YRI', control:'YRI', treatment:'GBR' ]
+                        [ contrast:'GBR-YRI', control:'YRI', treatment:'GBR' ],
+                        [ contrast:'YRI-GBR', control:'GBR', treatment:'YRI' ]
                     )
                     """
                 }
@@ -75,7 +76,7 @@ nextflow_workflow {
             workflow {
                 """
                 // Use the deltapsi_modulize output from MAJIQ workflow
-                input[0] = MAJIQ.out.deltapsi_modulize
+                input[0] = MAJIQ.out.ch_deltapsi_modulize
                 """
             }
         }
@@ -87,8 +88,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     stable_name,
-                    stable_path,
-                    workflow.out.deltapsi_html
+                    stable_path
                 ).match() }
             )
         }

@@ -129,6 +129,10 @@ workflow MAJIQ {
     //  MAJIQ Quantification
     //
 
+    // initialize output channels
+    ch_quantify_modulize        = channel.empty()  
+    ch_deltapsi_modulize        = channel.empty()
+    ch_heterogen_modulize       = channel.empty()
 
 
     if( !params.skip_psi ) {
@@ -155,6 +159,8 @@ workflow MAJIQ {
             ch_modulize_input_quantify
         )
 
+        ch_quantify_modulize = ch_quantify_modulize.mix(QUANTIFY_MODULIZE.out.modulize_files.first())
+
     }
 
 
@@ -168,6 +174,7 @@ workflow MAJIQ {
             ch_contrast_input
         )
 
+        
 
         //
         // MODULE: MAJIQ_MODULIZE
@@ -182,7 +189,9 @@ workflow MAJIQ {
 
         DELTAPSI_MODULIZE(
             ch_modulize_input_deltapsi
-    )
+        )
+
+        ch_deltapsi_modulize = ch_deltapsi_modulize.mix(DELTAPSI_MODULIZE.out.modulize_files.first())
 
 
 
@@ -208,12 +217,15 @@ workflow MAJIQ {
             .combine(MAJIQ_HETEROGEN.out.hetcov.collect())
             .toList()
             .combine(ch_finished_splicegraph)
+        
+        
 
 
         HETEROGEN_MODULIZE(
             ch_modulize_input_heterogen
         )
 
+        ch_heterogen_modulize = ch_heterogen_modulize.mix(HETEROGEN_MODULIZE.out.modulize_files.first())
 
 
 
@@ -229,7 +241,9 @@ workflow MAJIQ {
 
 
     emit:
-    deltapsi_modulize         = DELTAPSI_MODULIZE.out.modulize_files
-    // heterogen_modulize        = HETEROGEN_MODULIZE.out.modulize_files
+    ch_splicegraph               = ch_finished_splicegraph
+    ch_quantify_modulize         = ch_quantify_modulize
+    ch_deltapsi_modulize         = ch_deltapsi_modulize
+    ch_heterogen_modulize        = ch_heterogen_modulize
 
 }

@@ -7,16 +7,18 @@ workflow DOWNSTREAM_ANALYSIS {
     deltapsi_modulize         // channel: [meta, files]
 
     main:
+
+    ch_versions = channel.empty()
     
      // Add metadata to the directory
     ch_with_meta = deltapsi_modulize
         .map { modulize_dir ->
-            def meta = [id: 'deltapsi_analysis']
+            def meta = [id: 'majiq_deltapsi_modulize_report']
             tuple(meta, modulize_dir)
         }
     
     // Prepare the Quarto notebook template
-    ch_notebook_template = file("${projectDir}/assets/quarto/deltapsi_report.qmd", checkIfExists: true)
+    ch_notebook_template = file("${projectDir}/assets/quarto/majiq_deltapsi_modulize_report.qmd", checkIfExists: true)
     
     // Input 1: tuple val(meta), path(notebook)
     ch_meta_notebook = ch_with_meta
@@ -30,7 +32,7 @@ workflow DOWNSTREAM_ANALYSIS {
             [
                 sample_id: meta.id,
                 modulize_dir: modulize_dir.name,
-                artifact_dir: "artifacts",
+                artifact_dir: "tables",
                 analysis_date: new Date().format('yyyy-MM-dd'),
                 output_prefix: meta.id
             ]
@@ -51,7 +53,18 @@ workflow DOWNSTREAM_ANALYSIS {
         ch_input_files,
         ch_extensions
     )
+
+    // Extract the overview_table.tsv from the artifacts output
+    ch_overview_table = QUARTONOTEBOOK_DELTAPSI.out.artifacts
+        .map { meta, artifacts ->
+            // Handle both single file and list of files
+            def tsv_file = artifacts.find { it.name == 'overview_table.tsv' }
+            tuple(meta, tsv_file)
+        }
+
+    ch_versions = QUARTONOTEBOOK_DELTAPSI.out.versions
     
     emit:
-    deltapsi_params_yml = QUARTONOTEBOOK_DELTAPSI.out.params_yaml
+    ch_versions = ch_versions
+    ch_deltapsi_table = ch_overview_table
 }
