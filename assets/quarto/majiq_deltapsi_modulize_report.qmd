@@ -2,7 +2,7 @@
 title: "Deltapsi Modulize Report"
 author: "ZarnackGroup/majiq_splicing_analysis_pipeline"
 date: "`r Sys.Date()`"
-format: 
+format:
   html:
     toc: true
     toc-depth: 2
@@ -20,7 +20,7 @@ params:
 
 ## Libraries
 
-The libraries used to create this report. The `tidyverse` package is used to reduce the number of dependencies. The `openxlsx` package is added on top because `tidyverse` does not include a package that can write Excel files. 
+The libraries used to create this report. The `tidyverse` package is used to reduce the number of dependencies. The `openxlsx` package is added on top because `tidyverse` does not include a package that can write Excel files.
 
 ```{r libraries}
 #| echo: true
@@ -86,16 +86,16 @@ in_json <- FALSE
 repeat {
   line <- readLines(con, n = 1, warn = FALSE)
   if (length(line) == 0) break  # EOF safeguard
-  
+
   # detect start of JSON
   if (str_detect(line, "^#\\s*\\{")) {
     in_json <- TRUE
   }
-  
+
   if (in_json) {
     json_lines <- c(json_lines, line)
   }
-  
+
   # detect end of JSON
   if (in_json && str_detect(line, "^#\\s*\\}")) {
     break
@@ -186,9 +186,9 @@ event_types <- c(
 paths <- setNames(file.path(modulize_path, paste0(event_types, ".tsv")), event_types)
 
 # drop missing types quietly
-paths <- paths[file.exists(paths)]  
+paths <- paths[file.exists(paths)]
 
-# read in files 
+# read in files
 modulize_results <- lapply(paths, read.table, sep = "\t", header = TRUE, stringsAsFactors = FALSE) %>%
   discard(~ nrow(.x) == 0) # remove event types that have no entries
 ```
@@ -202,12 +202,12 @@ remove_invalid_events <- function(df) {
 
   critical_cols = c("event_id", "gene_id", "lsv_id", "gene_name")
   coord_cols <- c("spliced_with_coord", "lsv_id", "reference_exon_coord")
-  
+
   ## ---------------------------------------------
   ## Step 1 — critical cols: NA or empty
   ## ---------------------------------------------
-  
-  # Normalize NA-like strings in critical columns 
+
+  # Normalize NA-like strings in critical columns
   df2 <- df %>%
   mutate(across(
     all_of(critical_cols),
@@ -229,11 +229,11 @@ remove_invalid_events <- function(df) {
         ~ is.na(.) | . == "" | grepl("na-", ., ignore.case = TRUE) | grepl("-na", ., ignore.case = TRUE)
       )
     )
-  
+
   ## ---------------------------------------------
   ## Step 3 — coordinates containing -1
   ## ---------------------------------------------
-  
+
   bad_minus1_coord_rows <- df2 %>%
     filter(
       if_any(
@@ -257,8 +257,8 @@ remove_invalid_events <- function(df) {
   ## Step 5 — remove all rows belonging to bad events
   ## ---------------------------------------------
   df2 <- df2 %>% filter(!event_id %in% bad_event_ids)
-  
-  
+
+
 }
 
 sanitized_results <- lapply(modulize_results, remove_invalid_events) %>% discard(~ nrow(.x) == 0)
@@ -272,10 +272,10 @@ convert_na_probability_to_0 <- function (df) {
   ## ---------------------------------------------
   ## converte nan and NaN to 0 in probability columns
   ## ---------------------------------------------
-  
+
   # find probability columns
   prob_cols <- grep("(probability|psi)", colnames(df), value = TRUE)
-  
+
   df2 <- df %>%
     mutate(across(
       all_of(prob_cols),
@@ -290,7 +290,7 @@ convert_na_probability_to_0 <- function (df) {
     ))
 }
 
-cleaned_results <- lapply(sanitized_results, convert_na_probability_to_0) 
+cleaned_results <- lapply(sanitized_results, convert_na_probability_to_0)
 ```
 
 
@@ -352,15 +352,15 @@ add_contrast_boolean_calls_majiq <- function(
     contrasts <- sub("_median_dpsi$", "", dpsi_cols)
 
     df_out <- df
-    
-    
+
+
     # iterate over every contrast
     for (ct in contrasts) {
       dpsiCol <- paste0(ct, "_median_dpsi")
       pChgCol <- paste0(ct, "_probability_changing")
       pNonCol <- paste0(ct, "_probability_non_changing")
-      
-    
+
+
       # add information for every row if it meets the filtering thresholds
       df_num <- df_out %>%
         mutate(
@@ -374,9 +374,9 @@ add_contrast_boolean_calls_majiq <- function(
           # strict prob-changing on all rows
           meets_prob_changing = .data[[pChgCol]] >= dpsi_probability_changing_threshold_default
         )
-      
+
       # summarize junction information on LSV level to identify LSVs that meet changing critereia
-      
+
       # ---- LSV level ----
       lsv_sum <- df_num %>%
         group_by(event_id, lsv_id) %>%
@@ -386,7 +386,7 @@ add_contrast_boolean_calls_majiq <- function(
           all_prob_changing_lsv = all(meets_prob_changing),
           .groups = "drop"
         )
-      
+
       # summarize LSV level information for events (one Event can have more than 1 LSV)
       # ---- Event level ----
       event_calls <- lsv_sum %>%
@@ -585,7 +585,7 @@ write.table(
 
 ```
 
-## Session information 
+## Session information
 
 ```{r}
 #| echo: false

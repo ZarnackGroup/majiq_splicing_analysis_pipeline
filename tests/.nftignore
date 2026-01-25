@@ -44,4 +44,4 @@ reports/*.html
 reports/*.qmd
 reports/*.yml
 reports/tables/rds/*.rds
-reports/tables/excel/*.xlsx 
+reports/tables/excel/*.xlsx

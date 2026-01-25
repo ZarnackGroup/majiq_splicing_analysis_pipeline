@@ -14,7 +14,7 @@ nextflow_workflow {
     tag "ci"
 
     test("nf-core/rnasplice test data - with MAJIQ deltapsi output") {
-        
+
         setup {
             // First, run AGAT to convert GTF to GFF3
             run("AGAT_CONVERTSPGXF2GXF") {
@@ -30,7 +30,7 @@ nextflow_workflow {
                     """
                 }
             }
-            
+
             // Second, run the MAJIQ workflow with skip parameters for speed
             run("MAJIQ") {
                 script "../../majiq/main.nf"  // Adjust path as needed

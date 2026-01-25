@@ -130,7 +130,7 @@ workflow MAJIQ {
     //
 
     // initialize output channels
-    ch_quantify_modulize        = channel.empty()  
+    ch_quantify_modulize        = channel.empty()
     ch_deltapsi_modulize        = channel.empty()
     ch_heterogen_modulize       = channel.empty()
 
@@ -174,7 +174,7 @@ workflow MAJIQ {
             ch_contrast_input
         )
 
-        
+
 
         //
         // MODULE: MAJIQ_MODULIZE
@@ -217,8 +217,8 @@ workflow MAJIQ {
             .combine(MAJIQ_HETEROGEN.out.hetcov.collect())
             .toList()
             .combine(ch_finished_splicegraph)
-        
-        
+
+
 
 
         HETEROGEN_MODULIZE(
