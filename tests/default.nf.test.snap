@@ -1878,15 +1878,14 @@
                 "ERR188383.Aligned.out.bam.bai:md5,710b133442903288f0e0614dea57d056",
                 "ERR188428.Aligned.out.bam.bai:md5,a1ce6b50935f289fe37e50993d76bf8e",
                 "ERR188454.Aligned.out.bam.bai:md5,6b6cf12090fde841d3babe4b713f73e7",
-                "ERR204916.Aligned.out.bam.bai:md5,a6d7050ac386e520f7596fcb7b722fab",
-                "overview_table.tsv:md5,2a03797e66cb76e771946fa11bc1a093"
+                "ERR204916.Aligned.out.bam.bai:md5,a6d7050ac386e520f7596fcb7b722fab"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2026-01-25T00:45:25.03224816"
+        "timestamp": "2026-01-25T10:44:21.577071433"
     },
     "Pipeline without IRFinder (GitHub actions friendly)": {
         "content": [
@@ -3592,15 +3591,14 @@
                 "ERR188383.Aligned.out.bam.bai:md5,710b133442903288f0e0614dea57d056",
                 "ERR188428.Aligned.out.bam.bai:md5,a1ce6b50935f289fe37e50993d76bf8e",
                 "ERR188454.Aligned.out.bam.bai:md5,6b6cf12090fde841d3babe4b713f73e7",
-                "ERR204916.Aligned.out.bam.bai:md5,a6d7050ac386e520f7596fcb7b722fab",
-                "overview_table.tsv:md5,2a03797e66cb76e771946fa11bc1a093"
+                "ERR204916.Aligned.out.bam.bai:md5,a6d7050ac386e520f7596fcb7b722fab"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2026-01-25T00:48:52.488445277"
+        "timestamp": "2026-01-25T10:47:52.373260275"
     },
     "-profile test,stub": {
         "content": [

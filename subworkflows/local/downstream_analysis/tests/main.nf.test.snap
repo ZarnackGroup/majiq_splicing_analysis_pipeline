@@ -1103,14 +1103,13 @@
                 ".zarray:md5,f43f68666a4e3b6b1cf00c2e38a046a9",
                 ".zarray:md5,cee5f379d56f9c557b407956ee8a3063",
                 ".zarray:md5,1eed540e0e2e039d4f7020de37924b01",
-                "chrX.agat.gff:md5,4b0db27ba7b45ea37f487cf8361ca358",
-                "overview_table.tsv:md5,692fbfb8c05b9847ab037338f2b0e7f4"
+                "chrX.agat.gff:md5,4b0db27ba7b45ea37f487cf8361ca358"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2026-01-25T01:32:37.287016143"
+        "timestamp": "2026-01-25T10:39:12.876606062"
     }
 }
