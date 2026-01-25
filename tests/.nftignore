@@ -40,3 +40,9 @@ irfinder/diff/*/suppa.psivec
 irfinder/diff/*/groups.tsv
 irfinder/diff/*/*.tpm.tsv
 irfinder/diff/*/*.psi.tsv
+reports/*.html
+reports/*.qmd
+reports/*.yml
+reports/tables/rds/*.rds
+reports/tables/excel/*.xlsx
+reports/tables/*.tsv

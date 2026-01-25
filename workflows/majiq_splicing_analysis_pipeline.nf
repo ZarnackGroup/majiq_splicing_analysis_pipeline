@@ -15,6 +15,7 @@ include { MAJIQ                  } from '../subworkflows/local/majiq/main'
 include { BAM_RSEQC              } from '../subworkflows/nf-core/bam_rseqc/main'
 include { IRFINDER               } from '../subworkflows/local/irfinder/main'
 include { REFERENCES             } from '../subworkflows/local/references/main'
+include { DOWNSTREAM_ANALYSIS    } from '../subworkflows/local/downstream_analysis/main'
 
 // FUNCTIONS
 include { paramsSummaryMap       } from 'plugin/nf-schema'
@@ -128,6 +129,14 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
             ch_contrasts
         )
     }
+
+    //
+    // SUBWORKFLOW: Downstream Analysis
+    //
+    DOWNSTREAM_ANALYSIS (
+        MAJIQ.out.ch_deltapsi_modulize
+    )
+    ch_versions = ch_versions.mix(DOWNSTREAM_ANALYSIS.out.ch_versions.first())
 
     //
     // SUBWORKFLOW: RSEQC
