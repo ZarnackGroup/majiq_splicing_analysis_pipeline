@@ -3,11 +3,12 @@ description: "Suggested text and references to use when describing pipeline usag
 section_name: "ZarnackGroup/majiq_splicing_analysis_pipeline Methods Description"
 section_href: "https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline"
 plot_type: "html"
-## TODO nf-core: Update the HTML below to your preferred methods description, e.g. add publication citation for this pipeline
-## You inject any metadata in the Nextflow '${workflow}' object
 data: |
   <h4>Methods</h4>
-  <p>Data was processed using ZarnackGroup/majiq_splicing_analysis_pipeline v${workflow.manifest.version} ${doi_text} of the nf-core collection of workflows (<a href="https://doi.org/10.1038/s41587-020-0439-x">Ewels <em>et al.</em>, 2020</a>), utilising reproducible software environments from the Bioconda (<a href="https://doi.org/10.1038/s41592-018-0046-7">Grüning <em>et al.</em>, 2018</a>) and Biocontainers (<a href="https://doi.org/10.1093/bioinformatics/btx192">da Veiga Leprevost <em>et al.</em>, 2017</a>) projects.</p>
+  <p>
+  Alternative splicing events were identified using the ZarnackGroup/majiq_splicing_analysis_pipeline v${workflow.manifest.version} ${doi_text}, which builds upon workflows from the nf-core collection (<a href="https://doi.org/10.1038/s41587-020-0439-x">Ewels <em>et al.</em>, 2020</a>) and leverages reproducible software environments provided by the Bioconda (<a href="https://doi.org/10.1038/s41592-018-0046-7">Grüning <em>et al.</em>, 2018</a>) and Biocontainers (<a href="https://doi.org/10.1093/bioinformatics/btx192">da Veiga Leprevost <em>et al.</em>, 2017</a>) projects.
+  Splicing analysis was performed using MAJIQ v3 (<a href="https://doi.org/10.1101/2024.07.02.601792">Aicher <em>et al.</em>, 2024</a>), and intron retention analysis was carried out using IRFinder-S (<a href="https://doi.org/10.1186/s13059-021-02515-8">Lorenzi <em>et al.</em>, 2021</a>).
+  </p>
   <p>The pipeline was executed with Nextflow v${workflow.nextflow.version} (<a href="https://doi.org/10.1038/nbt.3820">Di Tommaso <em>et al.</em>, 2017</a>) with the following command:</p>
   <pre><code>${workflow.commandLine}</code></pre>
   <p>${tool_citations}</p>
@@ -17,6 +18,8 @@ data: |
     <li>Ewels, P. A., Peltzer, A., Fillinger, S., Patel, H., Alneberg, J., Wilm, A., Garcia, M. U., Di Tommaso, P., & Nahnsen, S. (2020). The nf-core framework for community-curated bioinformatics pipelines. Nature Biotechnology, 38(3), 276-278. doi: <a href="https://doi.org/10.1038/s41587-020-0439-x">10.1038/s41587-020-0439-x</a></li>
     <li>Grüning, B., Dale, R., Sjödin, A., Chapman, B. A., Rowe, J., Tomkins-Tinch, C. H., Valieris, R., Köster, J., & Bioconda Team. (2018). Bioconda: sustainable and comprehensive software distribution for the life sciences. Nature Methods, 15(7), 475–476. doi: <a href="https://doi.org/10.1038/s41592-018-0046-7">10.1038/s41592-018-0046-7</a></li>
     <li>da Veiga Leprevost, F., Grüning, B. A., Alves Aflitos, S., Röst, H. L., Uszkoreit, J., Barsnes, H., Vaudel, M., Moreno, P., Gatto, L., Weber, J., Bai, M., Jimenez, R. C., Sachsenberg, T., Pfeuffer, J., Vera Alvarez, R., Griss, J., Nesvizhskii, A. I., & Perez-Riverol, Y. (2017). BioContainers: an open-source and community-driven framework for software standardization. Bioinformatics (Oxford, England), 33(16), 2580–2582. doi: <a href="https://doi.org/10.1093/bioinformatics/btx192">10.1093/bioinformatics/btx192</a></li>
+    <li>Aicher, J. K., Slaff, B., Jewell, S., & Barash, Y. (2024). MAJIQ V3 offers improvements in accuracy, performance, and usability for splicing analysis from RNA sequencing. <i>bioRxiv</i>. doi: <a href="https://doi.org/10.1101/2024.07.02.601792">10.1101/2024.07.02.601792</a></li>
+    <li>Lorenzi, C., Barriere, S., Arnold, K., Luco, R. F., Oldfield, A. J., & Ritchie, W. (2021). IRFinder-S: a comprehensive suite to discover and explore intron retention. <i>Genome Biology</i>, 22(1), 307. doi: <a href="https://doi.org/10.1186/s13059-021-02515-8">10.1186/s13059-021-02515-8</a></li>
     ${tool_bibliography}
   </ul>
   <div class="alert alert-info">
