@@ -59,6 +59,10 @@
                 "QUANTIFY_MODULIZE": {
                     "voila": "3.0.6"
                 },
+                "QUARTONOTEBOOK_DELTAPSI": {
+                    "papermill": "2.6.0",
+                    "quarto": "1.7.31"
+                },
                 "RSEQC_BAMSTAT": {
                     "rseqc": "5.0.2"
                 },
@@ -1510,7 +1514,19 @@
                 "quality_control/rseqc/ERR204916/ERR204916.pos.DupRate.xls",
                 "quality_control/rseqc/ERR204916/ERR204916.seq.DupRate.xls",
                 "quality_control/rseqc/ERR204916/ERR204916.splice_events.pdf",
-                "quality_control/rseqc/ERR204916/ERR204916.splice_junction.pdf"
+                "quality_control/rseqc/ERR204916/ERR204916.splice_junction.pdf",
+                "reports",
+                "reports/majiq_deltapsi_modulize_report.html",
+                "reports/majiq_deltapsi_modulize_report.qmd",
+                "reports/params.yml",
+                "reports/tables",
+                "reports/tables/excel",
+                "reports/tables/excel/annotated_results.xlsx",
+                "reports/tables/excel/overview_table.xlsx",
+                "reports/tables/overview_table.tsv",
+                "reports/tables/rds",
+                "reports/tables/rds/annotated_results.rds",
+                "reports/tables/rds/overview_table.rds"
             ],
             [
                 "ERR188383.bigWig:md5,ca460a5d3cca479b7b3639f02214a36b",
@@ -1862,14 +1878,15 @@
                 "ERR188383.Aligned.out.bam.bai:md5,710b133442903288f0e0614dea57d056",
                 "ERR188428.Aligned.out.bam.bai:md5,a1ce6b50935f289fe37e50993d76bf8e",
                 "ERR188454.Aligned.out.bam.bai:md5,6b6cf12090fde841d3babe4b713f73e7",
-                "ERR204916.Aligned.out.bam.bai:md5,a6d7050ac386e520f7596fcb7b722fab"
+                "ERR204916.Aligned.out.bam.bai:md5,a6d7050ac386e520f7596fcb7b722fab",
+                "overview_table.tsv:md5,2a03797e66cb76e771946fa11bc1a093"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-12-05T11:22:08.273607709"
+        "timestamp": "2026-01-25T00:45:25.03224816"
     },
     "Pipeline without IRFinder (GitHub actions friendly)": {
         "content": [
@@ -1921,6 +1938,10 @@
                 },
                 "QUANTIFY_MODULIZE": {
                     "voila": "3.0.6"
+                },
+                "QUARTONOTEBOOK_DELTAPSI": {
+                    "papermill": "2.6.0",
+                    "quarto": "1.7.31"
                 },
                 "RSEQC_BAMSTAT": {
                     "rseqc": "5.0.2"
@@ -3268,7 +3289,19 @@
                 "quality_control/rseqc/ERR204916/ERR204916.pos.DupRate.xls",
                 "quality_control/rseqc/ERR204916/ERR204916.seq.DupRate.xls",
                 "quality_control/rseqc/ERR204916/ERR204916.splice_events.pdf",
-                "quality_control/rseqc/ERR204916/ERR204916.splice_junction.pdf"
+                "quality_control/rseqc/ERR204916/ERR204916.splice_junction.pdf",
+                "reports",
+                "reports/majiq_deltapsi_modulize_report.html",
+                "reports/majiq_deltapsi_modulize_report.qmd",
+                "reports/params.yml",
+                "reports/tables",
+                "reports/tables/excel",
+                "reports/tables/excel/annotated_results.xlsx",
+                "reports/tables/excel/overview_table.xlsx",
+                "reports/tables/overview_table.tsv",
+                "reports/tables/rds",
+                "reports/tables/rds/annotated_results.rds",
+                "reports/tables/rds/overview_table.rds"
             ],
             [
                 "ERR188383.bigWig:md5,ca460a5d3cca479b7b3639f02214a36b",
@@ -3559,14 +3592,15 @@
                 "ERR188383.Aligned.out.bam.bai:md5,710b133442903288f0e0614dea57d056",
                 "ERR188428.Aligned.out.bam.bai:md5,a1ce6b50935f289fe37e50993d76bf8e",
                 "ERR188454.Aligned.out.bam.bai:md5,6b6cf12090fde841d3babe4b713f73e7",
-                "ERR204916.Aligned.out.bam.bai:md5,a6d7050ac386e520f7596fcb7b722fab"
+                "ERR204916.Aligned.out.bam.bai:md5,a6d7050ac386e520f7596fcb7b722fab",
+                "overview_table.tsv:md5,2a03797e66cb76e771946fa11bc1a093"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-12-05T11:25:36.689670697"
+        "timestamp": "2026-01-25T00:48:52.488445277"
     },
     "-profile test,stub": {
         "content": [
@@ -3627,6 +3661,10 @@
                 },
                 "QUANTIFY_MODULIZE": {
                     "voila": "3.0.6"
+                },
+                "QUARTONOTEBOOK_DELTAPSI": {
+                    "papermill": "2.6.0",
+                    "quarto": "1.7.31"
                 },
                 "RSEQC_BAMSTAT": {
                     "rseqc": "5.0.2"
@@ -3809,13 +3847,17 @@
                 "quality_control/rseqc/ERR204916/ERR204916.junction_annotation.log",
                 "quality_control/rseqc/ERR204916/ERR204916.junction_plot.r",
                 "quality_control/rseqc/ERR204916/ERR204916.pos.DupRate.xls",
-                "quality_control/rseqc/ERR204916/ERR204916.seq.DupRate.xls"
+                "quality_control/rseqc/ERR204916/ERR204916.seq.DupRate.xls",
+                "reports",
+                "reports/majiq_deltapsi_modulize_report.html",
+                "reports/majiq_deltapsi_modulize_report.qmd",
+                "reports/params.yml"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-12-05T11:26:46.161092985"
+        "timestamp": "2026-01-25T00:49:55.426990517"
     }
 }
