@@ -4,7 +4,28 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+### Setting up MAJIQ
+
+1. Obtain a LICENSE – MAJIQ is free for academic use, but you need to visit the [homepage](https://majiq.biociphers.org/app_download/).
+2. Add the license key to your [Nextflow secrets](https://nextflow.io/docs/latest/secrets.html) as `MAJIQ_LICENSE`.
+
+   ```bash
+   nextflow secrets set MAJIQ_LICENSE "$(cat "majiq_license_academic_official.lic")"
+   ```
+
+3. Installing MAJIQ – choose your preferred option. Current tests are built for MAJIQ V3 at tag **3.0.6**:
+   1. Set up with Conda: follow the instructions on the download page.
+   2. Set up with Docker: you can find a Dockerfile to build a MAJIQ container in the [`assets`](assets/docker/majiq/Dockerfile) folder of this repository.
+   3. Apptainer/Singularity: use the Docker image.
+   4. Others: I have not tried anything else yet. If you find a reliable and legal way to set it up, feel free to contribute here.
+4. Configuring the pipeline to use your MAJIQ installation:  
+   You need to create a `.config` file where you specify the container or Conda environment for each MAJIQ process. You can find an example in the `conf` folder – [`cctb.config`](conf/cctb.config).  
+   For a Conda environment, use `"conda"` instead of `"container"`.  
+   Pass the created `.config` file using the [`-c` option](https://www.nextflow.io/docs/latest/config.html).
+
+### Setting up IRFinder-S
+
+IRFinder-S processes are per defualt configured to utilize the Docker image provided by the [IRFinder-S repository](https://github.com/RitchieLabIGH/IRFinder/wiki/Download-and-Install). If you wish to use a different method follow the instructions on how to install IRFinder-S from source in the [IRFinder-S repository](https://github.com/RitchieLabIGH/IRFinder/wiki/Download-and-Install) and create a custom config file as described for MAJIQ above.
 
 ## Samplesheet input
 
@@ -14,48 +35,63 @@ You will need to create a samplesheet with information about the samples you wou
 --input '[path to samplesheet file]'
 ```
 
-### Multiple runs of the same sample
+`samplesheet.csv`:
 
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
+```csv
+sample,condition,genome_bam
+ERR188383,GBR,PATH/TO/ERR188383.Aligned.out.bam
+ERR188428,GBR,PATH/TO/ERR188428.Aligned.out.bam
+ERR188454,YRI,PATH/TO/ERR188454.Aligned.out.bam
+ERR204916,YRI,PATH/TO/ERR204916.Aligned.out.bam
 
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
-```
-
-### Full samplesheet
-
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
-
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 ```
 
 | Column    | Description                                                                                                                                                                            |
 | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+| `sample`  | Custom sample name.  |
+| `condition` | is used to group and compare samples.                                                             |
+| `genome_bam` | Full path to BAM file for short reads                                                              |
 
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+## Contrastsheet input
+You will need to create a samplesheet with information about the sample groups you would like to compare before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+
+```bash
+--contrasts '[path to contrastsheet file]'
+```
+
+`contrastsheet.csv`:
+
+```csv
+contrast,treatment,control
+YRI-GBR,YRI,GBR
+```
+
+Each row represents a comparison (contrast).  
+The `control` column is used as the reference in comparisons, and `treatment` specifies the other condition.  
+`contrast` is an identifier for the comparison.
+
+## Annotation inputs
+
+`annotation`:  
+Provide the annotation file used during alignment. It can be in `.gtf` or `.gff3` format.  
+MAJIQ requires `.gff3`. If a GTF file is provided, it will be converted using AGAT. `.gz` are allowed and files will be unzipped.
+
+`genome_fasta`:
+**Optional** input that is required to run **IRFinder**. `.gz` are allowed and files will be unzipped.
 
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run ZarnackGroup/majiq_splicing_analysis_pipeline --input ./samplesheet.csv --outdir ./results  -profile docker
+nextflow run ZarnackGroup/majiq_splicing_analysis_pipeline \
+   -profile <docker> \
+   --input samplesheet.csv \
+   --contrasts contrastsheet.csv \
+   --annotation annotation.gff3 \
+   --genome_fasta reference.fa \
+   --outdir <OUTDIR> \
+   -c majiq.config
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -92,13 +128,6 @@ outdir: './results/'
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
 
-### Updating the pipeline
-
-When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
-
-```bash
-nextflow pull ZarnackGroup/majiq_splicing_analysis_pipeline
-```
 
 ### Reproducibility
 
@@ -133,6 +162,8 @@ Note that multiple profiles can be loaded, for example: `-profile test,docker` -
 They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
 If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended, since it can lead to different results on different machines dependent on the computer environment.
+
+Please note that depending on your execution profile you will need to adapt how you make the MAJIQ and IRFinder-S software available to the pipeline (see [Setting up MAJIQ](#setting-up-majiq)) and [Setting up IRFinder-S](#setting-up-irfinder-s).
 
 - `test`
   - A profile with a complete configuration for automated testing
