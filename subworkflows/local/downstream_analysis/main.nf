@@ -60,7 +60,7 @@ workflow DOWNSTREAM_ANALYSIS {
             // Handle both single file and list of files
             def tsv_file = artifacts.find { it.name == 'overview_table_mqc.tsv' }
             tuple(meta, tsv_file)
-        } 
+        }
 
     ch_versions = QUARTONOTEBOOK_DELTAPSI.out.versions
 

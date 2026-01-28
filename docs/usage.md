@@ -46,13 +46,14 @@ ERR204916,YRI,PATH/TO/ERR204916.Aligned.out.bam
 
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name.  |
-| `condition` | is used to group and compare samples.                                                             |
-| `genome_bam` | Full path to BAM file for short reads                                                              |
+| Column       | Description                           |
+| ------------ | ------------------------------------- |
+| `sample`     | Custom sample name.                   |
+| `condition`  | is used to group and compare samples. |
+| `genome_bam` | Full path to BAM file for short reads |
 
 ## Contrastsheet input
+
 You will need to create a samplesheet with information about the sample groups you would like to compare before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
 
 ```bash
@@ -127,7 +128,6 @@ outdir: './results/'
 ```
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
-
 
 ### Reproducibility
 

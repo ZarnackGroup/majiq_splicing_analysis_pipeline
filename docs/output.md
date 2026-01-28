@@ -109,7 +109,7 @@ FastQC provides general quality metrics about the sequenced reads.
 
 </details>
 
-### Differential splicing  (heterogen)
+### Differential splicing (heterogen)
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -123,7 +123,6 @@ FastQC provides general quality metrics about the sequenced reads.
   - `junctions.tsv`: Junction-level table.
   - `summary.tsv`: Summary table.
   - `voila.log`: Voila log.
-
 
 </details>
 
