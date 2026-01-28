@@ -290,6 +290,11 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         )
     )
 
+    // Add the overview_table.tsv to MultiQC files
+    ch_multiqc_files = ch_multiqc_files.mix(
+        DOWNSTREAM_ANALYSIS.out.ch_deltapsi_table.map { meta, tsv -> tsv }
+    )
+
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_config.toList(),
