@@ -1523,7 +1523,7 @@
                 "reports/tables/excel",
                 "reports/tables/excel/annotated_results.xlsx",
                 "reports/tables/excel/overview_table.xlsx",
-                "reports/tables/overview_table.tsv",
+                "reports/tables/overview_table_mqc.tsv",
                 "reports/tables/rds",
                 "reports/tables/rds/annotated_results.rds",
                 "reports/tables/rds/overview_table.rds"
@@ -1885,7 +1885,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2026-01-25T10:44:21.577071433"
+        "timestamp": "2026-01-28T15:34:15.520151821"
     },
     "Pipeline without IRFinder (GitHub actions friendly)": {
         "content": [
@@ -3297,7 +3297,7 @@
                 "reports/tables/excel",
                 "reports/tables/excel/annotated_results.xlsx",
                 "reports/tables/excel/overview_table.xlsx",
-                "reports/tables/overview_table.tsv",
+                "reports/tables/overview_table_mqc.tsv",
                 "reports/tables/rds",
                 "reports/tables/rds/annotated_results.rds",
                 "reports/tables/rds/overview_table.rds"
@@ -3598,7 +3598,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2026-01-25T10:47:52.373260275"
+        "timestamp": "2026-01-28T15:37:40.753103679"
     },
     "-profile test,stub": {
         "content": [

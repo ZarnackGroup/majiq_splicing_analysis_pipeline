@@ -9,9 +9,9 @@ This document describes the output produced by the pipeline. Most QC plots are c
 The pipeline produces the following top-level output directories:
 
 - [`processed_inputs/`](#processed-inputs) - Processed inputs used by the workflow (annotation conversions, validated sheets, BAM indices)
-- [`quality_control/`](#quality-control) - Per-sample QC results (FastQC, RSeQC)
+- [`quality_control/`](#quality-control) - Per-sample quality control results (FastQC, RSeQC)
 - [`majiq/`](#majiq) - Splicing analysis outputs (build, deltapsi, heterogen, quantify, modulize tables)
-- [`irfinder/`](#irfinder) - Intron retention outputs (per-sample + differential comparisons)
+- [`irfinder/`](#irfinder) - IRFinder-s outputs (per-sample + differential comparisons)
 - [`bigWig/`](#bigwig) - Coverage tracks for genome browser visualisation
 - [`reports/`](#reports) - Pipeline reports and summary tables (HTML + tabular exports)
 - [`multiqc/`](#multiqc) - Aggregate QC report
@@ -234,6 +234,8 @@ FastQC provides general quality metrics about the sequenced reads.
 
 ## Pipeline information
 
+[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
+
 <details markdown="1">
 <summary>Output files</summary>
 Nextflow-generated reports and information about the pipeline execution.
@@ -246,6 +248,3 @@ Nextflow-generated reports and information about the pipeline execution.
   - `*_software_mqc_versions.yml`
 
 </details>
-
-
-[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.

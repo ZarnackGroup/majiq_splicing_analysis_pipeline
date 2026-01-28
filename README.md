@@ -88,6 +88,9 @@ flowchart TB
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
+Below are the minimal steps required to run the pipeline.
+Full documentation for the pipeline, including usage, all parameters and output files can be found in the [`docs`](docs) folder.
+
 ### Setting up MAJIQ
 
 1. Obtain a LICENSE – MAJIQ is free for academic use, but you need to visit the [homepage](https://majiq.biociphers.org/app_download/).
@@ -157,6 +160,8 @@ nextflow run ZarnackGroup/majiq_splicing_analysis_pipeline \
    --outdir <OUTDIR> \
    -c majiq.config
 ```
+
+All available parameters can be found in the [parameters documentation](docs/parameters.md).
 
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).

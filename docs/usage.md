@@ -1,8 +1,8 @@
 # ZarnackGroup/majiq_splicing_analysis_pipeline: Usage
 
-> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
-
 ## Introduction
+
+**ZarnackGroup/majiq_splicing_analysis_pipeline** is our in-house pipeline for analyzing alternative splicing events from RNA sequencing data, based on Nextflow and utilizing [`MAJIQ V3`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792) as the core splicing analysis tool.
 
 ### Setting up MAJIQ
 
@@ -107,7 +107,7 @@ work                # Directory containing the nextflow working files
 
 If you wish to repeatedly use the same parameters for multiple runs, rather than specifying each flag in the command, you can specify these in a params file.
 
-Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
+Pipeline parameters can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
 > [!WARNING]
 > Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
