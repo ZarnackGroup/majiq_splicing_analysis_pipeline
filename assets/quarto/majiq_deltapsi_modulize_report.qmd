@@ -574,13 +574,32 @@ writeDataTable(wb_overview, "overview", overview_tbl, withFilter = TRUE)
 setColWidths(wb_overview, "overview", cols = 1:ncol(overview_tbl), widths = "auto")
 saveWorkbook(wb_overview, paste0(params$artifact_dir,"/excel/overview_table.xlsx"), overwrite = TRUE)
 
+```
+
+```{r multiqc}
 # ---- 3) save overview table as .tsv ----
+
+# Define MultiQC header
+mqc_header <- "# id: 'majiq_overview_table'
+# section_name: 'MAJIQ'
+# description: 'Overview table from MAJIQ Deltapsi modulize analysis results'
+# plot_type: 'table'
+# pconfig:
+#     id: 'majiq_overview_table'
+#     title: 'MAJIQ Delta PSI Overview'
+"
+
+# Write header first
+cat(mqc_header, file = paste0(params$artifact_dir, "/overview_table_mqc.tsv"))
+
+# Append the table data
 write.table(
   overview_tbl,
-  file = paste0(params$artifact_dir,"/overview_table.tsv"),
+  file = paste0(params$artifact_dir, "/overview_table_mqc.tsv"),
   sep = "\t",
   quote = FALSE,
-  row.names = FALSE
+  row.names = FALSE,
+  append = TRUE  # Important: append to the header
 )
 
 ```

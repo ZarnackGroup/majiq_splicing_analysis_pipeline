@@ -124,6 +124,30 @@
                 }
             }
         },
+        "irfinder": {
+            "title": "IRFinder",
+            "type": "object",
+            "description": "Parameters to modify the IRFinder Analysis",
+            "default": "",
+            "properties": {
+                "skip_irfinder": {
+                    "type": "boolean",
+                    "description": "If set to true, this will skip the IRFinder Analysis"
+                },
+                "irfinder_buildrefprocess_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "irfinder_bam_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                },
+                "irfinder_diff_args": {
+                    "type": "string",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
+                }
+            }
+        },
         "rseqc": {
             "title": "RSEQC",
             "type": "object",
@@ -327,30 +351,6 @@
                     "description": "Display hidden parameters in the help message (only works when --help or --help_full are provided)."
                 }
             }
-        },
-        "irfinder": {
-            "title": "IRFinder",
-            "type": "object",
-            "description": "Parameters to modify the IRFinder Analysis",
-            "default": "",
-            "properties": {
-                "skip_irfinder": {
-                    "type": "boolean",
-                    "description": "If set to true, this will skip the IRFinder Analysis"
-                },
-                "irfinder_buildrefprocess_args": {
-                    "type": "string",
-                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
-                },
-                "irfinder_bam_args": {
-                    "type": "string",
-                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
-                },
-                "irfinder_diff_args": {
-                    "type": "string",
-                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
-                }
-            }
         }
     },
     "allOf": [
@@ -359,6 +359,9 @@
         },
         {
             "$ref": "#/$defs/majiq"
+        },
+        {
+            "$ref": "#/$defs/irfinder"
         },
         {
             "$ref": "#/$defs/rseqc"
@@ -371,9 +374,6 @@
         },
         {
             "$ref": "#/$defs/generic_options"
-        },
-        {
-            "$ref": "#/$defs/irfinder"
         }
     ]
 }

@@ -883,7 +883,7 @@
                 "reports/tables/excel",
                 "reports/tables/excel/annotated_results.xlsx",
                 "reports/tables/excel/overview_table.xlsx",
-                "reports/tables/overview_table.tsv",
+                "reports/tables/overview_table_mqc.tsv",
                 "reports/tables/rds",
                 "reports/tables/rds/annotated_results.rds",
                 "reports/tables/rds/overview_table.rds"
@@ -1110,6 +1110,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2026-01-25T10:39:12.876606062"
+        "timestamp": "2026-01-28T15:02:29.217467979"
     }
 }
