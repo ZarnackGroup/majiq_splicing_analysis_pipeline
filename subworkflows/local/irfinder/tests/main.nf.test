@@ -1,0 +1,158 @@
+nextflow_workflow {
+
+    name "Test Workflow IRFINDER"
+    script "subworkflows/local/irfinder/main.nf"
+    workflow "IRFINDER"
+
+    test("buildrefprocess + bam + diff") {
+        setup {
+            run("GUNZIP") {
+                script "../../../../modules/nf-core/gunzip/main.nf"  // Path to the gunzip module
+                process {
+                    """
+
+                    input[0] = channel.of(
+                        [
+                            [ id: 'chrX_fa' ],
+                            file(params.pipelines_testdata_base_path +'rnasplice/reference/X.fa.gz', checkIfExists: true)
+                        ]
+                    )
+                    """
+                }
+            }
+        }
+        when {
+            params {
+                outdir = "$outputDir"
+                irfinder_diff_args = "-m suppa"
+            }
+            workflow {
+
+                """
+                input[0] = Channel.of(
+                            [
+                            [ id:'chrX_gtf' ],
+                            file(params.pipelines_testdata_base_path +'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
+                            ]
+                        )
+
+                input[1] = GUNZIP.out.gunzip.map { meta, file -> file }
+                input[2] = Channel.of(
+                    [
+                        [ id: 'ERR188383', condition: 'GBR' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188383.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR188428', condition: 'GBR' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188428.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR188454', condition: 'YRI' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188454.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR204916', condition: 'YRI' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam", checkIfExists: false)
+                    ],
+                )
+                input[3] = Channel.of(
+                    [ contrast:'GBR-YRI', control:'YRI', treatment:'GBR' ]
+                )
+                """
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                    ).match() }
+            )
+        }
+
+    }
+
+    test("buildrefprocess + bam + diff - STUB") {
+    tag "stub"
+    tag "ci"
+
+    options "-stub"
+
+    setup {
+        run("GUNZIP") {
+            script "../../../../modules/nf-core/gunzip/main.nf"
+            process {
+                """
+                input[0] = channel.of(
+                    [
+                        [ id: 'chrX_fa' ],
+                        file(params.pipelines_testdata_base_path + 'rnasplice/reference/X.fa.gz', checkIfExists: true)
+                    ]
+                )
+                """
+            }
+        }
+    }
+
+    when {
+        params {
+            outdir = "$outputDir"
+            irfinder_diff_args = "-m suppa"
+        }
+        workflow {
+            """
+            input[0] = Channel.of(
+                [
+                    [ id:'chrX_gtf' ],
+                    file(params.pipelines_testdata_base_path + 'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
+                ]
+            )
+
+            input[1] = GUNZIP.out.gunzip.map { meta, file -> file }
+            input[2] = Channel.of(
+                [
+                    [ id: 'ERR188383', condition: 'GBR' ],
+                    file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188383.Aligned.out.bam", checkIfExists: false)
+                ],
+                [
+                    [ id: 'ERR188428', condition: 'GBR' ],
+                    file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188428.Aligned.out.bam", checkIfExists: false)
+                ],
+                [
+                    [ id: 'ERR188454', condition: 'YRI' ],
+                    file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188454.Aligned.out.bam", checkIfExists: false)
+                ],
+                [
+                    [ id: 'ERR204916', condition: 'YRI' ],
+                    file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam", checkIfExists: false)
+                ],
+            )
+            input[3] = Channel.of(
+                [ contrast:'GBR-YRI', control:'YRI', treatment:'GBR' ]
+            )
+            """
+        }
+    }
+
+    then {
+        // For stub tests, check that the workflow completes and generates expected file structure
+        def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+
+        assertAll(
+            { assert workflow.success },
+            { assert snapshot(
+                stable_name  // Only snapshot file names/structure, not content
+            ).match() }
+        )
+    }
+}
+
+}

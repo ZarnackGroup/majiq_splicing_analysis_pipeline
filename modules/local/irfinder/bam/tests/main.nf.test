@@ -1,0 +1,71 @@
+// TODO nf-core: Once you have added the required tests, please run the following command to build this file:
+// nf-core modules test irfinder/bam
+nextflow_process {
+
+    name "Test Process IRFINDER_BAM"
+    script "../main.nf"
+    process "IRFINDER_BAM"
+
+    tag "modules"
+    tag "modules_"
+    tag "irfinder"
+    tag "irfinder/bam"
+
+    test("rnasplice - gtf/fasta") {
+
+        setup {
+            run("IRFINDER_BUILDREFPROCESS") {
+                script "../../buildrefprocess/main.nf"  // Path to the irfinder/buildrefprocess module
+                process {
+                    """
+
+                    input[0] = channel.of(
+                        [
+                            [ id: 'test' ],
+                            file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/chr21_gencode.gtf', checkIfExists: true)
+                        ]
+                    )
+
+                    input[1] = channel.of(
+                        [
+                            file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                        ]
+                    )
+                    """
+                }
+            }
+        }
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            process {
+                """
+                input[0] = channel.of([
+                    [ id:'test2.paired_end.markduplicates' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.markduplicates.sorted.bam', checkIfExists: true),
+                ])
+                input[1] = IRFINDER_BUILDREFPROCESS.out.ir_finder_reference.map{ meta, file -> file }  // Use the reference from setup
+                """
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                    ).match() }
+            )
+        }
+
+    }
+
+}

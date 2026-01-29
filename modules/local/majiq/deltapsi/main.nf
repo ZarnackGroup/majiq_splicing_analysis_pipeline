@@ -1,0 +1,59 @@
+process MAJIQ_DELTAPSI {
+    tag "$contrast"
+    label 'process_medium'
+    secret 'MAJIQ_LICENSE'
+
+
+
+    input:
+    tuple val(contrast), val(treatment), val(control), path(treatment_files), path(control_files), path(splicegraph)  // channel: [ contrast, treatment, control ]
+    // channel: [ val(meta), path(splicegraph) ]
+
+
+    output:
+
+    path("deltapsi/${contrast}.deltapsi.tsv") , emit: deltapsi_tsv
+    path("deltapsi/${contrast}.dpsicov")      , emit: dpsicov
+    path "deltapsi/${contrast}.deltapsi.logger.txt"               , emit: logger
+    tuple val("${task.process}"), val('majiq'), eval('majiq --version | grep -oE "[0-9]+\\.[0-9]+\\.[0-9]+"'), emit: versions_majiq, topic: versions
+
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def majiqLicense = secrets.MAJIQ_LICENSE ?
+        "export MAJIQ_LICENSE_FILE=\$(mktemp); echo -n \"\$MAJIQ_LICENSE\" >| \$MAJIQ_LICENSE_FILE; " :
+        ""
+
+    """
+
+    $majiqLicense
+
+    mkdir deltapsi
+
+    majiq \\
+        deltapsi \\
+        --nthreads ${task.cpus} \\
+        --splicegraph $splicegraph \\
+        -psi1 $control_files \\
+        -psi2 $treatment_files \\
+        --names $control $treatment \\
+        --output-tsv deltapsi/${contrast}.deltapsi.tsv \\
+        --logger deltapsi/${contrast}.deltapsi.logger.txt \\
+        --output-voila deltapsi/${contrast}.dpsicov \\
+        --debug \\
+        $args
+
+    """
+
+    stub:
+    """
+    mkdir -p deltapsi
+    echo -e "gene_id\\tdeltapsi_value\\nGENE1\\t0.5\\nGENE2\\t-0.3" > deltapsi/${contrast}.deltapsi.tsv
+    touch deltapsi/${contrast}.dpsicov
+    echo "This is a stub log file for ${contrast}" > deltapsi/${contrast}.deltapsi.logger.txt
+
+    """
+}

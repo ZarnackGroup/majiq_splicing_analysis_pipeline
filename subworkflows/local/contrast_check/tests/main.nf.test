@@ -1,0 +1,26 @@
+nextflow_workflow {
+
+    name "Test Workflow CONTRASTS_CHECK"
+    script "subworkflows/local/contrast_check/main.nf"
+    workflow "CONTRASTS_CHECK"
+
+    tag "ci"
+
+    test("Should run without failures") {
+
+        when {
+            workflow {
+                """
+                input[0] = file(params.pipelines_testdata_base_path +'rnasplice/samplesheet/contrastsheet.csv')
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}

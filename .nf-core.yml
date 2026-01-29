@@ -10,6 +10,7 @@ lint:
     - .github/workflows/ci.yml
     - .github/workflows/linting_comment.yml
     - .github/workflows/linting.yml
+    - .github/workflows/nf-test.yml
     - conf/igenomes.config
     - conf/igenomes_ignored.config
     - CODE_OF_CONDUCT.md
@@ -19,6 +20,7 @@ lint:
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
+    - conf/test_full.config
   files_unchanged:
     - .github/CONTRIBUTING.md
     - .prettierignore
@@ -42,13 +44,11 @@ lint:
     - validation.help.afterText
     - validation.summary.beforeText
     - validation.summary.afterText
-nf_core_version: 3.4.1
+nf_core_version: 3.5.1
 repository_type: pipeline
 template:
   author: Felix Haidle
-  description: In-house pipeline for analyzing alternative splicing events from RNA
-    sequencing data, based on Nextflow and utilizing MAJIQ as the core splicing analysis
-    tool.
+  description: In-house pipeline for analyzing alternative splicing events from RNA sequencing data, based on Nextflow and utilizing MAJIQ as the core splicing analysis tool.
   force: false
   is_nfcore: false
   name: majiq_splicing_analysis_pipeline
@@ -60,4 +60,4 @@ template:
     - codespaces
     - adaptivecard
     - seqera_platform
-  version: 1.0.0dev
+  version: 0.1.0

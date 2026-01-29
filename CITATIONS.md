@@ -10,6 +10,14 @@
 
 ## Pipeline tools
 
+- [MAJIQ v3](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792)
+
+> Aicher JK, Slaff B, Jewell S, Barash Y. MAJIQ V3 offers improvements in accuracy, performance, and usability for splicing analysis from RNA sequencing. bioRxiv. 2024. doi: 10.1101/2024.07.02.601792.
+
+- [IRFinder-S](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02515-8)
+
+> Lorenzi C, Barriere S, Arnold K, et al. IRFinder-S: a comprehensive suite to discover and explore intron retention. Genome Biology. 2021;22:307. doi: 10.1186/s13059-021-02515-8.
+
 - [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
 > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
@@ -17,6 +25,22 @@
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 
 > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+
+- [RSeQC](http://rseqc.sourceforge.net/)
+
+> Wang L, Wang S, Li W. RSeQC: quality control of RNA-seq experiments. Bioinformatics. 2012 Aug 15;28(16):2184-2185. doi: 10.1093/bioinformatics/bts356. PubMed PMID: 22743226.
+
+- [AGAT](https://doi.org/10.5281/zenodo.3552717)
+
+> Dainat J. AGAT: Another Gff Analysis Toolkit to handle annotations in any GTF/GFF format (Version v0.7.0). Zenodo. doi: 10.5281/zenodo.3552717.
+
+- [deepTools](https://doi.org/10.1093/nar/gkw257)
+
+> Ramírez F, Ryan DP, Grüning B, Bhardwaj V, Kilpert F, Richter AS, Heyne S, Dündar F, Manke T. deepTools2: a next generation web server for deep-sequencing data analysis. Nucleic Acids Res. 2016 Jul 8;44(W1):W160-W165. doi: 10.1093/nar/gkw257. PubMed PMID: 27079975.
+
+- [SAMtools](https://doi.org/10.1093/bioinformatics/btp352)
+
+  > Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R; 1000 Genome Project Data Processing Subgroup. The Sequence Alignment/Map format and SAMtools. Bioinformatics. 2009 Aug 15;25(16):2078-2079. doi: 10.1093/bioinformatics/btp352. PubMed PMID: 19505943.
 
 ## Software packaging/containerisation tools
 

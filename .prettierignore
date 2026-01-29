@@ -11,3 +11,6 @@ testing*
 bin/
 .nf-test/
 ro-crate-metadata.json
+assets/docker/**
+modules/nf-core/
+subworkflows/nf-core/

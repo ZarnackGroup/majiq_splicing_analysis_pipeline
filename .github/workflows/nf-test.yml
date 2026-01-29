@@ -50,6 +50,7 @@ jobs:
           NFT_VER: ${{ env.NFT_VER }}
         with:
           max_shards: 7
+          tags: "ci"
 
       - name: debug
         run: |
@@ -66,13 +67,11 @@ jobs:
       fail-fast: false
       matrix:
         shard: ${{ fromJson(needs.nf-test-changes.outputs.shard) }}
-        profile: [conda, docker, singularity]
+        profile: [docker]
         isMain:
           - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
         # Exclude conda and singularity on dev
         exclude:
-          - isMain: false
-            profile: "conda"
           - isMain: false
             profile: "singularity"
         NXF_VER:
@@ -81,6 +80,7 @@ jobs:
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
+      MAJIQ_LICENSE: ${{ secrets.MAJIQ_LICENSE }}
 
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
@@ -98,6 +98,7 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
+          tags: "ci"
 
       - name: Report test status
         if: ${{ always() }}

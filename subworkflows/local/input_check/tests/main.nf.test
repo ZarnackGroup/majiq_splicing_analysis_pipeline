@@ -1,0 +1,26 @@
+nextflow_workflow {
+
+    name "Test Workflow INPUT_CHECK"
+    script "subworkflows/local/input_check/main.nf"
+    workflow "INPUT_CHECK"
+
+    tag "ci"
+
+    test("Should run without failures") {
+        when {
+            workflow {
+                """
+                input[0] = file(params.pipelines_testdata_base_path + 'rnasplice/samplesheet/samplesheet_bam.csv')
+                input[1] = 'genome_bam'
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}

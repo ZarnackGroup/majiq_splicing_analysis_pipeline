@@ -1,0 +1,613 @@
+---
+title: "Deltapsi Modulize Report"
+author: "ZarnackGroup/majiq_splicing_analysis_pipeline"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    code-fold: true
+    embed-resources: true
+params:
+  meta: NULL
+  cpus: 1
+  artifact_dir: "artifacts"
+  sample_id: "default"
+  modulize_dir: "modulize"
+  analysis_date: "2024-01-01"
+  output_prefix: "sample"
+---
+
+## Libraries
+
+The libraries used to create this report. The `tidyverse` package is used to reduce the number of dependencies. The `openxlsx` package is added on top because `tidyverse` does not include a package that can write Excel files.
+
+```{r libraries}
+#| echo: true
+#| message: false
+#| warning: false
+
+# load tidyverse packages - https://tidyverse.org/packages/
+library(tidyverse)
+library(jsonlite)
+library(dplyr)
+library(tidyr)
+library(purrr)
+
+# openxlsx package to write excel sheets
+library(openxlsx)
+```
+
+
+## Quarto parameters
+
+```{r}
+#| echo: true
+
+params_tbl <- tibble(
+  parameter = names(params),
+  value     = vapply(
+    params,
+    function(x) paste(capture.output(str(x)), collapse = " "),
+    character(1)
+  )
+)
+
+knitr::kable(
+  params_tbl,
+  col.names = c("Parameter", "Value"),
+  caption = "Input parameters used for this report"
+)
+
+```
+
+
+
+
+## Voila modulize command overview
+
+Summary of the `voila modulize` command used to create the inputs for this report. Thresholds are used later to identify changing events between conditions.
+
+```{r voila modulize meta data}
+
+
+modulize_path <- params$modulize_dir
+
+# -----------------------------
+# 1) Read the JSON header of summary.tsv
+# -----------------------------
+path <- paste0(modulize_path, "/summary.tsv")
+
+con <- file(path, open = "r")
+
+json_lines <- character()
+in_json <- FALSE
+
+repeat {
+  line <- readLines(con, n = 1, warn = FALSE)
+  if (length(line) == 0) break  # EOF safeguard
+
+  # detect start of JSON
+  if (str_detect(line, "^#\\s*\\{")) {
+    in_json <- TRUE
+  }
+
+  if (in_json) {
+    json_lines <- c(json_lines, line)
+  }
+
+  # detect end of JSON
+  if (in_json && str_detect(line, "^#\\s*\\}")) {
+    break
+  }
+}
+
+close(con)
+
+# Clean and collapse to a JSON string
+json_text <- json_lines %>%
+  str_remove("^#\\s*") %>%
+  paste(collapse = "\n")
+
+# Parse JSON
+info <- fromJSON(json_text)
+
+voila_version <- info$voila_version %||% NA_character_
+command_used  <- info$command     %||% NA_character_
+
+# -----------------------------
+# 2) Default values for filtering
+# -----------------------------
+
+dpsi_probability_changing_threshold_default <- 0.95
+dpsi_changing_threshold_default        <- 0.2
+changing_between_group_dpsi_secondary_default <- 0.1
+
+# -----------------------------
+# 3) Overwrite defaults if JSON provides values
+# -----------------------------
+dpsi_changing_threshold <-
+  info$dpsi_changing_threshold %||% dpsi_changing_threshold_default
+
+dpsi_probability_changing_threshold <-
+  info$dpsi_probability_changing_threshold %||% dpsi_probability_changing_threshold_default
+
+# need to do some regex magic here because the parameter needs to be extracted from the command as it is not provided as entry in the json header
+num01 <- "(0(?:\\.\\d+)?|1(?:\\.0+)?)"
+pat   <- paste0("--changing-between-group-dpsi-secondary\\s+(", num01, ")")
+
+changing_between_group_dpsi_secondary <-
+  if (!is.na(command_used) && grepl(pat, command_used, perl = TRUE)) {
+    as.numeric(sub(paste0(".*", pat, ".*"), "\\1", command_used, perl = TRUE))
+  } else {
+    changing_between_group_dpsi_secondary_default
+  }
+
+
+
+
+# -----------------------------
+# 4) Pretty printing in Quarto
+# -----------------------------
+tibble(
+  key = c(
+    "Command",
+    "Voila version",
+    "dpsi_probability_changing_threshold",
+    "dpsi_changing_threshold",
+    "changing_between_group_dpsi_secondary"
+  ),
+  value = c(
+    command_used,
+    voila_version,
+    dpsi_probability_changing_threshold,
+    dpsi_changing_threshold,
+    changing_between_group_dpsi_secondary
+  )
+) %>%
+  knitr::kable()
+
+```
+
+## Sanitize inputs
+
+Here, the `voila modulize` outputs are read in.
+
+```{r read in event files}
+# define list of relevant event types to read in
+event_types <- c(
+  "cassette","alternative_intron","alt5prime","alt3prime","alt3and5prime",
+  "alternate_first_exon","alternate_last_exon","p_alt5prime","p_alt3prime",
+  "p_alternate_first_exon","p_alternate_last_exon","mutually_exclusive",
+  "tandem_cassette","multi_exon_spanning"
+)
+
+# construct paths for event type files
+paths <- setNames(file.path(modulize_path, paste0(event_types, ".tsv")), event_types)
+
+# drop missing types quietly
+paths <- paths[file.exists(paths)]
+
+# read in files
+modulize_results <- lapply(paths, read.table, sep = "\t", header = TRUE, stringsAsFactors = FALSE) %>%
+  discard(~ nrow(.x) == 0) # remove event types that have no entries
+```
+
+
+To avoid unecessary computations, events with missing values in the columns `event_id`, `gene_id`, `lsv_id`, `gene_name`, `spliced_with_coord` are removed here. after filtering out events with missing values, event types without events left are dropped from the downstream steps.
+
+
+```{r}
+remove_invalid_events <- function(df) {
+
+  critical_cols = c("event_id", "gene_id", "lsv_id", "gene_name")
+  coord_cols <- c("spliced_with_coord", "lsv_id", "reference_exon_coord")
+
+  ## ---------------------------------------------
+  ## Step 1 — critical cols: NA or empty
+  ## ---------------------------------------------
+
+  # Normalize NA-like strings in critical columns
+  df2 <- df %>%
+  mutate(across(
+    all_of(critical_cols),
+    ~ replace(., . %in% c("", "NA", "NaN", "nan", "na"), NA)
+  ))
+
+  bad_critical_rows <- df2 %>%
+    filter(if_any(all_of(critical_cols), is.na))
+
+  ## ---------------------------------------------
+  ## Step 2 — columns with coordinates that contain NA, empty, or "na" text
+  ## ---------------------------------------------
+  coord_cols <- c("spliced_with_coord", "lsv_id", "reference_exon_coord")
+
+  bad_coord_rows <- df2 %>%
+    filter(
+      if_any(
+        all_of(coord_cols),
+        ~ is.na(.) | . == "" | grepl("na-", ., ignore.case = TRUE) | grepl("-na", ., ignore.case = TRUE)
+      )
+    )
+
+  ## ---------------------------------------------
+  ## Step 3 — coordinates containing -1
+  ## ---------------------------------------------
+
+  bad_minus1_coord_rows <- df2 %>%
+    filter(
+      if_any(
+        all_of(coord_cols),
+        ~ grepl("(^-1-|--1$)", ., perl = TRUE)
+      )
+    )
+
+
+  ## ---------------------------------------------
+  ## Step 4 — union of all problematic event_ids
+  ## ---------------------------------------------
+  bad_event_ids <- unique(c(
+    bad_critical_rows$event_id,
+    bad_coord_rows$event_id,
+    bad_minus1_coord_rows$event_id
+  ))
+
+
+  ## ---------------------------------------------
+  ## Step 5 — remove all rows belonging to bad events
+  ## ---------------------------------------------
+  df2 <- df2 %>% filter(!event_id %in% bad_event_ids)
+
+
+}
+
+sanitized_results <- lapply(modulize_results, remove_invalid_events) %>% discard(~ nrow(.x) == 0)
+
+
+
+```
+
+```{r}
+convert_na_probability_to_0 <- function (df) {
+  ## ---------------------------------------------
+  ## converte nan and NaN to 0 in probability columns
+  ## ---------------------------------------------
+
+  # find probability columns
+  prob_cols <- grep("(probability|psi)", colnames(df), value = TRUE)
+
+  df2 <- df %>%
+    mutate(across(
+      all_of(prob_cols),
+      ~ {
+        x <- .
+        # convert "nan", "NaN", "NA" strings to NA_real_
+        x[x %in% c("nan", "NaN", "NA", "")] <- NA_real_
+        x <- as.numeric(x)  # ensure numeric
+        x[is.na(x)] <- 0    # convert NaN/NA to 0
+        x
+      }
+    ))
+}
+
+cleaned_results <- lapply(sanitized_results, convert_na_probability_to_0)
+```
+
+
+Here, “empty” events are removed. If all junctions have no coverage (i.e. every PSI value is 0), the event is also removed.
+
+```{r}
+
+
+remove_no_coverage_events <- function(event_list) {
+
+  out <- map(event_list, function(df) {
+
+    psi_cols <- grep("_median_psi$", names(df), value = TRUE)
+
+    bad_event_ids <- df %>%
+      group_by(event_id) %>%
+      filter(if_all(all_of(psi_cols), ~ all(. == 0, na.rm = TRUE))) %>%
+      distinct(event_id) %>%
+      pull(event_id)
+
+    df %>% filter(!event_id %in% bad_event_ids)
+  })
+
+  out
+}
+
+non_empty_results <- remove_no_coverage_events(cleaned_results) %>% discard(~ nrow(.x) == 0)
+
+
+```
+
+## Identify significant events
+
+After cleaning up the tables, we annotate each event in every contrast id it is significantly changing. An event is considered significantly changing if it satisfies the following criteria:
+
+1. At least one junction of the event meets the `–-changing-between-group-dpsi` threshold (dpsi > `r dpsi_changing_threshold`)
+
+2. All junctions meet the `-–changing-between-group-dpsi-secondary` threshold (dpsi > `r changing_between_group_dpsi_secondary`)
+
+3. All junctions meet the `-–probability-changing-threshold` threshold (P(dpsi > `r dpsi_changing_threshold`) > `r dpsi_probability_changing_threshold` )
+
+```{r}
+
+
+add_contrast_boolean_calls_majiq <- function(
+  event_list,
+  dpsi_changing_threshold_default,
+  dpsi_probability_changing_threshold_default,
+  changing_between_group_dpsi_secondary_default
+) {
+  out <- vector("list", length(event_list))
+
+  # iterate over event types
+  for (i in seq_along(event_list)) {
+    df <- event_list[[i]]
+
+    dpsi_cols <- grep("_median_dpsi$", colnames(df), value = TRUE)
+
+    contrasts <- sub("_median_dpsi$", "", dpsi_cols)
+
+    df_out <- df
+
+
+    # iterate over every contrast
+    for (ct in contrasts) {
+      dpsiCol <- paste0(ct, "_median_dpsi")
+      pChgCol <- paste0(ct, "_probability_changing")
+      pNonCol <- paste0(ct, "_probability_non_changing")
+
+
+      # add information for every row if it meets the filtering thresholds
+      df_num <- df_out %>%
+        mutate(
+          # primary changing driver (row-level)
+            is_primary_changing = .data[[pChgCol]] >= dpsi_probability_changing_threshold_default &
+            abs(.data[[dpsiCol]]) >= dpsi_changing_threshold_default,
+
+          # secondary requirement (row-level)
+          meets_secondary = abs(.data[[dpsiCol]]) >= changing_between_group_dpsi_secondary_default,
+
+          # strict prob-changing on all rows
+          meets_prob_changing = .data[[pChgCol]] >= dpsi_probability_changing_threshold_default
+        )
+
+      # summarize junction information on LSV level to identify LSVs that meet changing critereia
+
+      # ---- LSV level ----
+      lsv_sum <- df_num %>%
+        group_by(event_id, lsv_id) %>%
+        summarise(
+          any_primary_changing_lsv = any(is_primary_changing),
+          all_secondary_lsv = all(meets_secondary),
+          all_prob_changing_lsv = all(meets_prob_changing),
+          .groups = "drop"
+        )
+
+      # summarize LSV level information for events (one Event can have more than 1 LSV)
+      # ---- Event level ----
+      event_calls <- lsv_sum %>%
+        group_by(event_id) %>%
+        summarise(
+          event_changing =
+            any(any_primary_changing_lsv) &
+            all(all_secondary_lsv) &
+            all(all_prob_changing_lsv),
+          .groups = "drop"
+        )
+
+      changing_col <- paste0(ct, "_event_changing")
+
+      df_out <- df_out %>%
+        left_join(event_calls, by = "event_id", suffix = c("", "__tmp")) %>%
+        rename(
+          !!changing_col := event_changing__tmp
+        ) %>%
+        mutate(
+          !!changing_col := tidyr::replace_na(.data[[changing_col]], FALSE)
+        )
+    }
+
+    out[[i]] <- df_out
+  }
+
+  names(out) <- names(event_list)
+  out
+}
+
+annotated_results <- add_contrast_boolean_calls_majiq(
+  non_empty_results,
+  dpsi_changing_threshold,
+  dpsi_probability_changing_threshold,
+  changing_between_group_dpsi_secondary
+)
+
+
+
+```
+
+Overview table of significant events across contrasts:
+
+```{r}
+
+make_contrast_overview_table <- function(event_list) {
+
+  event_types <- names(event_list)
+
+  # 1) collect all contrasts (from *_event_changing columns)
+  all_contrasts <- imap(event_list, function(df, event_type) {
+    if (!is.data.frame(df)) return(character())
+    cols <- grep("_event_changing$", colnames(df), value = TRUE)
+    sub("_event_changing$", "", cols)
+  }) %>%
+    unlist(use.names = FALSE) %>%
+    unique() %>%
+    sort()
+
+  if (length(all_contrasts) == 0) {
+    return(tibble::tibble(contrast = character()))
+  }
+
+  # 2) full grid
+  grid <- tidyr::expand_grid(
+    contrast = all_contrasts,
+    event_type = event_types
+  )
+
+  # 3) counts
+  counts_long <- imap_dfr(event_list, function(df, event_type) {
+
+    if (!is.data.frame(df) || !"event_id" %in% colnames(df)) {
+      return(tibble::tibble(contrast = character(), event_type = character(), n_changing = integer()))
+    }
+
+    chg_cols <- grep("_event_changing$", colnames(df), value = TRUE)
+    if (length(chg_cols) == 0) {
+      return(tibble::tibble(contrast = character(), event_type = character(), n_changing = integer()))
+    }
+
+    df %>%
+      select(event_id, all_of(chg_cols)) %>%
+      distinct(event_id, .keep_all = TRUE) %>%
+      pivot_longer(
+        cols = all_of(chg_cols),
+        names_to = "contrast",
+        values_to = "event_changing"
+      ) %>%
+      mutate(contrast = sub("_event_changing$", "", contrast)) %>%
+      group_by(contrast) %>%
+      summarise(n_changing = sum(event_changing, na.rm = TRUE), .groups = "drop") %>%
+      mutate(event_type = event_type)
+  })
+
+  # 4) join grid + counts and widen
+  grid %>%
+    left_join(counts_long, by = c("contrast", "event_type")) %>%
+    mutate(n_changing = tidyr::replace_na(n_changing, 0L)) %>%
+    pivot_wider(
+      names_from = event_type,
+      values_from = n_changing
+    ) %>%
+    arrange(contrast)
+}
+
+overview_tbl <- make_contrast_overview_table(annotated_results)
+
+overview_tbl %>%
+  knitr::kable(caption = "Number of changing events per contrast and event type")
+
+```
+
+## Save results
+
+Here, results are saved to Excel files for sharing and as `.rds` objects to allow for further work on the results.
+
+```{r save to rds}
+
+dir.create(paste0(params$artifact_dir, "/rds"), recursive = TRUE, showWarnings = FALSE)
+
+saveRDS(
+  annotated_results,
+  file = paste0(params$artifact_dir, "/rds/annotated_results.rds")
+)
+saveRDS(
+  overview_tbl,
+  file = paste0(params$artifact_dir, "/rds/overview_table.rds")
+)
+
+
+```
+
+```{r save to excel}
+dir.create(paste0(params$artifact_dir, "/excel"), recursive = TRUE, showWarnings = FALSE)
+# ---- helpers ----
+sanitize_sheet_names <- function(x) {
+  # Excel sheet name rules: <= 31 chars, no : \ / ? * [ ]
+  x <- gsub("[:\\\\/\\?\\*\\[\\]]", "_", x)
+  x <- substr(x, 1, 31)
+
+  # ensure unique (Excel also requires unique names)
+  make.unique(x, sep = "_")
+}
+
+dir.create(paste0(params$artifact_dir, "/rds"), recursive = TRUE, showWarnings = FALSE)
+
+
+
+write_event_list_xlsx <- function(event_list, outfile) {
+  stopifnot(is.list(event_list))
+
+  wb <- createWorkbook()
+
+  sheet_names <- names(event_list)
+  if (is.null(sheet_names) || any(sheet_names == "")) {
+    sheet_names <- paste0("sheet_", seq_along(event_list))
+  }
+  sheet_names <- sanitize_sheet_names(sheet_names)
+
+  for (i in seq_along(event_list)) {
+    df <- event_list[[i]]
+
+    # if not a data.frame, coerce to something reasonable
+    if (!is.data.frame(df)) df <- as.data.frame(df)
+
+    addWorksheet(wb, sheet_names[i])
+    writeDataTable(wb, sheet = sheet_names[i], x = df, withFilter = TRUE)
+    setColWidths(wb, sheet = sheet_names[i], cols = 1:ncol(df), widths = "auto")
+  }
+
+  saveWorkbook(wb, file = outfile, overwrite = TRUE)
+}
+
+# ---- 1) save your two event lists ----
+# replace "regulated_results" with your actual object name if different
+write_event_list_xlsx(annotated_results, paste0(params$artifact_dir,"/excel/annotated_results.xlsx"))
+
+# ---- 2) save overview table as .xlsx ----
+# overview_tbl is your wide table (contrast rows, event types columns)
+wb_overview <- createWorkbook()
+addWorksheet(wb_overview, "overview")
+writeDataTable(wb_overview, "overview", overview_tbl, withFilter = TRUE)
+setColWidths(wb_overview, "overview", cols = 1:ncol(overview_tbl), widths = "auto")
+saveWorkbook(wb_overview, paste0(params$artifact_dir,"/excel/overview_table.xlsx"), overwrite = TRUE)
+
+```
+
+```{r multiqc}
+# ---- 3) save overview table as .tsv ----
+
+# Define MultiQC header
+mqc_header <- "# id: 'majiq_overview_table'
+# section_name: 'MAJIQ'
+# description: 'Overview table from MAJIQ Deltapsi modulize analysis results'
+# plot_type: 'table'
+# pconfig:
+#     id: 'majiq_overview_table'
+#     title: 'MAJIQ Delta PSI Overview'
+"
+
+# Write header first
+cat(mqc_header, file = paste0(params$artifact_dir, "/overview_table_mqc.tsv"))
+
+# Append the table data
+write.table(
+  overview_tbl,
+  file = paste0(params$artifact_dir, "/overview_table_mqc.tsv"),
+  sep = "\t",
+  quote = FALSE,
+  row.names = FALSE,
+  append = TRUE  # Important: append to the header
+)
+
+```
+
+## Session information
+
+```{r}
+#| echo: false
+
+sessionInfo()
+```

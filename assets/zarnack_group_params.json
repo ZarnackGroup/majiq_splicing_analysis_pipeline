@@ -1,0 +1,14 @@
+{
+    "majiq_buildgff3_args": "",
+    "majiq_buildsj_args": "",
+    "majiq_buildupdate_args": "--no-simplify",
+    "majiq_psicoverage_args": "",
+    "majiq_psi_args": "",
+    "majiq_deltapsi_args": "--changing-threshold 0.05",
+    "majiq_heterogen_args": "",
+    "majiq_sgcoverage_args": "",
+    "deltapsi_modulize_args": "--changing-between-group-dpsi 0.05 --changing-between-group-dpsi-secondary 0.025 --probability-changing-threshold 0.9 --show-all",
+    "heterogen_modulize_args": "",
+    "deeptools_bamcoverage_args": "--normalizeUsing CPM --binSize 1 --minMappingQuality 1 --verbose",
+    "rseqc_modules": "bam_stat,infer_experiment,junction_annotation,junction_saturation"
+}

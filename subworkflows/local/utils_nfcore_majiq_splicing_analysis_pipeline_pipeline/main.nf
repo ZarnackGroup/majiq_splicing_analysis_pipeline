@@ -18,6 +18,9 @@ include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 
+include { INPUT_CHECK               } from '../input_check'
+include { CONTRASTS_CHECK           } from '../contrast_check'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW TO INITIALISE PIPELINE
@@ -39,7 +42,7 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -79,29 +82,62 @@ workflow PIPELINE_INITIALISATION {
     // Create channel from input file provided through params.input
     //
 
-    Channel
+    channel
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
+        .map { meta, genome_bam ->
+            return [ meta.id, meta, [ genome_bam ] ]
         }
         .groupTuple()
         .map { samplesheet ->
             validateInputSamplesheet(samplesheet)
         }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
+        .map { meta, bam_files ->
+            return [ meta, bam_files.flatten() ]
         }
         .set { ch_samplesheet }
 
+
+
+
+    //
+    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
+    //
+    INPUT_CHECK (
+        input,
+        'genome_bam'
+        )
+        .reads
+        .set { ch_genome_bam }
+
+        ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+
+
+
+
+
+    // Create samplesheet channel (after input check)
+
+
+
+    //
+    // SUBWORKFLOW: Read in contrastsheet, validate and stage input files
+    //
+    ch_contrasts = Channel.fromPath(params.contrasts)
+
+    CONTRASTS_CHECK (
+        ch_contrasts
+    )
+    ch_versions = ch_versions.mix(CONTRASTS_CHECK.out.versions)
+
+
+
+
     emit:
-    samplesheet = ch_samplesheet
-    versions    = ch_versions
+    genome_bam    = ch_genome_bam
+    samplesheet   = ch_samplesheet
+    contrasts     = CONTRASTS_CHECK.out.contrasts
+    versions      = ch_versions
+
 }
 
 /*
@@ -162,16 +198,16 @@ workflow PIPELINE_COMPLETION {
 // Validate channels from input samplesheet
 //
 def validateInputSamplesheet(input) {
-    def (metas, fastqs) = input[1..2]
+    def (metas, bam_files) = input[1..2]
 
-    // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size == 1
-    if (!endedness_ok) {
-        error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
+    // Basic validation: Ensure all BAM files exist
+    if (!bam_files || bam_files.flatten().isEmpty()) {
+        error("No BAM files found for sample: ${metas[0].id}")
     }
 
-    return [ metas[0], fastqs ]
+    return [ metas[0], bam_files ]
 }
+
 //
 // Generate methods description for MultiQC
 //
@@ -236,4 +272,76 @@ def methodsDescriptionText(mqc_methods_yaml) {
     def description_html = engine.createTemplate(methods_text).make(meta)
 
     return description_html.toString()
+}
+
+//
+// Function that parses RSeQC infer_experiment output file to get inferred strandedness, taken from https://github.com/nf-core/rnaseq/blob/3.20.0/subworkflows/local/utils_nfcore_rnaseq_pipeline/main.nf
+//
+def getInferexperimentStrandedness(inferexperiment_file, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
+    def forwardFragments = 0
+    def reverseFragments = 0
+    def unstrandedFragments = 0
+
+    inferexperiment_file.eachLine { line ->
+        def unstranded_matcher = line =~ /Fraction of reads failed to determine:\s([\d\.]+)/
+        def se_sense_matcher = line =~ /Fraction of reads explained by "\++,--":\s([\d\.]+)/
+        def se_antisense_matcher = line =~ /Fraction of reads explained by "\+-,-\+":\s([\d\.]+)/
+        def pe_sense_matcher = line =~ /Fraction of reads explained by "1\++,1--,2\+-,2-\+":\s([\d\.]+)/
+        def pe_antisense_matcher = line =~ /Fraction of reads explained by "1\+-,1-\+,2\+\+,2--":\s([\d\.]+)/
+
+        if (unstranded_matcher) unstrandedFragments = unstranded_matcher[0][1].toFloat() * 100
+        if (se_sense_matcher) forwardFragments = se_sense_matcher[0][1].toFloat() * 100
+        if (se_antisense_matcher) reverseFragments = se_antisense_matcher[0][1].toFloat() * 100
+        if (pe_sense_matcher) forwardFragments = pe_sense_matcher[0][1].toFloat() * 100
+        if (pe_antisense_matcher) reverseFragments = pe_antisense_matcher[0][1].toFloat() * 100
+    }
+
+    // Use shared calculation function to determine strandedness
+    return calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold, unstranded_threshold)
+}
+
+//
+// Function to determine library type by comparing type counts. Taken from https://github.com/nf-core/rnaseq/blob/3.20.0/subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/main.nf
+//
+
+//
+def calculateStrandedness(forwardFragments, reverseFragments, unstrandedFragments, stranded_threshold = 0.8, unstranded_threshold = 0.1) {
+    def totalFragments = forwardFragments + reverseFragments + unstrandedFragments
+    def totalStrandedFragments = forwardFragments + reverseFragments
+
+    def strandedness = 'undetermined'
+    if (totalStrandedFragments > 0) {
+        def forwardProportion = forwardFragments / (totalStrandedFragments as double)
+        def reverseProportion = reverseFragments / (totalStrandedFragments as double)
+        def proportionDifference = Math.abs(forwardProportion - reverseProportion)
+
+        if (forwardProportion >= stranded_threshold) {
+            strandedness = 'forward'
+        }
+        else if (reverseProportion >= stranded_threshold) {
+            strandedness = 'reverse'
+        }
+        else if (proportionDifference <= unstranded_threshold) {
+            strandedness = 'unstranded'
+        }
+    }
+
+    return [
+        inferred_strandedness: strandedness,
+        forwardFragments: (forwardFragments / (totalFragments as double)) * 100,
+        reverseFragments: (reverseFragments / (totalFragments as double)) * 100,
+        unstrandedFragments: (unstrandedFragments / (totalFragments as double)) * 100,
+    ]
+}
+
+//
+// Create MultiQC tsv custom content from a list of values. taken from https://github.com/nf-core/rnaseq/blob/3.20.0/subworkflows/nf-core/fastq_qc_trim_filter_setstrandedness/main.nf
+//
+def multiqcTsvFromList(tsv_data, header) {
+    def tsv_string = ""
+    if (tsv_data.size() > 0) {
+        tsv_string += "${header.join('\t')}\n"
+        tsv_string += tsv_data.join('\n')
+    }
+    return tsv_string
 }

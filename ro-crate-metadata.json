@@ -21,15 +21,18 @@
         {
             "@id": "./",
             "@type": "Dataset",
-            "creativeWorkStatus": "InProgress",
-            "datePublished": "2025-11-12T19:08:36+00:00",
-            "description": "# ZarnackGroup/majiq_splicing_analysis_pipeline\n\n\n[![GitHub Actions CI Status](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/nf-test.yml/badge.svg)](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/linting.yml/badge.svg)](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.04.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.4.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.4.1)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline)\n\n## Introduction\n\n**ZarnackGroup/majiq_splicing_analysis_pipeline** is a bioinformatics pipeline that ...\n\n<!-- TODO nf-core:\n   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the\n   major pipeline sections and the types of output it produces. You're giving an overview to someone new\n   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction\n-->\n\n<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core\n     workflows use the \"tube map\" design for that. See https://nf-co.re/docs/guidelines/graphic_design/workflow_diagrams#examples for examples.   -->\n<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.\n\n<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.\n     Explain what rows and columns represent. For instance (please edit as appropriate):\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\nsample,fastq_1,fastq_2\nCONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz\n```\n\nEach row represents a fastq file (single-end) or a pair of fastq files (paired end).\n\n-->\n\nNow, you can run the pipeline using:\n\n<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->\n\n```bash\nnextflow run ZarnackGroup/majiq_splicing_analysis_pipeline \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).\n\n## Credits\n\nZarnackGroup/majiq_splicing_analysis_pipeline was originally written by Felix Haidle.\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n<!-- TODO nf-core: If applicable, make list of people who have also contributed -->\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).\n\n## Citations\n\n<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->\n<!-- If you use ZarnackGroup/majiq_splicing_analysis_pipeline for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->\n\n<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nThis pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/main/LICENSE).\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
+            "creativeWorkStatus": "Stable",
+            "datePublished": "2026-01-28T22:37:03+00:00",
+            "description": "# ZarnackGroup/majiq_splicing_analysis_pipeline\n\n[![GitHub Actions CI Status](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/nf-test.yml/badge.svg)](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/linting.yml/badge.svg)](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/linting.yml)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.04.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.5.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.5.1)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n\n## Introduction\n\n**ZarnackGroup/majiq_splicing_analysis_pipeline** is our in-house pipeline for analyzing alternative splicing events from RNA sequencing data, based on Nextflow and utilizing [`MAJIQ V3`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792) as the core splicing analysis tool.\n\n```mermaid\nflowchart TB\n  subgraph MAJIQ_SPLICING_ANALYSIS_PIPELINE\n    subgraph required parameters\n      v0[\"--input\"]\n      v2[\"--annotation\"]\n      v1[\"--contrasts\"]\n      v3[\"genome_fasta\"]\n\n    end\n\n    subgraph s20[\"converting inputs\"]\n          subgraph s100[\"index bam files\"]\n               v15([SAMTOOLS_INDEX])\n          end\n          subgraph s2[\"annotation format handling\"]\n               v9([AGAT])\n          end\n     end\n    subgraph s3[\"splicing analysis\"]\n      v25([MAJIQ])\n      v26([IRFINDER-S])\n    end\n    subgraph s4[\"create BigWig\"]\n      v19([DEEPTOOLS_BAMCOVERAGE])\n    end\n    subgraph s7[\"quality control\"]\n      v32([BAM_RSEQC])\n      v22([FASTQC])\n    end\n    subgraph report\n      v63([MULTIQC])\n    end\n    v2 --> v9\n    v0 --> v19\n    v0 --> v15\n    v0 --> v22\n    v0 --> v25\n    v0 --> v26\n    v0 --> v32\n    v9 --> v25\n    v9 --> v26\n    v9 --> v32\n    v1 --> v26\n    v1 --> v25\n    v3 --> v26\n    v15 --> v19\n    v15 --> v32\n    v19 --> v63\n    v32 --> v63\n    v22 --> v63\n    v15 --> v63\n    v9 --> v63\n    v25 --> v63\n    v26 --> v63\n  end\n\n```\n\n1. Index BAM files ([`SAMTOOLS`](https://doi.org/10.1093/bioinformatics/btp352))\n2. Convert annotation: GXF conversion ([`AGAT`](https://doi.org/10.5281/zenodo.3552717))\n3. Convert annotation: BED conversion ([`AGAT`](https://doi.org/10.5281/zenodo.3552717))\n4. Splicing analysis ([`MAJIQ`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792))\n5. Intron Retention analysis ([`IRFINDER`](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02515-8))\n6. Coverage track generation ([`DEEPTOOLS`](https://doi.org/10.1093/nar/gkw257))\n7. Quality control: read & alignment QC ([`RSeQC`](http://rseqc.sourceforge.net/))\n8. Quality control: read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))\n9. Reporting ([`MultiQC`](https://pubmed.ncbi.nlm.nih.gov/27312411/))\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.\n\nBelow are the minimal steps required to run the pipeline.\nFull documentation for the pipeline, including usage, all parameters and output files can be found in the [`docs`](docs) folder.\n\n### Setting up MAJIQ\n\n1. Obtain a LICENSE \u2013 MAJIQ is free for academic use, but you need to visit the [homepage](https://majiq.biociphers.org/app_download/).\n2. Add the license key to your [Nextflow secrets](https://nextflow.io/docs/latest/secrets.html) as `MAJIQ_LICENSE`.\n\n   ```bash\n   nextflow secrets set MAJIQ_LICENSE \"$(cat \"majiq_license_academic_official.lic\")\"\n   ```\n\n3. Installing MAJIQ \u2013 choose your preferred option. Current tests are built for MAJIQ V3 at tag **3.0.6**:\n   1. Set up with Conda: follow the instructions on the download page.\n   2. Set up with Docker: you can find a Dockerfile to build a MAJIQ container in the [`assets`](assets/docker/majiq/Dockerfile) folder of this repository.\n   3. Apptainer/Singularity: use the Docker image.\n   4. Others: I have not tried anything else yet. If you find a reliable and legal way to set it up, feel free to contribute here.\n4. Configuring the pipeline to use your MAJIQ installation:  \n   You need to create a `.config` file where you specify the container or Conda environment for each MAJIQ process. You can find an example in the `conf` folder \u2013 [`cctb.config`](conf/cctb.config).  \n   For a Conda environment, use `\"conda\"` instead of `\"container\"`.  \n   Pass the created `.config` file using the [`-c` option](https://www.nextflow.io/docs/latest/config.html).\n\n### Running the pipeline\n\nFirst, prepare a samplesheet with your input data.\n\n`samplesheet.csv`:\n\n```csv\nsample,condition,genome_bam\nERR188383,GBR,PATH/TO/ERR188383.Aligned.out.bam\nERR188428,GBR,PATH/TO/ERR188428.Aligned.out.bam\nERR188454,YRI,PATH/TO/ERR188454.Aligned.out.bam\nERR204916,YRI,PATH/TO/ERR204916.Aligned.out.bam\n\n```\n\nEach row represents a BAM file.  \n`sample` is a unique identifier for each row.  \n`condition` is used to group and compare samples.  \n`genome_bam` refers to reads aligned against a genome.\n\n`contrastsheet.csv`:\n\n```csv\ncontrast,treatment,control\nYRI-GBR,YRI,GBR\n```\n\nEach row represents a comparison (contrast).  \nThe `control` column is used as the reference in comparisons, and `treatment` specifies the other condition.  \n`contrast` is an identifier for the comparison.\n\n`annotation`:  \nProvide the annotation file used during alignment. It can be in `.gtf` or `.gff3` format.  \nMAJIQ requires `.gff3`. If a GTF file is provided, it will be converted using AGAT. `.gz` are allowed and files will be unzipped.\n\n`genome_fasta`:\n**Optional** input that is required to run **IRFinder**. `.gz` are allowed and files will be unzipped.\n\nNow, you can run the pipeline using:\n\n```bash\nnextflow run ZarnackGroup/majiq_splicing_analysis_pipeline \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --contrasts contrastsheet.csv \\\n   --annotation annotation.gff3 \\\n   --genome_fasta reference.fa \\\n   --outdir <OUTDIR> \\\n   -c majiq.config\n```\n\nAll available parameters can be found in the [parameters documentation](docs/parameters.md).\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).\n\n## Credits\n\nmajiq_splicing_analysis_pipeline was originally written by Felix Haidle.\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n- Be the first!\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).\n\n## Citations\n\n> An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\n- [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)\n\n> Ewels PA, Peltzer A, Fillinger S, Patel H, Alneberg J, Wilm A, Garcia MU, Di Tommaso P, Nahnsen S. The nf-core framework for community-curated bioinformatics pipelines. Nat Biotechnol. 2020 Mar;38(3):276-278. doi: 10.1038/s41587-020-0439-x. PubMed PMID: 32055031.\n\n- [MAJIQ v3](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792)\n\n> Aicher JK, Slaff B, Jewell S, Barash Y. MAJIQ V3 offers improvements in accuracy, performance, and usability for splicing analysis from RNA sequencing. bioRxiv. 2024. doi: 10.1101/2024.07.02.601792.\n\n- [IRFinder-S](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02515-8)\n\n> Lorenzi C, Barriere S, Arnold K, et al. IRFinder-S: a comprehensive suite to discover and explore intron retention. Genome Biology. 2021;22:307. doi: 10.1186/s13059-021-02515-8.\n\n- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)\n\n> Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].\n\n- [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)\n\n> Ewels P, Magnusson M, Lundin S, K\u00e4ller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.\n\n- [RSeQC](http://rseqc.sourceforge.net/)\n\n> Wang L, Wang S, Li W. RSeQC: quality control of RNA-seq experiments. Bioinformatics. 2012 Aug 15;28(16):2184-2185. doi: 10.1093/bioinformatics/bts356. PubMed PMID: 22743226.\n\n- [AGAT](https://doi.org/10.5281/zenodo.3552717)\n\n> Dainat J. AGAT: Another Gff Analysis Toolkit to handle annotations in any GTF/GFF format (Version v0.7.0). Zenodo. doi: 10.5281/zenodo.3552717.\n\n- [deepTools](https://doi.org/10.1093/nar/gkw257)\n\n> Ram\u00edrez F, Ryan DP, Gr\u00fcning B, Bhardwaj V, Kilpert F, Richter AS, Heyne S, D\u00fcndar F, Manke T. deepTools2: a next generation web server for deep-sequencing data analysis. Nucleic Acids Res. 2016 Jul 8;44(W1):W160-W165. doi: 10.1093/nar/gkw257. PubMed PMID: 27079975.\n\n- [SAMtools](https://doi.org/10.1093/bioinformatics/btp352)\n\n> Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R; 1000 Genome Project Data Processing Subgroup. The Sequence Alignment/Map format and SAMtools. Bioinformatics. 2009 Aug 15;25(16):2078-2079. doi: 10.1093/bioinformatics/btp352. PubMed PMID: 19505943.\n\n- [Nextflow](https://pubmed.ncbi.nlm.nih.gov/28398311/)\n\n> Di Tommaso P, Chatzou M, Floden EW, Barja PP, Palumbo E, Notredame C. Nextflow enables reproducible computational workflows. Nat Biotechnol. 2017 Apr 11;35(4):316-319. doi: 10.1038/nbt.3820. PubMed PMID: 28398311.\n",
             "hasPart": [
                 {
                     "@id": "main.nf"
                 },
                 {
                     "@id": "assets/"
+                },
+                {
+                    "@id": "bin/"
                 },
                 {
                     "@id": "conf/"
@@ -39,6 +42,9 @@
                 },
                 {
                     "@id": "modules/"
+                },
+                {
+                    "@id": "modules/local/"
                 },
                 {
                     "@id": "modules/nf-core/"
@@ -93,7 +99,7 @@
             },
             "mentions": [
                 {
-                    "@id": "#c3a80793-f09d-444f-b176-79311d9b8791"
+                    "@id": "#e21cc6a6-44f9-485d-a913-c0f66d1e63dc"
                 }
             ],
             "name": "ZarnackGroup/majiq_splicing_analysis_pipeline"
@@ -121,7 +127,7 @@
                 "ComputationalWorkflow"
             ],
             "dateCreated": "",
-            "dateModified": "2025-11-12T20:08:36Z",
+            "dateModified": "2026-01-28T23:37:03Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
             "keywords": [
                 "nf-core",
@@ -141,10 +147,10 @@
             },
             "url": [
                 "https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline",
-                "https://nf-co.re/ZarnackGroup/majiq_splicing_analysis_pipeline/dev/"
+                "https://nf-co.re/ZarnackGroup/majiq_splicing_analysis_pipeline/0.1.0/"
             ],
             "version": [
-                "1.0.0dev"
+                "0.1.0"
             ]
         },
         {
@@ -160,11 +166,11 @@
             "version": "!>=25.04.0"
         },
         {
-            "@id": "#c3a80793-f09d-444f-b176-79311d9b8791",
+            "@id": "#e21cc6a6-44f9-485d-a913-c0f66d1e63dc",
             "@type": "TestSuite",
             "instance": [
                 {
-                    "@id": "#67f49f47-fa8a-4987-bea6-73a964110d56"
+                    "@id": "#2c9edb2e-4777-483d-86a9-efdfdd49037b"
                 }
             ],
             "mainEntity": {
@@ -173,7 +179,7 @@
             "name": "Test suite for ZarnackGroup/majiq_splicing_analysis_pipeline"
         },
         {
-            "@id": "#67f49f47-fa8a-4987-bea6-73a964110d56",
+            "@id": "#2c9edb2e-4777-483d-86a9-efdfdd49037b",
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing ZarnackGroup/majiq_splicing_analysis_pipeline",
             "resource": "repos/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/nf-test.yml",
@@ -196,6 +202,11 @@
             "description": "Additional files"
         },
         {
+            "@id": "bin/",
+            "@type": "Dataset",
+            "description": "Scripts that must be callable from a pipeline process"
+        },
+        {
             "@id": "conf/",
             "@type": "Dataset",
             "description": "Configuration files"
@@ -209,6 +220,11 @@
             "@id": "modules/",
             "@type": "Dataset",
             "description": "Modules used by the pipeline"
+        },
+        {
+            "@id": "modules/local/",
+            "@type": "Dataset",
+            "description": "Pipeline-specific modules"
         },
         {
             "@id": "modules/nf-core/",

@@ -1,0 +1,79 @@
+nextflow_workflow {
+
+    name "Test Subworkflow MAJIQ"
+    script "../main.nf"
+    workflow "MAJIQ"
+
+    tag "subworkflows"
+    tag "subworkflows_"
+    tag "subworkflows/majiq"
+    tag "majiq"
+    tag "majiq/buildgff3"
+    tag "ci"
+
+
+    test("nf-core/rnasplice test data") {
+        setup {
+                run("AGAT_CONVERTSPGXF2GXF") {
+                    script "../../../../modules/nf-core/agat/convertspgxf2gxf/main.nf"  // Path to the agat module
+                    process {
+                        """
+                        input[0] = Channel.of(
+                            [
+                            [ id:'chrX' ],
+                            file(params.pipelines_testdata_base_path +'rnasplice/reference/genes_chrX.gtf', checkIfExists: true)
+                            ]
+                        )
+                        """
+                    }
+                }
+            }
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [ id: 'ERR188383', condition: 'GBR' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188383.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR188428', condition: 'GBR' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188428.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR188454', condition: 'YRI' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR188454.Aligned.out.bam", checkIfExists: false)
+                    ],
+                    [
+                        [ id: 'ERR204916', condition: 'YRI' ],
+                        file("https://raw.githubusercontent.com/nf-core/test-datasets/rnasplice/testdata/ERR204916.Aligned.out.bam", checkIfExists: false)
+                    ],
+                )
+                input[1] = AGAT_CONVERTSPGXF2GXF.out.output_gff
+                input[2] = Channel.of(
+                    [ contrast:'GBR-YRI', control:'YRI', treatment:'GBR' ]
+                )
+                """
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                    ).match() }
+            )
+        }
+    }
+}
