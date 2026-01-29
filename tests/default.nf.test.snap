@@ -1961,7 +1961,7 @@
                     "samtools": "1.22.1"
                 },
                 "Workflow": {
-                    "ZarnackGroup/majiq_splicing_analysis_pipeline": "v1.0.0dev"
+                    "ZarnackGroup/majiq_splicing_analysis_pipeline": "v0.1.0"
                 }
             },
             [
@@ -3598,7 +3598,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2026-01-28T15:37:40.753103679"
+        "timestamp": "2026-01-29T01:29:33.714731534"
     },
     "-profile test,stub": {
         "content": [
@@ -3683,7 +3683,7 @@
                     "samtools": "1.22.1"
                 },
                 "Workflow": {
-                    "ZarnackGroup/majiq_splicing_analysis_pipeline": "v1.0.0dev"
+                    "ZarnackGroup/majiq_splicing_analysis_pipeline": "v0.1.0"
                 }
             },
             [
@@ -3856,6 +3856,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2026-01-25T00:49:55.426990517"
+        "timestamp": "2026-01-29T01:30:19.077858866"
     }
 }
