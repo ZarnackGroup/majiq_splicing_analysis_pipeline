@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
 
     test("-profile test") {
-        tag "irfinder" // will be excluded on GitHub CI - IRFinder BuildRefProcess quits with lower then 32G system memory :(
+        tag "irfinder" // will be excluded on GitHub CI - IRFinder BuildRefProcess quits with lower than 32G system memory :(
 
         when {
             params {
@@ -14,19 +14,29 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_path: All files + folders in ${params.outdir}/ with a stable path, including file name
+            def stable_path = getAllFilesFromDir(
+                params.outdir,
+                relative: true,
+                includeDir: true,
+                ignore: ['pipeline_info/*.{html,json,txt}']
+            )
+
+            // stable_content: All files in ${params.outdir}/ with stable content
+            def stable_content = getAllFilesFromDir(
+                params.outdir,
+                ignoreFile: 'tests/.nftignore'
+            )
+
             assertAll(
-                { assert workflow.success},
+                { assert workflow.success },
                 { assert snapshot(
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
+                    // pipeline versions.yml file for MultiQC from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
                     removeNextflowVersion("$outputDir/pipeline_info/majiq_splicing_analysis_pipeline_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
+                    // All stable paths, with relative paths
+                    stable_path,
                     // All files with stable contents
-                    stable_path
+                    stable_content
                 ).match() }
             )
         }
@@ -34,27 +44,41 @@ nextflow_pipeline {
 
     test("Pipeline without IRFinder (GitHub actions friendly)") {
         tag "ci"
+
         when {
             params {
                 outdir = "$outputDir"
                 skip_irfinder = true
             }
         }
+
         then {
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // stable_path: All files + folders in ${params.outdir}/ with a stable path, including file name
+            def stable_path = getAllFilesFromDir(
+                params.outdir,
+                relative: true,
+                includeDir: true,
+                ignore: ['pipeline_info/*.{html,json,txt}']
+            )
+
+            // stable_content: All files in ${params.outdir}/ with stable content
+            def stable_content = getAllFilesFromDir(
+                params.outdir,
+                ignoreFile: 'tests/.nftignore'
+            )
+
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
                     removeNextflowVersion("$outputDir/pipeline_info/majiq_splicing_analysis_pipeline_software_mqc_versions.yml"),
-                    stable_name,
-                    stable_path
+                    stable_path,
+                    stable_content
                 ).match() }
             )
         }
     }
 
-        test("-profile test,stub") {
+    test("-profile test,stub") {
         tag "ci"
         tag "stub"
 
@@ -67,16 +91,21 @@ nextflow_pipeline {
         }
 
         then {
-            // For stub tests, only check file structure, not content
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // For stub tests, only check file structure, not full content
+            def stable_path = getAllFilesFromDir(
+                params.outdir,
+                relative: true,
+                includeDir: true,
+                ignore: ['pipeline_info/*.{html,json,txt}']
+            )
 
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
                     // Check versions file still exists in stub mode
                     removeNextflowVersion("$outputDir/pipeline_info/majiq_splicing_analysis_pipeline_software_mqc_versions.yml"),
-                    // All stable path names with relative paths
-                    stable_name
+                    // All stable paths with relative paths
+                    stable_path
                 ).match() }
             )
         }

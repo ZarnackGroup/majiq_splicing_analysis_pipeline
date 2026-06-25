@@ -44,11 +44,13 @@ lint:
     - validation.help.afterText
     - validation.summary.beforeText
     - validation.summary.afterText
-nf_core_version: 3.5.1
+nf_core_version: 4.0.2
 repository_type: pipeline
 template:
   author: Felix Haidle
-  description: In-house pipeline for analyzing alternative splicing events from RNA sequencing data, based on Nextflow and utilizing MAJIQ as the core splicing analysis tool.
+  description: In-house pipeline for analyzing alternative splicing events from RNA
+    sequencing data, based on Nextflow and utilizing MAJIQ as the core splicing analysis
+    tool.
   force: false
   is_nfcore: false
   name: majiq_splicing_analysis_pipeline

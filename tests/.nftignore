@@ -46,3 +46,5 @@ reports/*.yml
 reports/tables/rds/*.rds
 reports/tables/excel/*.xlsx
 reports/tables/*.tsv
+fastqc/*_fastqc.{html,zip}
+pipeline_info/*.{html,json,txt,yml}
