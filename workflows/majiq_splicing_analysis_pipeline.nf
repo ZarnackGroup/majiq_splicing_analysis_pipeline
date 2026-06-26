@@ -140,7 +140,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     DOWNSTREAM_ANALYSIS (
         MAJIQ.out.ch_deltapsi_modulize
     )
-    ch_versions = ch_versions.mix(DOWNSTREAM_ANALYSIS.out.ch_versions.first())
 
     //
     // SUBWORKFLOW: RSEQC
