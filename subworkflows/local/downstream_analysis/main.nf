@@ -8,7 +8,6 @@ workflow DOWNSTREAM_ANALYSIS {
 
     main:
 
-    ch_versions = channel.empty()
 
      // Add metadata to the directory
     ch_with_meta = deltapsi_modulize
@@ -62,9 +61,7 @@ workflow DOWNSTREAM_ANALYSIS {
             tuple(meta, tsv_file)
         }
 
-    ch_versions = QUARTONOTEBOOK_DELTAPSI.out.versions
 
     emit:
-    ch_versions = ch_versions
     ch_deltapsi_table = ch_overview_table
 }
