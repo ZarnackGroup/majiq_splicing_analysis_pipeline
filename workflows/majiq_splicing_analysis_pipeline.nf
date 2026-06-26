@@ -9,6 +9,7 @@ include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { SAMTOOLS_INDEX         } from '../modules/nf-core/samtools/index/main'
 include { DEEPTOOLS_BAMCOVERAGE  } from '../modules/nf-core/deeptools/bamcoverage/main'
+include { RUSTQC                 } from '../modules/nf-core/rustqc/main'
 
 // SUBWORKFLOWS
 include { MAJIQ                  } from '../subworkflows/local/majiq/main'
@@ -141,45 +142,59 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     )
 
     //
-    // SUBWORKFLOW: RSEQC
+    // MODULE: RUSTQC
     //
 
 
-    // adjust channel structures for RSeQC subworkflow for bam and bed files
+    REFERENCES.out.gtf
+        .first()
+        .set { ch_gtf_rustqc }
 
+    if (!params.skip_rustqc) {
 
-    ch_bam_with_index.map { meta, bamList, bai ->
-        def bam = (bamList instanceof List ? bamList[0] : bamList)
-        tuple(meta, [bam, bai])
-    }.set { ch_bam_bai }
-
-
-    REFERENCES.out.bed
-    .map   { meta, bed -> bed }  // drop meta
-    .unique()
-    .first()
-    .set { ch_bed_single }
-
-    def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
-
-
-
-    if (!params.skip_rseqc && rseqc_modules.size() > 0) {
-        BAM_RSEQC (
+        RUSTQC (
             ch_bam_with_index,
-            ch_bed_single,
-            rseqc_modules
+            ch_gtf_rustqc
         )
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.bamstat_txt.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.inferexperiment_txt.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.innerdistance_freq.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionannotation_log.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionsaturation_rscript.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readdistribution_txt.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readduplication_pos_xls.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{it[1]})
-        ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
-        ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
+
+        // Keep only files that MultiQC can reasonably parse.
+        // Taken from nf-core/rnaseq 3.26
+        def mqcKeep = { f ->
+            f.name.endsWith('.featureCounts.tsv.summary')
+                ? false
+                : (
+                    f.name =~ /(?i)\.(txt|tsv|xls|log|stats|flagstat|idxstats|html)$/
+                    || f.name.contains('_mqc.')
+                )
+        }
+
+        ch_rustqc_multiqc_files = RUSTQC.out.dupradar
+            .mix(RUSTQC.out.featurecounts)
+            .mix(RUSTQC.out.preseq)
+            .mix(RUSTQC.out.samtools)
+            .mix(RUSTQC.out.rseqc)
+            .mix(RUSTQC.out.qualimap)
+            .flatMap { meta, files ->
+                (files instanceof List ? files : [files]).findAll(mqcKeep)
+            }
+
+        ch_multiqc_files = ch_multiqc_files.mix(ch_rustqc_multiqc_files)
+
+        // Extract RustQC's RSeQC-compatible infer_experiment output
+        // for the existing strandedness comparison.
+        ch_inferexperiment_txt = RUSTQC.out.rseqc
+            .map { meta, files ->
+                def inferexperiment = (files instanceof List ? files : [files]).find { file ->
+                    file.name.endsWith('.infer_experiment.txt')
+                }
+                inferexperiment ? [ meta, inferexperiment ] : null
+            }
+            .filter { entry -> entry != null }
+
+        //
+        // Strandedness comparison
+        //
+        ch_strand_comparison = ch_inferexperiment_txt
             .map { meta, strand_log ->
                 def rseqc_inferred_strand = getInferexperimentStrandedness(
                     strand_log,
@@ -194,7 +209,7 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
                 }
 
                 def multiqc_lines = [
-                    "$meta.id\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}"
+                    "$meta.id\tRustQC\t${rseqc_inferred_strand.values().join('\t')}"
                 ]
 
                 return [ meta, status, multiqc_lines ]
@@ -203,6 +218,7 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
                 status: [ meta.id, status == 'pass' ]
                 multiqc_lines: multiqc_lines
             }
+
         sample_status_header_multiqc = file("${projectDir}/assets/strandedness_table_header.txt")
 
         // Store the statuses for output
@@ -212,22 +228,23 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         ch_strand_comparison.multiqc_lines
             .flatten()
             .collect()
-            .map {
-                tsv_data ->
-                    def header = [
-                        "Sample",
-                        "Strand inference method",
-                        "Inferred strandedness",
-                        "Sense (%)",
-                        "Antisense (%)",
-                        "Unstranded (%)"
-                    ]
-                    sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
+            .map { tsv_data ->
+                def header = [
+                    "Sample",
+                    "Strand inference method",
+                    "Inferred strandedness",
+                    "Sense (%)",
+                    "Antisense (%)",
+                    "Unstranded (%)"
+                ]
+                sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
             }
             .set { ch_fail_strand_multiqc }
 
-        ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'sample_strandedness_mqc.tsv'))
-        }
+        ch_multiqc_files = ch_multiqc_files.mix(
+            ch_fail_strand_multiqc.collectFile(name: 'sample_strandedness_mqc.tsv')
+        )
+    }
 
 
     //
