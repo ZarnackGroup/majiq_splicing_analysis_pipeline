@@ -109,8 +109,7 @@ workflow PIPELINE_INITIALISATION {
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
     INPUT_CHECK (
-        input,
-        'genome_bam'
+        input
         )
         .reads
         .set { ch_genome_bam }

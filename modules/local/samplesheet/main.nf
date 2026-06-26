@@ -12,7 +12,6 @@ process SAMPLESHEET_CHECK {
 
     input:
     path samplesheet
-    val source
 
     output:
     path '*.csv'       , emit: csv
@@ -23,25 +22,14 @@ process SAMPLESHEET_CHECK {
 
     script: // This script is bundled with the pipeline, in nf-core/rnasplice/bin/
 
-    switch (source) {
-        case 'fastq':
-            """
-            check_samplesheet_fastq.py $samplesheet samplesheet.valid.csv
-            cat <<-END_VERSIONS > versions.yml
-            "${task.process}":
-                python: \$(python --version | sed 's/Python //g')
-            END_VERSIONS
-            """
-            break;
-        case 'genome_bam':
-            """
-            check_samplesheet_genome_bam.py $samplesheet samplesheet.valid.csv
-            cat <<-END_VERSIONS > versions.yml
-            "${task.process}":
-                python: \$(python --version | sed 's/Python //g')
-            END_VERSIONS
-            """
-            break;
-    }
+
+    """
+    check_samplesheet_genome_bam.py $samplesheet samplesheet.valid.csv
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+    END_VERSIONS
+    """
+
 
 }
