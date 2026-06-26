@@ -111,7 +111,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         ch_bam
     )
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
     //
     // SUBWORKFLOW: Run MAJIQ
