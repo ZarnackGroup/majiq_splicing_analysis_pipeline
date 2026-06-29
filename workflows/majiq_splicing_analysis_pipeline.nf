@@ -13,7 +13,6 @@ include { RUSTQC                 } from '../modules/nf-core/rustqc/main'
 
 // SUBWORKFLOWS
 include { MAJIQ                  } from '../subworkflows/local/majiq/main'
-include { BAM_RSEQC              } from '../subworkflows/nf-core/bam_rseqc/main'
 include { IRFINDER               } from '../subworkflows/local/irfinder/main'
 include { REFERENCES             } from '../subworkflows/local/references/main'
 include { DOWNSTREAM_ANALYSIS    } from '../subworkflows/local/downstream_analysis/main'
