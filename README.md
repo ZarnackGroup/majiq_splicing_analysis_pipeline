@@ -41,7 +41,7 @@ flowchart TB
       v19([DEEPTOOLS_BAMCOVERAGE])
     end
     subgraph s7["quality control"]
-      v32([BAM_RSEQC])
+      v32([RustQC])
       v22([FASTQC])
     end
     subgraph report
@@ -79,7 +79,7 @@ flowchart TB
 4. Splicing analysis ([`MAJIQ`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792))
 5. Intron Retention analysis ([`IRFINDER`](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02515-8))
 6. Coverage track generation ([`DEEPTOOLS`](https://doi.org/10.1093/nar/gkw257))
-7. Quality control: read & alignment QC ([`RSeQC`](http://rseqc.sourceforge.net/))
+7. Quality control: read & alignment QC ([`RustQC`](https://seqeralabs.github.io/RustQC/))
 8. Quality control: read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 9. Reporting ([`MultiQC`](https://pubmed.ncbi.nlm.nih.gov/27312411/))
 
@@ -198,13 +198,37 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
 
-- [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+- [RustQC](https://seqeralabs.github.io/RustQC/)
 
-> Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+> RustQC was developed by Seqera and reimplements established RNA-seq quality-control tools. Please cite the original tools used in the analysis.
+
+- [dupRadar](https://bioconductor.org/packages/dupRadar/)
+
+> Sayols S, Scherzinger D, Klein H. dupRadar: a Bioconductor package for the assessment of PCR artifacts in RNA-Seq data. BMC Bioinformatics. 2016;17(1):428. doi: 10.1186/s12859-016-1276-2.
+
+- [featureCounts / Subread](http://subread.sourceforge.net/)
+
+> Liao Y, Smyth GK, Shi W. featureCounts: an efficient general purpose program for assigning sequence reads to genomic features. Bioinformatics. 2014;30(7):923-930. doi: 10.1093/bioinformatics/btt656.
 
 - [RSeQC](http://rseqc.sourceforge.net/)
 
-> Wang L, Wang S, Li W. RSeQC: quality control of RNA-seq experiments. Bioinformatics. 2012 Aug 15;28(16):2184-2185. doi: 10.1093/bioinformatics/bts356. PubMed PMID: 22743226.
+> Wang L, Wang S, Li W. RSeQC: quality control of RNA-seq experiments. Bioinformatics. 2012;28(16):2184-2185. doi: 10.1093/bioinformatics/bts356.
+
+- [preseq](https://github.com/smithlabcode/preseq)
+
+> Daley T, Smith AD. Predicting the molecular complexity of sequencing libraries. Nature Methods. 2013;10(4):325-327. doi: 10.1038/nmeth.2375.
+
+- [SAMtools](https://www.htslib.org/)
+
+> Danecek P, Bonfield JK, Liddle J, et al. Twelve years of SAMtools and BCFtools. GigaScience. 2021;10(2):giab008. doi: 10.1093/gigascience/giab008.
+
+- [Qualimap](http://qualimap.conesalab.org/)
+
+> Garcia-Alcalde F, Okonechnikov K, Carbonell J, et al. Qualimap: evaluating next-generation sequencing alignment data. Bioinformatics. 2012;28(20):2678-2679. doi: 10.1093/bioinformatics/bts503.
+
+- [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+
+> Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
 - [AGAT](https://doi.org/10.5281/zenodo.3552717)
 

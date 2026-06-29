@@ -148,20 +148,20 @@
                 }
             }
         },
-        "rseqc": {
-            "title": "RSEQC",
+        "rustqc": {
+            "title": "RustQC",
             "type": "object",
-            "description": "Parameters to modify the RSEQC execution",
+            "description": "Parameters to modify the RustQC execution",
             "default": "",
             "properties": {
-                "skip_rseqc": {
+                "skip_rustqc": {
                     "type": "boolean",
-                    "description": "Skip RSEQC if set to true"
+                    "description": "If set to true, this will skip the RustQC Analysis"
                 },
-                "rseqc_modules": {
+                "rustqc_args": {
                     "type": "string",
-                    "default": "bam_stat,infer_experiment,junction_annotation,junction_saturation,read_duplication",
-                    "description": "Which RSEQC modules to run. Comma seperated list. \"inner_distance\" and \"read_distribution\" not available"
+                    "default": "--skip-dup-check",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
                 },
                 "stranded_threshold": {
                     "type": "number",
@@ -357,7 +357,7 @@
             "$ref": "#/$defs/irfinder"
         },
         {
-            "$ref": "#/$defs/rseqc"
+            "$ref": "#/$defs/rustqc"
         },
         {
             "$ref": "#/$defs/deeptools"

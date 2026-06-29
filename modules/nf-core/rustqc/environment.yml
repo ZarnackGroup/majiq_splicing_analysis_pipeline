@@ -4,5 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::rseqc=5.0.3
-  - conda-forge::r-base=3.5
+  - bioconda::rustqc=0.2.1

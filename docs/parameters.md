@@ -48,16 +48,16 @@ Parameters to modify the IRFinder Analysis
 | `irfinder_bam_args`             | Additional parameters to pass to the underlying command. Provide as a single string. | `string`  |         |          |        |
 | `irfinder_diff_args`            | Additional parameters to pass to the underlying command. Provide as a single string. | `string`  |         |          |        |
 
-## RSEQC
+## RustQC
 
-Parameters to modify the RSEQC execution
+Parameters to modify the RustQC execution
 
-| Parameter              | Description                                                                                                                                                                                                                                               | Type      | Default                                                                            | Required | Hidden |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------- | -------- | ------ |
-| `skip_rseqc`           | Skip RSEQC if set to true                                                                                                                                                                                                                                 | `boolean` | False                                                                              |          |        |
-| `rseqc_modules`        | Which RSEQC modules to run. Comma seperated list. "inner_distance" and "read_distribution" not available                                                                                                                                                  | `string`  | bam_stat,infer_experiment,junction_annotation,junction_saturation,read_duplication |          |        |
-| `stranded_threshold`   | The fraction of stranded reads that must be assigned to a strandedness for confident assignment. Must be at least 0.5.                                                                                                                                    | `number`  | 0.8                                                                                |          |        |
-| `unstranded_threshold` | The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'. By default the forward and reverse fractions must differ by less than 0.1 for the sample to be called as unstranded. | `number`  | 0.1                                                                                |          |        |
+| Parameter              | Description                                                                                                                                                                                                                                               | Type      | Default          | Required | Hidden |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------------- | -------- | ------ |
+| `skip_rustqc`          | If set to true, this will skip the RustQC Analysis                                                                                                                                                                                                        | `boolean` |                  |          |        |
+| `rustqc_args`          | Additional parameters to pass to the underlying command. Provide as a single string.                                                                                                                                                                      | `string`  | --skip-dup-check |          |        |
+| `stranded_threshold`   | The fraction of stranded reads that must be assigned to a strandedness for confident assignment. Must be at least 0.5.                                                                                                                                    | `number`  | 0.8              |          |        |
+| `unstranded_threshold` | The difference in fraction of stranded reads assigned to 'forward' and 'reverse' below which a sample is classified as 'unstranded'. By default the forward and reverse fractions must differ by less than 0.1 for the sample to be called as unstranded. | `number`  | 0.1              |          |        |
 
 ## DEEPTOOLS
 

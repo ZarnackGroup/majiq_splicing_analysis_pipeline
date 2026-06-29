@@ -26,10 +26,6 @@
 
 > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
-- [RSeQC](http://rseqc.sourceforge.net/)
-
-> Wang L, Wang S, Li W. RSeQC: quality control of RNA-seq experiments. Bioinformatics. 2012 Aug 15;28(16):2184-2185. doi: 10.1093/bioinformatics/bts356. PubMed PMID: 22743226.
-
 - [AGAT](https://doi.org/10.5281/zenodo.3552717)
 
 > Dainat J. AGAT: Another Gff Analysis Toolkit to handle annotations in any GTF/GFF format (Version v0.7.0). Zenodo. doi: 10.5281/zenodo.3552717.
@@ -41,6 +37,36 @@
 - [SAMtools](https://doi.org/10.1093/bioinformatics/btp352)
 
   > Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R; 1000 Genome Project Data Processing Subgroup. The Sequence Alignment/Map format and SAMtools. Bioinformatics. 2009 Aug 15;25(16):2078-2079. doi: 10.1093/bioinformatics/btp352. PubMed PMID: 19505943.
+
+RustQC reimplements several established RNA-seq QC tools. Please cite the original tools used by RustQC.
+
+- [RustQC](https://seqeralabs.github.io/RustQC/)
+
+> RustQC was developed by Seqera and reimplements established RNA-seq quality-control tools. Please cite the original tools used in the analysis.
+
+- [dupRadar](https://bioconductor.org/packages/dupRadar/)
+
+> Sayols S, Scherzinger D, Klein H. dupRadar: a Bioconductor package for the assessment of PCR artifacts in RNA-Seq data. BMC Bioinformatics. 2016;17(1):428. doi: 10.1186/s12859-016-1276-2.
+
+- [featureCounts / Subread](http://subread.sourceforge.net/)
+
+> Liao Y, Smyth GK, Shi W. featureCounts: an efficient general purpose program for assigning sequence reads to genomic features. Bioinformatics. 2014;30(7):923-930. doi: 10.1093/bioinformatics/btt656.
+
+- [RSeQC](http://rseqc.sourceforge.net/)
+
+> Wang L, Wang S, Li W. RSeQC: quality control of RNA-seq experiments. Bioinformatics. 2012;28(16):2184-2185. doi: 10.1093/bioinformatics/bts356.
+
+- [preseq](https://github.com/smithlabcode/preseq)
+
+> Daley T, Smith AD. Predicting the molecular complexity of sequencing libraries. Nature Methods. 2013;10(4):325-327. doi: 10.1038/nmeth.2375.
+
+- [SAMtools](https://www.htslib.org/)
+
+> Danecek P, Bonfield JK, Liddle J, et al. Twelve years of SAMtools and BCFtools. GigaScience. 2021;10(2):giab008. doi: 10.1093/gigascience/giab008.
+
+- [Qualimap](http://qualimap.conesalab.org/)
+
+> Garcia-Alcalde F, Okonechnikov K, Carbonell J, et al. Qualimap: evaluating next-generation sequencing alignment data. Bioinformatics. 2012;28(20):2678-2679. doi: 10.1093/bioinformatics/bts503.
 
 ## Software packaging/containerisation tools
 
