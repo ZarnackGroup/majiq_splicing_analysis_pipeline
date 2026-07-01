@@ -1,5 +1,5 @@
 ---
-title: "Deltapsi Modulize Report"
+title: "MAJIQ Deltapsi Modulize Report"
 author: "ZarnackGroup/majiq_splicing_analysis_pipeline"
 date: "`r Sys.Date()`"
 format:
@@ -8,6 +8,8 @@ format:
     toc-depth: 2
     code-fold: true
     embed-resources: true
+execute:
+  warning: false
 params:
   meta: NULL
   cpus: 1
@@ -64,7 +66,7 @@ knitr::kable(
 
 
 
-## Voila modulize command overview
+## VOILA modulize command overview
 
 Summary of the `voila modulize` command used to create the inputs for this report. Thresholds are used later to identify changing events between conditions.
 
@@ -194,7 +196,7 @@ modulize_results <- lapply(paths, read.table, sep = "\t", header = TRUE, strings
 ```
 
 
-To avoid unecessary computations, events with missing values in the columns `event_id`, `gene_id`, `lsv_id`, `gene_name`, `spliced_with_coord` are removed here. after filtering out events with missing values, event types without events left are dropped from the downstream steps.
+To avoid unnecessary computations, events with missing values in the columns `event_id`, `gene_id`, `lsv_id`, `gene_name`, `spliced_with_coord` are removed here. After filtering out events with missing values, event types without events left are dropped from the downstream steps.
 
 
 ```{r}
@@ -270,7 +272,7 @@ sanitized_results <- lapply(modulize_results, remove_invalid_events) %>% discard
 ```{r}
 convert_na_probability_to_0 <- function (df) {
   ## ---------------------------------------------
-  ## converte nan and NaN to 0 in probability columns
+  ## Convert nan and NaN to 0 in probability columns
   ## ---------------------------------------------
 
   # find probability columns
@@ -326,11 +328,11 @@ non_empty_results <- remove_no_coverage_events(cleaned_results) %>% discard(~ nr
 
 After cleaning up the tables, we annotate each event in every contrast id it is significantly changing. An event is considered significantly changing if it satisfies the following criteria:
 
-1. At least one junction of the event meets the `–-changing-between-group-dpsi` threshold (dpsi > `r dpsi_changing_threshold`)
+1. At least one junction of the event meets the `–-changing-between-group-dpsi` threshold (dpsi ≥ `r dpsi_changing_threshold`)
 
-2. All junctions meet the `-–changing-between-group-dpsi-secondary` threshold (dpsi > `r changing_between_group_dpsi_secondary`)
+2. All junctions meet the `-–changing-between-group-dpsi-secondary` threshold (dpsi ≥ `r changing_between_group_dpsi_secondary`)
 
-3. All junctions meet the `-–probability-changing-threshold` threshold (P(dpsi > `r dpsi_changing_threshold`) > `r dpsi_probability_changing_threshold` )
+3. All junctions meet the `-–probability-changing-threshold` threshold (P(dpsi > `r dpsi_changing_threshold`) ≥ `r dpsi_probability_changing_threshold` )
 
 ```{r}
 
@@ -375,7 +377,7 @@ add_contrast_boolean_calls_majiq <- function(
           meets_prob_changing = .data[[pChgCol]] >= dpsi_probability_changing_threshold_default
         )
 
-      # summarize junction information on LSV level to identify LSVs that meet changing critereia
+      # summarize junction information on LSV level to identify LSVs that meet changing criteria
 
       # ---- LSV level ----
       lsv_sum <- df_num %>%
@@ -505,6 +507,84 @@ overview_tbl %>%
 
 Here, results are saved to Excel files for sharing and as `.rds` objects to allow for further work on the results.
 
+```{r signifcant events by contrast}
+select_contrast_specific_columns <- function(df, contrast) {
+
+  # Example:
+  # contrast = "GBR.YRI"
+  # conditions = c("GBR", "YRI")
+  contrast_conditions <- strsplit(contrast, "\\.")[[1]]
+
+  # Columns that should remain for this contrast
+  keep_cols <- c(
+    paste0(contrast_conditions, "_median_psi"),
+    paste0(contrast, "_median_dpsi"),
+    paste0(contrast, "_probability_changing"),
+    paste0(contrast, "_probability_non_changing")
+  )
+
+  keep_cols <- intersect(keep_cols, colnames(df))
+
+  # All contrast-/condition-specific columns in the table
+  contrast_specific_cols <- grep(
+    "(_median_psi|_median_dpsi|_probability_changing|_probability_non_changing|_event_changing)$",
+    colnames(df),
+    value = TRUE
+  )
+
+  # Remove all contrast-specific columns except the ones for this contrast
+  drop_cols <- setdiff(contrast_specific_cols, keep_cols)
+
+  df %>%
+    select(-any_of(drop_cols))
+}
+make_significant_events_by_contrast <- function(event_list) {
+
+  all_contrasts <- event_list %>%
+    map(~ grep("_event_changing$", colnames(.x), value = TRUE)) %>%
+    unlist(use.names = FALSE) %>%
+    sub("_event_changing$", "", .) %>%
+    unique() %>%
+    sort()
+
+  significant_by_contrast <- map(all_contrasts, function(ct) {
+
+    changing_col <- paste0(ct, "_event_changing")
+
+    event_list %>%
+      map(function(df) {
+
+        if (!changing_col %in% colnames(df)) {
+          return(df[0, , drop = FALSE])
+        }
+
+        changing_event_ids <- df %>%
+          filter(.data[[changing_col]]) %>%
+          distinct(event_id) %>%
+          pull(event_id)
+
+        df %>%
+          filter(event_id %in% changing_event_ids) %>%
+          select_contrast_specific_columns(ct)
+      }) %>%
+      discard(~ nrow(.x) == 0)
+  })
+
+  names(significant_by_contrast) <- all_contrasts
+
+  significant_by_contrast
+}
+
+sanitize_file_names <- function(x) {
+  x <- gsub("[^A-Za-z0-9._-]+", "_", x)
+  x <- gsub("_+", "_", x)
+  x <- gsub("^_|_$", "", x)
+  x
+}
+
+significant_events_by_contrast <- make_significant_events_by_contrast(annotated_results)
+```
+
 ```{r save to rds}
 
 dir.create(paste0(params$artifact_dir, "/rds"), recursive = TRUE, showWarnings = FALSE)
@@ -518,6 +598,19 @@ saveRDS(
   file = paste0(params$artifact_dir, "/rds/overview_table.rds")
 )
 
+dir.create(paste0(params$artifact_dir, "/rds/significant_by_contrast"), recursive = TRUE, showWarnings = FALSE)
+
+iwalk(significant_events_by_contrast, function(event_list, contrast) {
+  saveRDS(
+    event_list,
+    file = paste0(
+      params$artifact_dir,
+      "/rds/significant_by_contrast/",
+      sanitize_file_names(contrast),
+      "_significant_events.rds"
+    )
+  )
+})
 
 ```
 
@@ -533,14 +626,18 @@ sanitize_sheet_names <- function(x) {
   make.unique(x, sep = "_")
 }
 
-dir.create(paste0(params$artifact_dir, "/rds"), recursive = TRUE, showWarnings = FALSE)
-
-
 
 write_event_list_xlsx <- function(event_list, outfile) {
   stopifnot(is.list(event_list))
 
   wb <- createWorkbook()
+
+  if (length(event_list) == 0) {
+    addWorksheet(wb, "no_significant_events")
+    writeData(wb, "no_significant_events", tibble(message = "No significant events for this contrast."))
+    saveWorkbook(wb, file = outfile, overwrite = TRUE)
+    return(invisible(NULL))
+  }
 
   sheet_names <- names(event_list)
   if (is.null(sheet_names) || any(sheet_names == "")) {
@@ -551,7 +648,6 @@ write_event_list_xlsx <- function(event_list, outfile) {
   for (i in seq_along(event_list)) {
     df <- event_list[[i]]
 
-    # if not a data.frame, coerce to something reasonable
     if (!is.data.frame(df)) df <- as.data.frame(df)
 
     addWorksheet(wb, sheet_names[i])
@@ -562,8 +658,7 @@ write_event_list_xlsx <- function(event_list, outfile) {
   saveWorkbook(wb, file = outfile, overwrite = TRUE)
 }
 
-# ---- 1) save your two event lists ----
-# replace "regulated_results" with your actual object name if different
+# ---- 1) save event lists ----
 write_event_list_xlsx(annotated_results, paste0(params$artifact_dir,"/excel/annotated_results.xlsx"))
 
 # ---- 2) save overview table as .xlsx ----
@@ -573,6 +668,24 @@ addWorksheet(wb_overview, "overview")
 writeDataTable(wb_overview, "overview", overview_tbl, withFilter = TRUE)
 setColWidths(wb_overview, "overview", cols = 1:ncol(overview_tbl), widths = "auto")
 saveWorkbook(wb_overview, paste0(params$artifact_dir,"/excel/overview_table.xlsx"), overwrite = TRUE)
+
+dir.create(
+  paste0(params$artifact_dir, "/excel/significant_by_contrast"),
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+iwalk(significant_events_by_contrast, function(event_list, contrast) {
+  write_event_list_xlsx(
+    event_list,
+    paste0(
+      params$artifact_dir,
+      "/excel/significant_by_contrast/",
+      sanitize_file_names(contrast),
+      "_significant_events.xlsx"
+    )
+  )
+})
 
 ```
 
@@ -604,10 +717,107 @@ write.table(
 
 ```
 
+## Export significant events to BED files
+
+For each contrast, a BED file is written that contains the significant events identified for that contrast. These files can be loaded into genome browsers such as [IGV](https://igv.org/) to inspect the genomic region covered by each event.
+
+The BED intervals are derived from the `junction_coord` column. Because one event can contain multiple junction rows, all `junction_coord` values belonging to the same `event_id` are combined, and the exported BED interval spans from the minimum junction coordinate to the maximum junction coordinate of that event.
+
+The BED files use the standard BED6 format:
+
+`chrom`, `chrom_start`, `chrom_end`, `name`, `score`, `strand`
+
+The `chrom_start` coordinate is converted to BED format by subtracting 1 from the minimum junction coordinate, because BED uses 0-based start coordinates. The `chrom_end` coordinate is kept as the maximum junction coordinate. The interval name is constructed from the gene name, event type, and event ID, for example:
+
+`TPM1|cassette|event_42`
+
+
+```{r export bed files}
+make_event_bed_from_event_list <- function(event_list) {
+
+  imap_dfr(event_list, function(df, event_type) {
+
+    df %>%
+      select(
+        event_id,
+        gene_id,
+        gene_name,
+        seqid,
+        strand,
+        junction_coord
+      ) %>%
+      mutate(
+        junction_coord = as.character(junction_coord),
+        coord_range = str_extract_all(junction_coord, "\\d+\\s*-\\s*\\d+")
+      ) %>%
+      unnest_longer(coord_range, values_to = "coord_range") %>%
+      filter(!is.na(coord_range)) %>%
+      separate(
+        coord_range,
+        into = c("coord_start", "coord_end"),
+        sep = "\\s*-\\s*",
+        convert = TRUE
+      ) %>%
+      mutate(
+        coord_min = pmin(coord_start, coord_end),
+        coord_max = pmax(coord_start, coord_end)
+      ) %>%
+      group_by(event_id, gene_id, gene_name, seqid, strand) %>%
+      summarise(
+        chrom_start = min(coord_min, na.rm = TRUE) - 1,
+        chrom_end = max(coord_max, na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
+      mutate(
+        name = paste(event_type, gene_name, event_id, sep = "|"),
+        score = 0
+      ) %>%
+      select(
+        chrom = seqid,
+        chrom_start,
+        chrom_end,
+        name,
+        score,
+        strand
+      )
+  }) %>%
+    distinct() %>%
+    arrange(chrom, chrom_start, chrom_end)
+}
+```
+
+```{r save bed}
+dir.create(
+  paste0(params$artifact_dir, "/bed/"),
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+iwalk(significant_events_by_contrast, function(event_list, contrast) {
+
+  bed_tbl <- make_event_bed_from_event_list(event_list)
+
+  outfile <- paste0(
+    params$artifact_dir,
+    "/bed/",
+    sanitize_file_names(contrast),
+    "_significant_events.bed"
+  )
+
+  write.table(
+    bed_tbl,
+    file = outfile,
+    sep = "\t",
+    quote = FALSE,
+    row.names = FALSE,
+    col.names = FALSE
+  )
+})
+```
+
 ## Session information
 
 ```{r}
-#| echo: false
 
 sessionInfo()
 ```

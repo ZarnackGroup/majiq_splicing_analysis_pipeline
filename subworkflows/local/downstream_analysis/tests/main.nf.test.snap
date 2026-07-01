@@ -880,13 +880,22 @@
                 "reports/majiq_deltapsi_modulize_report.qmd",
                 "reports/params.yml",
                 "reports/tables",
+                "reports/tables/bed",
+                "reports/tables/bed/GBR.YRI_significant_events.bed",
+                "reports/tables/bed/YRI.GBR_significant_events.bed",
                 "reports/tables/excel",
                 "reports/tables/excel/annotated_results.xlsx",
                 "reports/tables/excel/overview_table.xlsx",
+                "reports/tables/excel/significant_by_contrast",
+                "reports/tables/excel/significant_by_contrast/GBR.YRI_significant_events.xlsx",
+                "reports/tables/excel/significant_by_contrast/YRI.GBR_significant_events.xlsx",
                 "reports/tables/overview_table_mqc.tsv",
                 "reports/tables/rds",
                 "reports/tables/rds/annotated_results.rds",
-                "reports/tables/rds/overview_table.rds"
+                "reports/tables/rds/overview_table.rds",
+                "reports/tables/rds/significant_by_contrast",
+                "reports/tables/rds/significant_by_contrast/GBR.YRI_significant_events.rds",
+                "reports/tables/rds/significant_by_contrast/YRI.GBR_significant_events.rds"
             ],
             [
                 ".zgroup:md5,e20297935e73dd0154104d4ea53040ab",
@@ -1106,10 +1115,10 @@
                 "chrX.agat.gff:md5,4b0db27ba7b45ea37f487cf8361ca358"
             ]
         ],
+        "timestamp": "2026-07-01T15:50:01.929822398",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2026-01-28T15:02:29.217467979"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }

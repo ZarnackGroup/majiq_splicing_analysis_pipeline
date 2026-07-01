@@ -1862,13 +1862,16 @@
                 "reports/majiq_deltapsi_modulize_report.qmd",
                 "reports/params.yml",
                 "reports/tables",
+                "reports/tables/bed",
                 "reports/tables/excel",
                 "reports/tables/excel/annotated_results.xlsx",
                 "reports/tables/excel/overview_table.xlsx",
+                "reports/tables/excel/significant_by_contrast",
                 "reports/tables/overview_table_mqc.tsv",
                 "reports/tables/rds",
                 "reports/tables/rds/annotated_results.rds",
-                "reports/tables/rds/overview_table.rds"
+                "reports/tables/rds/overview_table.rds",
+                "reports/tables/rds/significant_by_contrast"
             ],
             [
                 "ERR188383.bigWig:md5,ca460a5d3cca479b7b3639f02214a36b",
@@ -2440,7 +2443,7 @@
                 "ERR204916.stats:md5,3d26500ec93585e627881664648f625e"
             ]
         ],
-        "timestamp": "2026-06-29T18:00:02.820195222",
+        "timestamp": "2026-07-01T16:14:18.593304896",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -4195,13 +4198,16 @@
                 "reports/majiq_deltapsi_modulize_report.qmd",
                 "reports/params.yml",
                 "reports/tables",
+                "reports/tables/bed",
                 "reports/tables/excel",
                 "reports/tables/excel/annotated_results.xlsx",
                 "reports/tables/excel/overview_table.xlsx",
+                "reports/tables/excel/significant_by_contrast",
                 "reports/tables/overview_table_mqc.tsv",
                 "reports/tables/rds",
                 "reports/tables/rds/annotated_results.rds",
-                "reports/tables/rds/overview_table.rds"
+                "reports/tables/rds/overview_table.rds",
+                "reports/tables/rds/significant_by_contrast"
             ],
             [
                 "ERR188383.bigWig:md5,ca460a5d3cca479b7b3639f02214a36b",
@@ -4712,7 +4718,7 @@
                 "ERR204916.stats:md5,3d26500ec93585e627881664648f625e"
             ]
         ],
-        "timestamp": "2026-06-29T17:45:23.483816932",
+        "timestamp": "2026-07-01T16:17:53.401519124",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

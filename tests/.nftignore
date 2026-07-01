@@ -46,7 +46,10 @@ reports/*.html
 reports/*.qmd
 reports/*.yml
 reports/tables/rds/*.rds
+reports/tables/rds/significant_by_contrast/*.rds
 reports/tables/excel/*.xlsx
+reports/tables/bed/*.bed
+reports/tables/excel/significant_by_contrast/*.xlsx
 reports/tables/*.tsv
 fastqc/*_fastqc.{html,zip}
 pipeline_info/*.{html,json,txt,yml}
