@@ -70,7 +70,7 @@ nextflow_workflow {
                 skip_heterogen = true
                 skip_psi = true
                 majiq_buildupdate_args = "--no-simplify"
-                deltapsi_modulize_args = "--show-all"
+                deltapsi_modulize_args = "--show-all --changing-between-group-dpsi 0.05 --changing-between-group-dpsi-secondary 0.025 --probability-changing-threshold 0.3"
 
             }
             workflow {
