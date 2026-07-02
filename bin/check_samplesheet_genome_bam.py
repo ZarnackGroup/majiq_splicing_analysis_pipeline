@@ -95,10 +95,11 @@ class RowChecker:
             )
 
     def _validate_condition_value(self, condition):
-        regex = "^(([A-Za-z]|[.][._A-Za-z])[._A-Za-z0-9]*)|[.]$"
-        assert bool(re.search(regex, condition)), (
+        regex = r"^[A-Za-z][A-Za-z0-9]*$"
+        assert bool(re.fullmatch(regex, condition)), (
             f"The condition column has an invalid name: {condition}\n"
-            f"A syntactically valid name consists of letters, numbers and the dot or underline characters and starts with a letter or the dot not followed by a number."
+            f"A syntactically valid condition name consists only of letters and numbers "
+            f"and starts with a letter."
         )
 
     def validate_unique_samples(self):
