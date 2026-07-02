@@ -127,7 +127,7 @@ ERR204916,YRI,PATH/TO/ERR204916.Aligned.out.bam
 
 Each row represents a BAM file.  
 `sample` is a unique identifier for each row.  
-`condition` is used to group and compare samples.  
+`condition` is used to group and compare samples. Condition names must contain only letters and numbers and start with a letter, because downstream tools may use separators such as underscores, dashes, dots, or spaces for internal parsing.
 `genome_bam` refers to reads aligned against a genome.
 
 `contrastsheet.csv`:

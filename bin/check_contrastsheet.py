@@ -70,23 +70,30 @@ class RowChecker:
 
     def _validate_treatment(self, row):
         """Assert that the treatment name exists and has a syntactically valid name."""
+        row[self._treatment_col] = row[self._treatment_col].strip()
+
         if len(row[self._treatment_col]) <= 0:
             raise AssertionError("Treatment name is required.")
-        # Sanity check condition.
+
         self._validate_condition_value(row[self._treatment_col])
+
 
     def _validate_control(self, row):
         """Assert that the control name exists and has a syntactically valid name."""
+        row[self._control_col] = row[self._control_col].strip()
+
         if len(row[self._control_col]) <= 0:
             raise AssertionError("Control name is required.")
-        # Sanity check condition.
+
         self._validate_condition_value(row[self._control_col])
 
+
     def _validate_condition_value(self, condition):
-        regex = "^(([A-Za-z]|[.][._A-Za-z])[._A-Za-z0-9]*)|[.]$"
-        assert bool(re.search(regex, condition)), (
+        regex = r"^[A-Za-z][A-Za-z0-9]*$"
+        assert bool(re.fullmatch(regex, condition)), (
             f"The condition column has an invalid name: {condition}\n"
-            f"A syntactically valid name consists of letters, numbers and the dot or underline characters and starts with a letter or the dot not followed by a number."
+            f"A syntactically valid condition name consists only of letters and numbers "
+            f"and starts with a letter."
         )
 
 
