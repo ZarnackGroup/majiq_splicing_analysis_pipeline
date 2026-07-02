@@ -46,11 +46,11 @@ ERR204916,YRI,PATH/TO/ERR204916.Aligned.out.bam
 
 ```
 
-| Column       | Description                           |
-| ------------ | ------------------------------------- |
-| `sample`     | Custom sample name.                   |
-| `condition`  | is used to group and compare samples. |
-| `genome_bam` | Full path to BAM file for short reads |
+| Column       | Description                                                                                                                                                                                                                         |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sample`     | Custom sample name.                                                                                                                                                                                                                 |
+| `condition`  | is used to group and compare samples. Condition names must contain only letters and numbers and start with a letter, because downstream tools may use separators such as underscores, dashes, dots, or spaces for internal parsing. |
+| `genome_bam` | Full path to BAM file for short reads                                                                                                                                                                                               |
 
 ## Contrastsheet input
 

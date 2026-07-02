@@ -206,6 +206,7 @@ FastQC provides general quality metrics about the sequenced reads.
     - `excel/`
       - `annotated_results.xlsx`
       - `overview_table.xlsx`
+    - `bed/` BED files with genomic intervals of significant splicing events.
     - `rds/`
       - `annotated_results.rds`
       - `overview_table.rds`
