@@ -31,7 +31,10 @@
 </picture>
 
 <p align="center">
-  <sub>Pipeline overview, generated with [nf-metro](https://github.com/seqeralabs/nf-metro)..</sub>
+  <sub>
+    Pipeline overview, generated with
+    <a href="https://github.com/seqeralabs/nf-metro">nf-metro</a>.
+  </sub>
 </p>
 
 1. Index BAM files ([`SAMTOOLS`](https://doi.org/10.1093/bioinformatics/btp352))
