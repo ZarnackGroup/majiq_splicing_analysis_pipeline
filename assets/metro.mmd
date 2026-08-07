@@ -1,0 +1,125 @@
+%%metro title: MAJIQ Splicing Analysis Pipeline
+%%metro track_gap: 1
+%%metro style: dark
+%%metro file: bam_in | BAM
+%%metro file: annotation_in | GTF/GFF3
+%%metro file: genome_in | FASTA
+%%metro file: report_out | HTML
+
+%%metro line: deltapsi | MAJIQ ΔΨ | #e63946
+%%metro line: heterogen | MAJIQ HET | #9c27b0
+%%metro line: psi | MAJIQ Ψ | #ff8c00
+%%metro line: irfinder | IRFinder | #f5c542
+%%metro line: qc | Quality Control | #2196F3 | dashed
+
+%%metro legend: br
+
+graph LR
+    subgraph input_prep [Input Preparation]
+        %%metro exit: right | main, deltapsi, heterogen, psi, irfinder
+        %%metro exit: bottom | qc
+
+        bam_in[ ]
+        annotation_in[ ]
+        genome_in[ ]
+        gunzip_references[Gunzip Annotation & Genome]
+        agat_gxf2gxf[AGAT GXF→GFF3]
+        agat_gff2gtf[AGAT GFF3→GTF]
+        agat_gff2bed[AGAT GFF3→BED]
+        samtools_index[SAMtools Index]
+
+        bam_in -->|deltapsi,heterogen,psi,qc,irfinder| gunzip_references
+		annotation_in -->|deltapsi,heterogen,psi,qc,irfinder| gunzip_references
+        genome_in -->|irfinder| gunzip_references
+        gunzip_references -->|deltapsi,heterogen,psi| agat_gxf2gxf
+        gunzip_references -->|qc,irfinder| agat_gff2gtf
+
+        agat_gxf2gxf -->|deltapsi,heterogen,psi| agat_gff2bed
+        agat_gff2gtf -->|qc,irfinder| agat_gff2bed
+
+        agat_gff2bed -->|deltapsi,heterogen,psi,qc,irfinder| samtools_index
+    end
+
+    subgraph majiq_build [MAJIQ Build]
+        %%metro entry: left | main, deltapsi,heterogen,psi
+        %%metro exit: right | deltapsi,heterogen,psi
+
+        majiq_buildgff3[MAJIQ BuildGFF3]
+        majiq_buildsj[MAJIQ BuildSJ]
+        majiq_buildupdate[MAJIQ BuildUpdate]
+        majiq_psicoverage[MAJIQ PSI Coverage]
+        majiq_sgcoverage[MAJIQ SG Coverage]
+
+        majiq_buildgff3 -->|deltapsi,heterogen,psi| majiq_buildsj
+        majiq_buildsj -->|deltapsi,heterogen,psi| majiq_buildupdate
+        majiq_sgcoverage -->|deltapsi,heterogen,psi| majiq_psicoverage
+        majiq_buildupdate -->|deltapsi,heterogen,psi| majiq_sgcoverage
+    end
+
+
+  subgraph ir_analysis [IRFinder]
+          %%metro entry: left| irfinder
+
+          irfinder_buildref[IRFinder BuildRef]
+          irfinder_bam[IRFinder BAM]
+          irfinder_diff[IRFinder Diff]
+
+          irfinder_buildref -->|irfinder| irfinder_bam
+          irfinder_bam -->|irfinder| irfinder_diff
+      end
+    subgraph qc_section [Quality Control]
+        %%metro entry: left | qc
+        %%metro exit: right | qc
+
+        fastqc[FastQC]
+        deeptools[DeepTools BamCoverage]
+        rustqc[RustQC]
+
+        fastqc -->|qc| deeptools
+        deeptools -->|qc| rustqc
+
+    end
+
+
+
+    subgraph majiq_quant [MAJIQ Quantifier]
+        %%metro entry: left | deltapsi, heterogen, psi
+        %%metro exit: right | deltapsi
+
+        majiq_quantify[MAJIQ Quantify]
+        majiq_deltapsi[MAJIQ ΔΨ]
+        majiq_heterogen[MAJIQ Heterogen]
+        quantify_modulize[Modulize (PSI)]
+        deltapsi_modulize[Modulize (ΔΨ)]
+        heterogen_modulize[Modulize (Het.)]
+
+        majiq_quantify -->|psi| quantify_modulize
+        majiq_deltapsi -->|deltapsi| deltapsi_modulize
+        majiq_heterogen -->|heterogen| heterogen_modulize
+    end
+
+
+    subgraph downstream [Downstream & Reporting]
+        %%metro entry: left | deltapsi
+        %%metro entry: bottom | qc
+
+        quarto[Quarto Report]
+        multiqc[MultiQC]
+        report_out[ ]
+
+        quarto -->|deltapsi| multiqc
+        multiqc -->|deltapsi,qc| report_out
+	end
+
+    %% Inter-section edges
+    samtools_index -->|deltapsi,heterogen,psi| majiq_buildgff3
+    samtools_index -->|qc| fastqc
+    samtools_index -->|irfinder| irfinder_buildref
+
+
+    majiq_psicoverage -->|psi| majiq_quantify
+    majiq_psicoverage -->|deltapsi| majiq_deltapsi
+    majiq_psicoverage -->|heterogen| majiq_heterogen
+
+    deltapsi_modulize -->|deltapsi| quarto
+    rustqc -->|qc| multiqc
