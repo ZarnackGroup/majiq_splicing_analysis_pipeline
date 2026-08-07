@@ -14,64 +14,28 @@
 
 **ZarnackGroup/majiq_splicing_analysis_pipeline** is our in-house pipeline for analyzing alternative splicing events from RNA sequencing data, based on Nextflow and utilizing [`MAJIQ V3`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792) as the core splicing analysis tool.
 
-```mermaid
-flowchart TB
-  subgraph MAJIQ_SPLICING_ANALYSIS_PIPELINE
-    subgraph required parameters
-      v0["--input"]
-      v2["--annotation"]
-      v1["--contrasts"]
-      v3["genome_fasta"]
+<picture>
+  <source
+    media="(prefers-color-scheme: dark)"
+    srcset="docs/images/metro_dark_animated.svg"
+  >
+  <source
+    media="(prefers-color-scheme: light)"
+    srcset="docs/images/metro_light_animated.svg"
+  >
+  <img
+    src="docs/images/metro_light_animated.svg"
+    alt="MAJIQ splicing analysis pipeline"
+    width="100%"
+  >
+</picture>
 
-    end
-
-    subgraph s20["converting inputs"]
-          subgraph s100["index bam files"]
-               v15([SAMTOOLS_INDEX])
-          end
-          subgraph s2["annotation format handling"]
-               v9([AGAT])
-          end
-     end
-    subgraph s3["splicing analysis"]
-      v25([MAJIQ])
-      v26([IRFINDER-S])
-    end
-    subgraph s4["create BigWig"]
-      v19([DEEPTOOLS_BAMCOVERAGE])
-    end
-    subgraph s7["quality control"]
-      v32([RustQC])
-      v22([FASTQC])
-    end
-    subgraph report
-      v63([MULTIQC])
-    end
-    v2 --> v9
-    v0 --> v19
-    v0 --> v15
-    v0 --> v22
-    v0 --> v25
-    v0 --> v26
-    v0 --> v32
-    v9 --> v25
-    v9 --> v26
-    v9 --> v32
-    v1 --> v26
-    v1 --> v25
-    v3 --> v26
-    v15 --> v19
-    v15 --> v32
-    v19 --> v63
-    v32 --> v63
-    v22 --> v63
-    v15 --> v63
-    v9 --> v63
-    v25 --> v63
-    v26 --> v63
-  end
-
-```
+<p align="center">
+  <sub>
+    Pipeline overview, generated with
+    <a href="https://github.com/seqeralabs/nf-metro">nf-metro</a>.
+  </sub>
+</p>
 
 1. Index BAM files ([`SAMTOOLS`](https://doi.org/10.1093/bioinformatics/btp352))
 2. Convert annotation: GXF conversion ([`AGAT`](https://doi.org/10.5281/zenodo.3552717))
