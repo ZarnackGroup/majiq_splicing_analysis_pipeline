@@ -273,6 +273,7 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     //
     // MODULE: MultiQC
     //
+    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
 
     def ch_summary_params = paramsSummaryMap(
         workflow,
@@ -295,8 +296,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         methodsDescriptionText(ch_multiqc_custom_methods_description)
     )
 
-    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_methods_description.collectFile(
             name: 'methods_description_mqc.yaml',
@@ -306,7 +305,7 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
 
     // Add the overview_table.tsv to MultiQC files
     ch_multiqc_files = ch_multiqc_files.mix(
-        DOWNSTREAM_ANALYSIS.out.ch_deltapsi_table.map { meta, tsv -> tsv }
+        DOWNSTREAM_ANALYSIS.out.ch_deltapsi_table.map { _meta, tsv -> tsv }
     )
 
     MULTIQC(
@@ -327,8 +326,8 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     )
 
     emit:
-    multiqc_report = MULTIQC.out.report.map { meta, report -> report }.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                                                // channel: [ path(versions.yml) ]
+    multiqc_report = MULTIQC.out.report.map { _meta, report -> [report] }.toList()
+    versions       = ch_versions
 }
 
 /*

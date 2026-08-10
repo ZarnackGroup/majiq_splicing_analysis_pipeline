@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/ZarnackGroup/majiq_splicing_analysis_pipeline/master/nextflow_schema.json",
+    "$id": "https://raw.githubusercontent.com/ZarnackGroup/majiq_splicing_analysis_pipeline/main/nextflow_schema.json",
     "title": "ZarnackGroup/majiq_splicing_analysis_pipeline pipeline parameters",
     "description": "In-house pipeline for analyzing alternative splicing events from RNA sequencing data, based on Nextflow and utilizing MAJIQ as the core splicing analysis tool.",
     "type": "object",
