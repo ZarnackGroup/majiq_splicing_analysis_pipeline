@@ -1,8 +1,8 @@
-include { AGAT_CONVERTSPGXF2GXF  } from '../../../modules/nf-core/agat/convertspgxf2gxf/main'
-include { AGAT_CONVERTGFF2BED    } from '../../../modules/nf-core/agat/convertgff2bed/main'
-include { AGAT_CONVERTSPGFF2GTF  } from '../../../modules/nf-core/agat/convertspgff2gtf/main'
-include { GUNZIP as GUNZIP_ANNOTATION                 } from '../../../modules/nf-core/gunzip/main'
-include { GUNZIP as GUNZIP_GENOME                     } from '../../../modules/nf-core/gunzip/main'
+include { AGAT_CONVERTSPGXF2GXF         } from '../../../modules/nf-core/agat/convertspgxf2gxf/main'
+include { AGAT_CONVERTGFF2BED           } from '../../../modules/nf-core/agat/convertgff2bed/main'
+include { AGAT_CONVERTSPGFF2GTF         } from '../../../modules/nf-core/agat/convertspgff2gtf/main'
+include { GUNZIP as GUNZIP_ANNOTATION   } from '../../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_GENOME       } from '../../../modules/nf-core/gunzip/main'
 
 workflow REFERENCES {
 
@@ -11,8 +11,6 @@ workflow REFERENCES {
     ch_genome_input     // channel: [ val(meta), path(genome) ]
 
     main:
-
-    ch_versions = channel.empty()
 
     //
     // Branch annotation based on compression
@@ -29,11 +27,14 @@ workflow REFERENCES {
     //
     // MODULE: GUNZIP ANNOTATION
     //
-    ch_annotation_decompressed = GUNZIP_ANNOTATION( annotation_branched.compressed ).gunzip
-    ch_versions = ch_versions.mix(GUNZIP_ANNOTATION.out.versions.first())
+    ch_annotation_decompressed = GUNZIP_ANNOTATION(
+        annotation_branched.compressed
+    ).gunzip
 
     // Combine decompressed and already uncompressed
-    ch_annotation = ch_annotation_decompressed.mix(annotation_branched.uncompressed)
+    ch_annotation = ch_annotation_decompressed.mix(
+        annotation_branched.uncompressed
+    )
 
     //
     // Branch annotation based on format
@@ -52,14 +53,16 @@ workflow REFERENCES {
     //
     // MODULE: AGAT_CONVERTSPGXF2GXF (GTF to GFF3)
     //
-    ch_gff3_converted = AGAT_CONVERTSPGXF2GXF( annotation_format.gtf ).output_gff
-    ch_versions = ch_versions.mix(AGAT_CONVERTSPGXF2GXF.out.versions.first())
+    ch_gff3_converted = AGAT_CONVERTSPGXF2GXF(
+        annotation_format.gtf
+    ).output_gff
 
     //
     // MODULE: AGAT_CONVERTSPGFF2GTF (GFF3 to GTF)
     //
-    ch_gtf_converted = AGAT_CONVERTSPGFF2GTF( annotation_format.gff3 ).output_gtf
-    ch_versions = ch_versions.mix(AGAT_CONVERTSPGFF2GTF.out.versions.first())
+    ch_gtf_converted = AGAT_CONVERTSPGFF2GTF(
+        annotation_format.gff3
+    ).output_gtf
 
     // Combine GTF outputs: original GTF + converted from GFF3
     ch_gtf = annotation_format.gtf.mix(ch_gtf_converted)
@@ -70,8 +73,7 @@ workflow REFERENCES {
     //
     // MODULE: AGAT_CONVERTGFF2BED
     //
-    ch_bed = AGAT_CONVERTGFF2BED( ch_gff3 ).bed
-    ch_versions = ch_versions.mix(AGAT_CONVERTGFF2BED.out.versions.first())
+    ch_bed = AGAT_CONVERTGFF2BED(ch_gff3).bed
 
     //
     // Branch genome based on compression
@@ -88,16 +90,18 @@ workflow REFERENCES {
     //
     // MODULE: GUNZIP GENOME
     //
-    ch_genome_decompressed = GUNZIP_GENOME( genome_branched.compressed ).gunzip
-    ch_versions = ch_versions.mix(GUNZIP_GENOME.out.versions.first())
+    ch_genome_decompressed = GUNZIP_GENOME(
+        genome_branched.compressed
+    ).gunzip
 
     // Combine decompressed and already uncompressed
-    ch_genome = ch_genome_decompressed.mix(genome_branched.uncompressed)
+    ch_genome = ch_genome_decompressed.mix(
+        genome_branched.uncompressed
+    )
 
     emit:
-    gtf              = ch_gtf                // channel: [ val(meta), [ path(gtf)    ] ]
-    gff3             = ch_gff3               // channel: [ val(meta), [ path(gff3)   ] ]
-    bed              = ch_bed                // channel: [ val(meta), [ path(bed)    ] ]
-    genome_fasta     = ch_genome             // channel: [ val(meta), [ path(fasta)  ] ]
-    versions         = ch_versions           // channel: version information
+    gtf          = ch_gtf
+    gff3         = ch_gff3
+    bed          = ch_bed
+    genome_fasta = ch_genome
 }

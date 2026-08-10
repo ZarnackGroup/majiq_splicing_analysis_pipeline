@@ -930,8 +930,7 @@
                 "pipeline_info",
                 "processed_inputs",
                 "processed_inputs/annotation",
-                "processed_inputs/annotation/chrX.agat.gff",
-                "processed_inputs/annotation/genes_chrX.agat.log"
+                "processed_inputs/annotation/chrX.agat.gff"
             ],
             [
                 ".zgroup:md5,e20297935e73dd0154104d4ea53040ab",
@@ -1150,13 +1149,13 @@
                 ".zarray:md5,049fc5d073532435822189d5c4a4c273",
                 ".zarray:md5,b031f0b819a35724d18676d7dcf15df7",
                 ".zarray:md5,4497590daf23de72bf231cf0312e1fb6",
-                "chrX.agat.gff:md5,4b0db27ba7b45ea37f487cf8361ca358"
+                "chrX.agat.gff:md5,4f173f96f5a5c1e9b5385be9bb0fb116"
             ]
         ],
+        "timestamp": "2026-08-10T19:23:51.596110715",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-12-05T11:06:52.425855327"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }

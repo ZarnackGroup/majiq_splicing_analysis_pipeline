@@ -72,7 +72,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         ch_annotation,
         ch_genome
     )
-    ch_versions = ch_versions.mix(REFERENCES.out.versions)
 
 
 
@@ -84,11 +83,8 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         ch_bam
     )
 
-    ch_bam.join(SAMTOOLS_INDEX.out.bai, by: [0])
+    ch_bam.join(SAMTOOLS_INDEX.out.index, by: [0])
     .set { ch_bam_with_index }
-
-
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     //
     // MODULE: DEEPTOOLS_BAMCOVERAGE
@@ -101,7 +97,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
             [],
             [[],[]]
         )
-        ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions.first())
     }
 
     //
