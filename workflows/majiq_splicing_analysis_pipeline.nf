@@ -72,7 +72,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         ch_annotation,
         ch_genome
     )
-    ch_versions = ch_versions.mix(REFERENCES.out.versions)
 
 
 
@@ -98,7 +97,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
             [],
             [[],[]]
         )
-        ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions.first())
     }
 
     //
