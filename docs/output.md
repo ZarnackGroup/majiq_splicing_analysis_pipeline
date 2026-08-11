@@ -9,7 +9,7 @@ This document describes the output produced by the pipeline. Most QC plots are c
 The pipeline produces the following top-level output directories:
 
 - [`processed_inputs/`](#processed-inputs) - Processed inputs used by the workflow (annotation conversions, validated sheets, BAM indices)
-- [`quality_control/`](#quality-control) - Per-sample quality control results (FastQC, RSeQC)
+- [`quality_control/`](#quality-control) - Per-sample quality control results (FastQC, RustQC)
 - [`majiq/`](#majiq) - Splicing analysis outputs (build, deltapsi, heterogen, quantify, modulize tables)
 - [`irfinder/`](#irfinder) - IRFinder-s outputs (per-sample + differential comparisons)
 - [`bigWig/`](#bigwig) - Coverage tracks for genome browser visualisation
@@ -60,7 +60,7 @@ FastQC provides general quality metrics about the sequenced reads.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `quality_control/rustc/<SAMPLE>/`
+- `quality_control/rustqc/<SAMPLE>/`
   - `samtools/`: Alignment summary files from Samtools, including `*.flagstat`, `*.idxstats`, and `*.stats`.
   - `featurecounts/`: Gene and biotype count summaries, including `*.featureCounts.tsv`, `*.summary`, and biotype count tables.
   - `qualimap/`: RNA-seq QC report, summary metrics, coverage profiles, junction analysis, and related plots.

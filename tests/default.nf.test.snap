@@ -71,7 +71,7 @@
                     "samtools": 1.24
                 },
                 "Workflow": {
-                    "ZarnackGroup/majiq_splicing_analysis_pipeline": "v0.1.0"
+                    "ZarnackGroup/majiq_splicing_analysis_pipeline": "v0.2.0"
                 }
             },
             [
@@ -2448,7 +2448,7 @@
                 "ERR204916.stats:md5,3d26500ec93585e627881664648f625e"
             ]
         ],
-        "timestamp": "2026-08-10T20:19:46.636215727",
+        "timestamp": "2026-08-11T15:04:50.165276793",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -2517,7 +2517,7 @@
                     "samtools": 1.24
                 },
                 "Workflow": {
-                    "ZarnackGroup/majiq_splicing_analysis_pipeline": "v0.1.0"
+                    "ZarnackGroup/majiq_splicing_analysis_pipeline": "v0.2.0"
                 }
             },
             [
@@ -4728,7 +4728,7 @@
                 "ERR204916.stats:md5,3d26500ec93585e627881664648f625e"
             ]
         ],
-        "timestamp": "2026-08-10T20:23:30.827795068",
+        "timestamp": "2026-08-11T15:08:40.25686555",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -4806,7 +4806,7 @@
                     "samtools": 1.24
                 },
                 "Workflow": {
-                    "ZarnackGroup/majiq_splicing_analysis_pipeline": "v0.1.0"
+                    "ZarnackGroup/majiq_splicing_analysis_pipeline": "v0.2.0"
                 }
             },
             [
@@ -5151,7 +5151,7 @@
                 "reports/params.yml"
             ]
         ],
-        "timestamp": "2026-08-10T20:24:34.947288048",
+        "timestamp": "2026-08-11T15:09:41.362578958",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
