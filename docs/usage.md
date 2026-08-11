@@ -25,7 +25,7 @@
 
 ### Setting up IRFinder-S
 
-IRFinder-S processes are per defualt configured to utilize the Docker image provided by the [IRFinder-S repository](https://github.com/RitchieLabIGH/IRFinder/wiki/Download-and-Install). If you wish to use a different method follow the instructions on how to install IRFinder-S from source in the [IRFinder-S repository](https://github.com/RitchieLabIGH/IRFinder/wiki/Download-and-Install) and create a custom config file as described for MAJIQ above.
+IRFinder-S processes are per default configured to utilize the Docker image provided by the [IRFinder-S repository](https://github.com/RitchieLabIGH/IRFinder/wiki/Download-and-Install). If you wish to use a different method follow the instructions on how to install IRFinder-S from source in the [IRFinder-S repository](https://github.com/RitchieLabIGH/IRFinder/wiki/Download-and-Install) and create a custom config file as described for MAJIQ above.
 
 ## Samplesheet input
 
@@ -54,7 +54,7 @@ ERR204916,YRI,PATH/TO/ERR204916.Aligned.out.bam
 
 ## Contrastsheet input
 
-You will need to create a samplesheet with information about the sample groups you would like to compare before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a contrastsheet with information about the sample groups you would like to compare before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
 
 ```bash
 --contrasts '[path to contrastsheet file]'
