@@ -15,7 +15,7 @@
                         {
                             "id": "test_gtf"
                         },
-                        "test_gtf.agat.gff:md5,d5761e0b66732e4e143ae92987be5b54"
+                        "test_gtf.agat.gff:md5,313c1a1b13f5dfe6a726b46932f485f0"
                     ]
                 ],
                 "2": [
@@ -23,7 +23,7 @@
                         {
                             "id": "test_gtf"
                         },
-                        "test_gtf.bed:md5,ab6bd09b94d32bd8e1967832ec16716f"
+                        "test_gtf.bed:md5,6e3c79c50db5035142c9d01714e83f48"
                     ]
                 ],
                 "3": [
@@ -34,18 +34,12 @@
                         "chr19.fa:md5,dd9375c0cfa5de18757a0608411ff608"
                     ]
                 ],
-                "4": [
-                    "versions.yml:md5,5a6062b64e9b8870106b8885913ea435",
-                    "versions.yml:md5,b0a15146d0911ba4884df150e250a768",
-                    "versions.yml:md5,c5d8f0ff4f5372ff64d867eff14cd30a",
-                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
-                ],
                 "bed": [
                     [
                         {
                             "id": "test_gtf"
                         },
-                        "test_gtf.bed:md5,ab6bd09b94d32bd8e1967832ec16716f"
+                        "test_gtf.bed:md5,6e3c79c50db5035142c9d01714e83f48"
                     ]
                 ],
                 "genome_fasta": [
@@ -61,7 +55,7 @@
                         {
                             "id": "test_gtf"
                         },
-                        "test_gtf.agat.gff:md5,d5761e0b66732e4e143ae92987be5b54"
+                        "test_gtf.agat.gff:md5,313c1a1b13f5dfe6a726b46932f485f0"
                     ]
                 ],
                 "gtf": [
@@ -71,20 +65,14 @@
                         },
                         "chr19.filtered.gtf:md5,29ea9f8629c84868b4b0ce5cd4f57632"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,5a6062b64e9b8870106b8885913ea435",
-                    "versions.yml:md5,b0a15146d0911ba4884df150e250a768",
-                    "versions.yml:md5,c5d8f0ff4f5372ff64d867eff14cd30a",
-                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
                 ]
             }
         ],
+        "timestamp": "2026-08-10T18:45:07.237893769",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-11-25T18:14:57.602967109"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     },
     "GFF3 annotation + uncompressed genome": {
         "content": [
@@ -121,10 +109,6 @@
                         "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta"
                     ]
                 ],
-                "4": [
-                    "versions.yml:md5,65a5bb329e2f9d9fb9f81135e5ffd770",
-                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
-                ],
                 "bed": [
                     [
                         {
@@ -156,18 +140,14 @@
                         },
                         "chr21.agat.gtf:md5,be1c396ac00fd5a84dc08a36d84ff8c5"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,65a5bb329e2f9d9fb9f81135e5ffd770",
-                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
                 ]
             }
         ],
+        "timestamp": "2026-08-10T18:45:17.002853436",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-11-25T18:15:08.825781695"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     },
     "GTF annotation + uncompressed genome": {
         "content": [
@@ -185,7 +165,7 @@
                         {
                             "id": "test_gtf"
                         },
-                        "test_gtf.agat.gff:md5,bf149491a02b14c674c74af5a4745495"
+                        "test_gtf.agat.gff:md5,bfa76f7e7bbdf30fd9ede0cd1d2878ae"
                     ]
                 ],
                 "2": [
@@ -193,7 +173,7 @@
                         {
                             "id": "test_gtf"
                         },
-                        "test_gtf.bed:md5,11c545a73cf34072c3b4ceb54f73ab71"
+                        "test_gtf.bed:md5,55cb0e28b2915f643dc717ecd1896804"
                     ]
                 ],
                 "3": [
@@ -204,16 +184,12 @@
                         "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta"
                     ]
                 ],
-                "4": [
-                    "versions.yml:md5,b0a15146d0911ba4884df150e250a768",
-                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
-                ],
                 "bed": [
                     [
                         {
                             "id": "test_gtf"
                         },
-                        "test_gtf.bed:md5,11c545a73cf34072c3b4ceb54f73ab71"
+                        "test_gtf.bed:md5,55cb0e28b2915f643dc717ecd1896804"
                     ]
                 ],
                 "genome_fasta": [
@@ -229,7 +205,7 @@
                         {
                             "id": "test_gtf"
                         },
-                        "test_gtf.agat.gff:md5,bf149491a02b14c674c74af5a4745495"
+                        "test_gtf.agat.gff:md5,bfa76f7e7bbdf30fd9ede0cd1d2878ae"
                     ]
                 ],
                 "gtf": [
@@ -239,18 +215,14 @@
                         },
                         "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/homo_sapiens/genome/chr21/sequence/chr21_gencode.gtf"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,b0a15146d0911ba4884df150e250a768",
-                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
                 ]
             }
         ],
+        "timestamp": "2026-08-10T18:44:18.848700834",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-11-25T18:14:21.132618985"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     },
     "compressed GFF3 annotation - no genome": {
         "content": [
@@ -278,17 +250,13 @@
                     "chr1.bed:md5,c1c1eb36c47724291fb26ab8eadf5cd0"
                 ]
             ],
-            [
-                "versions.yml:md5,5a6062b64e9b8870106b8885913ea435",
-                "versions.yml:md5,65a5bb329e2f9d9fb9f81135e5ffd770",
-                "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
-            ]
+            null
         ],
+        "timestamp": "2026-08-10T18:45:40.084929997",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-11-25T18:28:27.222520544"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     },
     "compressed GFF3 annotation + uncompressed genome": {
         "content": [
@@ -325,11 +293,6 @@
                         "/nf-core/test-datasets/raw/refs/heads/modules/data/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta"
                     ]
                 ],
-                "4": [
-                    "versions.yml:md5,5a6062b64e9b8870106b8885913ea435",
-                    "versions.yml:md5,65a5bb329e2f9d9fb9f81135e5ffd770",
-                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
-                ],
                 "bed": [
                     [
                         {
@@ -361,18 +324,13 @@
                         },
                         "chr1.agat.gtf:md5,1e8820a497ddb0320986f4c2001ee948"
                     ]
-                ],
-                "versions": [
-                    "versions.yml:md5,5a6062b64e9b8870106b8885913ea435",
-                    "versions.yml:md5,65a5bb329e2f9d9fb9f81135e5ffd770",
-                    "versions.yml:md5,c9d121f63cb3ef4377cc40cbb7af3287"
                 ]
             }
         ],
+        "timestamp": "2026-08-10T18:45:28.651354697",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-11-25T18:30:37.311688247"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }

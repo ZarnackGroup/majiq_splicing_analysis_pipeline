@@ -37,7 +37,11 @@ workflow ZARNACKGROUP_MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     // WORKFLOW: Run pipeline
     //
     MAJIQ_SPLICING_ANALYSIS_PIPELINE (
-        samplesheet
+        samplesheet,
+        params.multiqc_config,
+        params.multiqc_logo,
+        params.multiqc_methods_description,
+        params.outdir,
     )
     emit:
     multiqc_report = MAJIQ_SPLICING_ANALYSIS_PIPELINE.out.multiqc_report // channel: /path/to/multiqc_report.html
@@ -73,7 +77,11 @@ workflow {
     //
     MAJIQ_SPLICING_ANALYSIS_PIPELINE (
         PIPELINE_INITIALISATION.out.genome_bam,
-        PIPELINE_INITIALISATION.out.contrasts
+        PIPELINE_INITIALISATION.out.contrasts,
+        params.multiqc_config,
+        params.multiqc_logo,
+        params.multiqc_methods_description,
+        params.outdir
     )
     //
     // SUBWORKFLOW: Run completion tasks
@@ -84,7 +92,6 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
-        params.hook_url,
         MAJIQ_SPLICING_ANALYSIS_PIPELINE.out.multiqc_report
     )
 }

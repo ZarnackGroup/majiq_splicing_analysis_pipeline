@@ -9,10 +9,10 @@ include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { SAMTOOLS_INDEX         } from '../modules/nf-core/samtools/index/main'
 include { DEEPTOOLS_BAMCOVERAGE  } from '../modules/nf-core/deeptools/bamcoverage/main'
+include { RUSTQC                 } from '../modules/nf-core/rustqc/main'
 
 // SUBWORKFLOWS
 include { MAJIQ                  } from '../subworkflows/local/majiq/main'
-include { BAM_RSEQC              } from '../subworkflows/nf-core/bam_rseqc/main'
 include { IRFINDER               } from '../subworkflows/local/irfinder/main'
 include { REFERENCES             } from '../subworkflows/local/references/main'
 include { DOWNSTREAM_ANALYSIS    } from '../subworkflows/local/downstream_analysis/main'
@@ -38,6 +38,10 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     take:
         ch_bam          // channel: bam file inputs
         ch_contrasts    // channel: contrasts input
+        multiqc_config
+        multiqc_logo
+        multiqc_methods_description
+        outdir
 
     main:
 
@@ -68,7 +72,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         ch_annotation,
         ch_genome
     )
-    ch_versions = ch_versions.mix(REFERENCES.out.versions)
 
 
 
@@ -80,11 +83,8 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         ch_bam
     )
 
-    ch_bam.join(SAMTOOLS_INDEX.out.bai, by: [0])
+    ch_bam.join(SAMTOOLS_INDEX.out.index, by: [0])
     .set { ch_bam_with_index }
-
-
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     //
     // MODULE: DEEPTOOLS_BAMCOVERAGE
@@ -97,7 +97,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
             [],
             [[],[]]
         )
-        ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions.first())
     }
 
     //
@@ -107,7 +106,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         ch_bam
     )
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
     //
     // SUBWORKFLOW: Run MAJIQ
@@ -136,48 +134,61 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
     DOWNSTREAM_ANALYSIS (
         MAJIQ.out.ch_deltapsi_modulize
     )
-    ch_versions = ch_versions.mix(DOWNSTREAM_ANALYSIS.out.ch_versions.first())
 
     //
-    // SUBWORKFLOW: RSEQC
+    // MODULE: RUSTQC
     //
 
 
-    // adjust channel structures for RSeQC subworkflow for bam and bed files
+    REFERENCES.out.gtf
+        .first()
+        .set { ch_gtf_rustqc }
 
+    if (!params.skip_rustqc) {
 
-    ch_bam_with_index.map { meta, bamList, bai ->
-        def bam = (bamList instanceof List ? bamList[0] : bamList)
-        tuple(meta, [bam, bai])
-    }.set { ch_bam_bai }
-
-
-    REFERENCES.out.bed
-    .map   { meta, bed -> bed }  // drop meta
-    .unique()
-    .first()
-    .set { ch_bed_single }
-
-    def rseqc_modules = params.rseqc_modules ? params.rseqc_modules.split(',').collect{ it.trim().toLowerCase() } : []
-
-
-
-    if (!params.skip_rseqc && rseqc_modules.size() > 0) {
-        BAM_RSEQC (
+        RUSTQC (
             ch_bam_with_index,
-            ch_bed_single,
-            rseqc_modules
+            ch_gtf_rustqc
         )
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.bamstat_txt.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.inferexperiment_txt.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.innerdistance_freq.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionannotation_log.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.junctionsaturation_rscript.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readdistribution_txt.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.readduplication_pos_xls.collect{it[1]})
-        ch_multiqc_files = ch_multiqc_files.mix(BAM_RSEQC.out.tin_txt.collect{it[1]})
-        ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
-        ch_strand_comparison = BAM_RSEQC.out.inferexperiment_txt
+
+        // Keep only files that MultiQC can reasonably parse.
+        // Taken from nf-core/rnaseq 3.26
+        def mqcKeep = { f ->
+            f.name.endsWith('.featureCounts.tsv.summary')
+                ? false
+                : (
+                    f.name =~ /(?i)\.(txt|tsv|xls|log|stats|flagstat|idxstats|html)$/
+                    || f.name.contains('_mqc.')
+                )
+        }
+
+        ch_rustqc_multiqc_files = RUSTQC.out.dupradar
+            .mix(RUSTQC.out.featurecounts)
+            .mix(RUSTQC.out.preseq)
+            .mix(RUSTQC.out.samtools)
+            .mix(RUSTQC.out.rseqc)
+            .mix(RUSTQC.out.qualimap)
+            .flatMap { meta, files ->
+                (files instanceof List ? files : [files]).findAll(mqcKeep)
+            }
+
+        ch_multiqc_files = ch_multiqc_files.mix(ch_rustqc_multiqc_files)
+
+        // Extract RustQC's RSeQC-compatible infer_experiment output
+        // for the existing strandedness comparison.
+        ch_inferexperiment_txt = RUSTQC.out.rseqc
+            .map { meta, files ->
+                def inferexperiment = (files instanceof List ? files : [files]).find { file ->
+                    file.name.endsWith('.infer_experiment.txt')
+                }
+                inferexperiment ? [ meta, inferexperiment ] : null
+            }
+            .filter { entry -> entry != null }
+
+        //
+        // Strandedness comparison
+        //
+        ch_strand_comparison = ch_inferexperiment_txt
             .map { meta, strand_log ->
                 def rseqc_inferred_strand = getInferexperimentStrandedness(
                     strand_log,
@@ -192,7 +203,7 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
                 }
 
                 def multiqc_lines = [
-                    "$meta.id\tRSeQC\t${rseqc_inferred_strand.values().join('\t')}"
+                    "$meta.id\tRustQC\t${rseqc_inferred_strand.values().join('\t')}"
                 ]
 
                 return [ meta, status, multiqc_lines ]
@@ -201,6 +212,7 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
                 status: [ meta.id, status == 'pass' ]
                 multiqc_lines: multiqc_lines
             }
+
         sample_status_header_multiqc = file("${projectDir}/assets/strandedness_table_header.txt")
 
         // Store the statuses for output
@@ -210,22 +222,23 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
         ch_strand_comparison.multiqc_lines
             .flatten()
             .collect()
-            .map {
-                tsv_data ->
-                    def header = [
-                        "Sample",
-                        "Strand inference method",
-                        "Inferred strandedness",
-                        "Sense (%)",
-                        "Antisense (%)",
-                        "Unstranded (%)"
-                    ]
-                    sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
+            .map { tsv_data ->
+                def header = [
+                    "Sample",
+                    "Strand inference method",
+                    "Inferred strandedness",
+                    "Sense (%)",
+                    "Antisense (%)",
+                    "Unstranded (%)"
+                ]
+                sample_status_header_multiqc.text + multiqcTsvFromList(tsv_data, header)
             }
             .set { ch_fail_strand_multiqc }
 
-        ch_multiqc_files = ch_multiqc_files.mix(ch_fail_strand_multiqc.collectFile(name: 'sample_strandedness_mqc.tsv'))
-        }
+        ch_multiqc_files = ch_multiqc_files.mix(
+            ch_fail_strand_multiqc.collectFile(name: 'sample_strandedness_mqc.tsv')
+        )
+    }
 
 
     //
@@ -238,7 +251,6 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
             versions_tuple: true
         }
 
-
     def topic_versions_string = topic_versions.versions_tuple
         .map { process, tool, version ->
             [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
@@ -249,40 +261,41 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
             "${process}:\n${tool_versions.join('\n')}"
         }
 
-    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+    def ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${params.outdir}/pipeline_info",
+            storeDir: "${outdir}/pipeline_info",
             name:  'majiq_splicing_analysis_pipeline_software_'  + 'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
-        ).set { ch_collated_versions }
-
+        )
 
     //
     // MODULE: MultiQC
     //
-    ch_multiqc_config        = channel.fromPath(
-        "$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-    ch_multiqc_custom_config = params.multiqc_config ?
-        channel.fromPath(params.multiqc_config, checkIfExists: true) :
-        channel.empty()
-    ch_multiqc_logo          = params.multiqc_logo ?
-        channel.fromPath(params.multiqc_logo, checkIfExists: true) :
-        channel.empty()
-
-    summary_params      = paramsSummaryMap(
-        workflow, parameters_schema: "nextflow_schema.json")
-    ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_custom_methods_description = params.multiqc_methods_description ?
-        file(params.multiqc_methods_description, checkIfExists: true) :
-        file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-    ch_methods_description                = channel.value(
-        methodsDescriptionText(ch_multiqc_custom_methods_description))
-
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
+
+    def ch_summary_params = paramsSummaryMap(
+        workflow,
+        parameters_schema: "nextflow_schema.json"
+    )
+
+    def ch_workflow_summary = channel.value(
+        paramsSummaryMultiqc(ch_summary_params)
+    )
+
+    ch_multiqc_files = ch_multiqc_files.mix(
+        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
+    )
+
+    def ch_multiqc_custom_methods_description = multiqc_methods_description
+        ? file(multiqc_methods_description, checkIfExists: true)
+        : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
+
+    def ch_methods_description = channel.value(
+        methodsDescriptionText(ch_multiqc_custom_methods_description)
+    )
+
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_methods_description.collectFile(
             name: 'methods_description_mqc.yaml',
@@ -292,24 +305,29 @@ workflow MAJIQ_SPLICING_ANALYSIS_PIPELINE {
 
     // Add the overview_table.tsv to MultiQC files
     ch_multiqc_files = ch_multiqc_files.mix(
-        DOWNSTREAM_ANALYSIS.out.ch_deltapsi_table.map { meta, tsv -> tsv }
+        DOWNSTREAM_ANALYSIS.out.ch_deltapsi_table.map { _meta, tsv -> tsv }
     )
 
-    MULTIQC (
-        ch_multiqc_files.collect(),
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList(),
-        [],
-        []
+    MULTIQC(
+        ch_multiqc_files.flatten().collect().map { files ->
+            [
+                [id: 'majiq_splicing_analysis_pipeline'],
+                files,
+                multiqc_config
+                    ? file(multiqc_config, checkIfExists: true)
+                    : file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true),
+                multiqc_logo
+                    ? file(multiqc_logo, checkIfExists: true)
+                    : [],
+                [],
+                [],
+            ]
+        }
     )
-
-
 
     emit:
-    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
-
+    multiqc_report = MULTIQC.out.report.map { _meta, report -> [report] }.toList()
+    versions       = ch_versions
 }
 
 /*

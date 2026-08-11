@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/ZarnackGroup/majiq_splicing_analysis_pipeline/master/nextflow_schema.json",
+    "$id": "https://raw.githubusercontent.com/ZarnackGroup/majiq_splicing_analysis_pipeline/main/nextflow_schema.json",
     "title": "ZarnackGroup/majiq_splicing_analysis_pipeline pipeline parameters",
     "description": "In-house pipeline for analyzing alternative splicing events from RNA sequencing data, based on Nextflow and utilizing MAJIQ as the core splicing analysis tool.",
     "type": "object",
@@ -148,20 +148,20 @@
                 }
             }
         },
-        "rseqc": {
-            "title": "RSEQC",
+        "rustqc": {
+            "title": "RustQC",
             "type": "object",
-            "description": "Parameters to modify the RSEQC execution",
+            "description": "Parameters to modify the RustQC execution",
             "default": "",
             "properties": {
-                "skip_rseqc": {
+                "skip_rustqc": {
                     "type": "boolean",
-                    "description": "Skip RSEQC if set to true"
+                    "description": "If set to true, this will skip the RustQC Analysis"
                 },
-                "rseqc_modules": {
+                "rustqc_args": {
                     "type": "string",
-                    "default": "bam_stat,infer_experiment,junction_annotation,junction_saturation,read_duplication",
-                    "description": "Which RSEQC modules to run. Comma seperated list. \"inner_distance\" and \"read_distribution\" not available"
+                    "default": "--skip-dup-check",
+                    "description": "Additional parameters to pass to the underlying command. Provide as a single string."
                 },
                 "stranded_threshold": {
                     "type": "number",
@@ -293,13 +293,6 @@
                     "fa_icon": "fas fa-palette",
                     "hidden": true
                 },
-                "hook_url": {
-                    "type": "string",
-                    "description": "Incoming hook URL for messaging service",
-                    "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
-                    "hidden": true
-                },
                 "multiqc_config": {
                     "type": "string",
                     "format": "file-path",
@@ -364,7 +357,7 @@
             "$ref": "#/$defs/irfinder"
         },
         {
-            "$ref": "#/$defs/rseqc"
+            "$ref": "#/$defs/rustqc"
         },
         {
             "$ref": "#/$defs/deeptools"

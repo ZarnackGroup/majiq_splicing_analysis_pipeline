@@ -3,9 +3,10 @@
 [![GitHub Actions CI Status](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/nf-test.yml/badge.svg)](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/nf-test.yml)
 [![GitHub Actions Linting Status](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/linting.yml/badge.svg)](https://github.com/ZarnackGroup/majiq_splicing_analysis_pipeline/actions/workflows/linting.yml)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
+[![DOI](https://zenodo.org/badge/921681560.svg)](https://doi.org/10.5281/zenodo.21889037)
 
-[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.04.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
-[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.5.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.5.1)
+[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.1.0-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.1.0)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -14,64 +15,28 @@
 
 **ZarnackGroup/majiq_splicing_analysis_pipeline** is our in-house pipeline for analyzing alternative splicing events from RNA sequencing data, based on Nextflow and utilizing [`MAJIQ V3`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792) as the core splicing analysis tool.
 
-```mermaid
-flowchart TB
-  subgraph MAJIQ_SPLICING_ANALYSIS_PIPELINE
-    subgraph required parameters
-      v0["--input"]
-      v2["--annotation"]
-      v1["--contrasts"]
-      v3["genome_fasta"]
+<picture>
+  <source
+    media="(prefers-color-scheme: dark)"
+    srcset="docs/images/metro_dark_animated.svg"
+  >
+  <source
+    media="(prefers-color-scheme: light)"
+    srcset="docs/images/metro_light_animated.svg"
+  >
+  <img
+    src="docs/images/metro_light_animated.svg"
+    alt="MAJIQ splicing analysis pipeline"
+    width="100%"
+  >
+</picture>
 
-    end
-
-    subgraph s20["converting inputs"]
-          subgraph s100["index bam files"]
-               v15([SAMTOOLS_INDEX])
-          end
-          subgraph s2["annotation format handling"]
-               v9([AGAT])
-          end
-     end
-    subgraph s3["splicing analysis"]
-      v25([MAJIQ])
-      v26([IRFINDER-S])
-    end
-    subgraph s4["create BigWig"]
-      v19([DEEPTOOLS_BAMCOVERAGE])
-    end
-    subgraph s7["quality control"]
-      v32([BAM_RSEQC])
-      v22([FASTQC])
-    end
-    subgraph report
-      v63([MULTIQC])
-    end
-    v2 --> v9
-    v0 --> v19
-    v0 --> v15
-    v0 --> v22
-    v0 --> v25
-    v0 --> v26
-    v0 --> v32
-    v9 --> v25
-    v9 --> v26
-    v9 --> v32
-    v1 --> v26
-    v1 --> v25
-    v3 --> v26
-    v15 --> v19
-    v15 --> v32
-    v19 --> v63
-    v32 --> v63
-    v22 --> v63
-    v15 --> v63
-    v9 --> v63
-    v25 --> v63
-    v26 --> v63
-  end
-
-```
+<p align="center">
+  <sub>
+    Pipeline overview, generated with
+    <a href="https://github.com/seqeralabs/nf-metro">nf-metro</a>.
+  </sub>
+</p>
 
 1. Index BAM files ([`SAMTOOLS`](https://doi.org/10.1093/bioinformatics/btp352))
 2. Convert annotation: GXF conversion ([`AGAT`](https://doi.org/10.5281/zenodo.3552717))
@@ -79,14 +44,14 @@ flowchart TB
 4. Splicing analysis ([`MAJIQ`](https://www.biorxiv.org/content/early/2024/07/04/2024.07.02.601792))
 5. Intron Retention analysis ([`IRFINDER`](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02515-8))
 6. Coverage track generation ([`DEEPTOOLS`](https://doi.org/10.1093/nar/gkw257))
-7. Quality control: read & alignment QC ([`RSeQC`](http://rseqc.sourceforge.net/))
+7. Quality control: read & alignment QC ([`RustQC`](https://seqeralabs.github.io/RustQC/))
 8. Quality control: read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 9. Reporting ([`MultiQC`](https://pubmed.ncbi.nlm.nih.gov/27312411/))
 
 ## Usage
 
 > [!NOTE]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.
 
 Below are the minimal steps required to run the pipeline.
 Full documentation for the pipeline, including usage, all parameters and output files can be found in the [`docs`](docs) folder.
@@ -127,7 +92,7 @@ ERR204916,YRI,PATH/TO/ERR204916.Aligned.out.bam
 
 Each row represents a BAM file.  
 `sample` is a unique identifier for each row.  
-`condition` is used to group and compare samples.  
+`condition` is used to group and compare samples. Condition names must contain only letters and numbers and start with a letter, because downstream tools may use separators such as underscores, dashes, dots, or spaces for internal parsing.
 `genome_bam` refers to reads aligned against a genome.
 
 `contrastsheet.csv`:
@@ -164,7 +129,7 @@ nextflow run ZarnackGroup/majiq_splicing_analysis_pipeline \
 All available parameters can be found in the [parameters documentation](docs/parameters.md).
 
 > [!WARNING]
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).
 
 ## Credits
 
@@ -176,7 +141,7 @@ We thank the following people for their extensive assistance in the development 
 
 ## Contributions and Support
 
-If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
+If you would like to contribute to this pipeline, please see the [contributing guidelines](docs/CONTRIBUTING.md).
 
 ## Citations
 
@@ -198,13 +163,37 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
 
-- [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+- [RustQC](https://seqeralabs.github.io/RustQC/)
 
-> Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+> RustQC was developed by Seqera and reimplements established RNA-seq quality-control tools. Please cite the original tools used in the analysis.
+
+- [dupRadar](https://bioconductor.org/packages/dupRadar/)
+
+> Sayols S, Scherzinger D, Klein H. dupRadar: a Bioconductor package for the assessment of PCR artifacts in RNA-Seq data. BMC Bioinformatics. 2016;17(1):428. doi: 10.1186/s12859-016-1276-2.
+
+- [featureCounts / Subread](http://subread.sourceforge.net/)
+
+> Liao Y, Smyth GK, Shi W. featureCounts: an efficient general purpose program for assigning sequence reads to genomic features. Bioinformatics. 2014;30(7):923-930. doi: 10.1093/bioinformatics/btt656.
 
 - [RSeQC](http://rseqc.sourceforge.net/)
 
-> Wang L, Wang S, Li W. RSeQC: quality control of RNA-seq experiments. Bioinformatics. 2012 Aug 15;28(16):2184-2185. doi: 10.1093/bioinformatics/bts356. PubMed PMID: 22743226.
+> Wang L, Wang S, Li W. RSeQC: quality control of RNA-seq experiments. Bioinformatics. 2012;28(16):2184-2185. doi: 10.1093/bioinformatics/bts356.
+
+- [preseq](https://github.com/smithlabcode/preseq)
+
+> Daley T, Smith AD. Predicting the molecular complexity of sequencing libraries. Nature Methods. 2013;10(4):325-327. doi: 10.1038/nmeth.2375.
+
+- [SAMtools](https://www.htslib.org/)
+
+> Danecek P, Bonfield JK, Liddle J, et al. Twelve years of SAMtools and BCFtools. GigaScience. 2021;10(2):giab008. doi: 10.1093/gigascience/giab008.
+
+- [Qualimap](http://qualimap.conesalab.org/)
+
+> Garcia-Alcalde F, Okonechnikov K, Carbonell J, et al. Qualimap: evaluating next-generation sequencing alignment data. Bioinformatics. 2012;28(20):2678-2679. doi: 10.1093/bioinformatics/bts503.
+
+- [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+
+> Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
 - [AGAT](https://doi.org/10.5281/zenodo.3552717)
 

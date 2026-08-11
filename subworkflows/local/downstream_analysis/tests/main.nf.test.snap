@@ -874,19 +874,27 @@
                 "processed_inputs",
                 "processed_inputs/annotation",
                 "processed_inputs/annotation/chrX.agat.gff",
-                "processed_inputs/annotation/genes_chrX.agat.log",
                 "reports",
                 "reports/majiq_deltapsi_modulize_report.html",
                 "reports/majiq_deltapsi_modulize_report.qmd",
                 "reports/params.yml",
                 "reports/tables",
+                "reports/tables/bed",
+                "reports/tables/bed/GBR.YRI_significant_events.bed",
+                "reports/tables/bed/YRI.GBR_significant_events.bed",
                 "reports/tables/excel",
                 "reports/tables/excel/annotated_results.xlsx",
                 "reports/tables/excel/overview_table.xlsx",
+                "reports/tables/excel/significant_by_contrast",
+                "reports/tables/excel/significant_by_contrast/GBR.YRI_significant_events.xlsx",
+                "reports/tables/excel/significant_by_contrast/YRI.GBR_significant_events.xlsx",
                 "reports/tables/overview_table_mqc.tsv",
                 "reports/tables/rds",
                 "reports/tables/rds/annotated_results.rds",
-                "reports/tables/rds/overview_table.rds"
+                "reports/tables/rds/overview_table.rds",
+                "reports/tables/rds/significant_by_contrast",
+                "reports/tables/rds/significant_by_contrast/GBR.YRI_significant_events.rds",
+                "reports/tables/rds/significant_by_contrast/YRI.GBR_significant_events.rds"
             ],
             [
                 ".zgroup:md5,e20297935e73dd0154104d4ea53040ab",
@@ -1103,13 +1111,13 @@
                 ".zarray:md5,f43f68666a4e3b6b1cf00c2e38a046a9",
                 ".zarray:md5,cee5f379d56f9c557b407956ee8a3063",
                 ".zarray:md5,1eed540e0e2e039d4f7020de37924b01",
-                "chrX.agat.gff:md5,4b0db27ba7b45ea37f487cf8361ca358"
+                "chrX.agat.gff:md5,4f173f96f5a5c1e9b5385be9bb0fb116"
             ]
         ],
+        "timestamp": "2026-08-10T19:13:55.367194483",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2026-01-28T15:02:29.217467979"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }
